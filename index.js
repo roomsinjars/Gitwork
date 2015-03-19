@@ -2,7 +2,6 @@ var nw = require('nw.gui');
 var win = nw.Window.get();
 var NodeGit = require("nodegit");
 
-
 var cloneURL = "https://github.com/nodegit/test";
 var localPath = require("path").join("repos", "tmp");
 var cloneOptions = {};
