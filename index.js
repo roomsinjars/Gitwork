@@ -1,2 +1,10 @@
 var nw = require('nw.gui');
 var win = nw.Window.get();
+
+if (process.platform === "darwin") {
+  var mb = new gui.Menu({type: 'menubar'});
+  mb.createMacBuiltin('RoboPaint', {
+    hideEdit: false,
+  });
+  gui.Window.get().menu = mb;
+}
