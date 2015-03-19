@@ -2,12 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c76871e3-3119-44d7-bf74-fb9f6278960e" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/window/app.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/window/directives/home/home.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/window/directives/home/home.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/window/directives/common/navbar/navbar.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/window/directives/common/navbar/navbar.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/Gitwork.iml" afterPath="$PROJECT_DIR$/.idea/Gitwork.iml" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/window/directives/common/navbar/navbar.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/window/directives/home/home.js" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/window/app.js" afterPath="$PROJECT_DIR$/window/app.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/window/directives/home/home.html" afterPath="$PROJECT_DIR$/window/directives/home/home.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.html" afterPath="$PROJECT_DIR$/index.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
@@ -36,18 +34,18 @@
       <file leaf-file-name="index.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.76072824" vertical-offset="0" max-vertical-offset="780">
-              <caret line="39" column="65" selection-start-line="39" selection-start-column="65" selection-end-line="39" selection-end-column="65" />
+            <state vertical-scroll-proportion="0.42801556" vertical-offset="0" max-vertical-offset="771">
+              <caret line="22" column="25" selection-start-line="22" selection-start-column="25" selection-end-line="22" selection-end-column="25" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="navbar.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/window/directives/common/navbar/navbar.js">
+      <file leaf-file-name="app.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/window/app.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="285">
-              <caret line="13" column="0" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="495">
+              <caret line="16" column="0" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -68,13 +66,13 @@
         <option value="$PROJECT_DIR$/main.html" />
         <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/window/common/directives/navbar/navbar.js" />
-        <option value="$PROJECT_DIR$/window/app.js" />
         <option value="$PROJECT_DIR$/window/common/directives/navbar/navbar.html" />
         <option value="$PROJECT_DIR$/window/common/directives/home/home.js" />
         <option value="$PROJECT_DIR$/window/common/directives/home/home.html" />
-        <option value="$PROJECT_DIR$/window/directives/common/navbar/navbar.js" />
-        <option value="$PROJECT_DIR$/window/directives/home/home.js" />
         <option value="$PROJECT_DIR$/window/directives/home/home.html" />
+        <option value="$PROJECT_DIR$/window/directives/home/home.js" />
+        <option value="$PROJECT_DIR$/window/directives/common/navbar/navbar.js" />
+        <option value="$PROJECT_DIR$/window/app.js" />
         <option value="$PROJECT_DIR$/index.html" />
       </list>
     </option>
@@ -151,10 +149,14 @@
     </key>
   </component>
   <component name="RunManager">
+    <configuration default="true" type="DartCommandLineRunConfigurationType" factoryName="Dart Command Line Application">
+      <method />
+    </configuration>
     <configuration default="true" type="DartUnitRunConfigurationType" factoryName="DartUnit">
       <method />
     </configuration>
-    <configuration default="true" type="DartCommandLineRunConfigurationType" factoryName="Dart Command Line Application">
+    <configuration default="true" type="JavaScriptTestRunnerKarma" factoryName="Karma" config-file="">
+      <envs />
       <method />
     </configuration>
     <configuration default="true" type="JSTestDriver:ConfigurationType" factoryName="JsTestDriver">
@@ -162,10 +164,6 @@
       <setting name="settingsFile" value="" />
       <setting name="serverType" value="INTERNAL" />
       <setting name="preferredDebugBrowser" value="Chrome" />
-      <method />
-    </configuration>
-    <configuration default="true" type="JavaScriptTestRunnerKarma" factoryName="Karma" config-file="">
-      <envs />
       <method />
     </configuration>
     <configuration default="true" type="JavascriptDebugType" factoryName="JavaScript Debug">
@@ -206,10 +204,10 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="48" y="-1080" width="1920" height="1080" extended-state="0" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18712871" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18675889" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -249,11 +247,18 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="780">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/index.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="100">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -297,7 +302,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.39011705" vertical-offset="0" max-vertical-offset="769">
           <caret line="20" column="0" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -305,7 +309,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="704">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -313,46 +316,29 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.54616386" vertical-offset="0" max-vertical-offset="769">
           <caret line="28" column="17" selection-start-line="28" selection-start-column="17" selection-end-line="28" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/window/directives/home/home.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.13618676" vertical-offset="0" max-vertical-offset="771">
+          <caret line="7" column="0" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/window/app.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="793">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/window/directives/home/home.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="769">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/window/directives/home/home.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.1702396" vertical-offset="0" max-vertical-offset="793">
-          <caret line="9" column="54" selection-start-line="9" selection-start-column="54" selection-end-line="9" selection-end-column="54" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/window/directives/common/navbar/navbar.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="285">
-          <caret line="13" column="0" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="495">
+          <caret line="16" column="0" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.76072824" vertical-offset="0" max-vertical-offset="780">
-          <caret line="39" column="65" selection-start-line="39" selection-start-column="65" selection-end-line="39" selection-end-column="65" />
+        <state vertical-scroll-proportion="0.42801556" vertical-offset="0" max-vertical-offset="771">
+          <caret line="22" column="25" selection-start-line="22" selection-start-column="25" selection-end-line="22" selection-end-column="25" />
           <folding />
         </state>
       </provider>
