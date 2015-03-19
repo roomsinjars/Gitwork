@@ -55,7 +55,7 @@ app.directive('home', function () {
         controller: 'MainController'
     };
 
-});
+})
 
 app.directive('navbar', function () {
 
@@ -65,4 +65,4 @@ app.directive('navbar', function () {
         templateUrl: 'window/directives/common/navbar/navbar.html'
     };
 
-});
+})
