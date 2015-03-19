@@ -13,7 +13,7 @@ app.controller('MainController', function ($scope, cloneFactory) {
 
 });
 
-<<<<<<< HEAD
+
 app.factory('cloneFactory', function(){
     
     return {
@@ -55,5 +55,6 @@ app.directive('home', function () {
         templateUrl: 'window/directives/home/home.html',
         controller: 'MainController'
     };
+});
 
 
