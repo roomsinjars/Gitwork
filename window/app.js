@@ -6,8 +6,8 @@ var NodeGit = require("nodegit");
 app.controller('MainController', function ($scope, cloneFactory) {
 
     $scope.cloneRepo = function (repoUrl) {
-        cloneFactory.cloneRepo(cloneUrl)
-        console.log("test")
+        cloneFactory.cloneRepo(repoUrl)
+        $scope.repoUrl = ''
     }
 
 
@@ -17,11 +17,12 @@ app.factory('cloneFactory', function(){
     
     return {
         cloneRepo: function(url){
+            console.log(url)
             var __dirname = "repos"
             var cloneURL = url;
-            var repoName = function (url){
-                    return url.split('/').pop()
-                }
+            var repoName = url.split('/').pop()
+        
+            console.log(repoName)
             var localPath = require("path").join(__dirname, repoName);
             var cloneOptions = {};
 
@@ -40,12 +41,6 @@ app.factory('cloneFactory', function(){
                 // Access any repository methods here.
                 console.log("Is the repository bare? %s", Boolean(repository.isBare()));
               });
-
-
-            return $http.post('/api/admin/itemCreate', data)
-                .then(function(response){
-                    return response.data;
-            })
         }
     }
 
@@ -56,7 +51,8 @@ app.directive('home', function () {
     return {
         restrict: 'E',
         scope: {},
-        templateUrl: 'window/directives/home/home.html'
+        templateUrl: 'window/directives/home/home.html',
+        controller: 'MainController'
     };
 
 });
