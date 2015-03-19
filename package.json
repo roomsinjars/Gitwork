@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/BLevine11/Gitwork/issues"
   },
-  "homepage": "https://github.com/BLevine11/Gitwork"
+  "homepage": "https://github.com/BLevine11/Gitwork",
+  "dependencies": {
+    "path": "^0.11.14"
+  }
 }
