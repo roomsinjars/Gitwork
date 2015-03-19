@@ -13,7 +13,6 @@ app.controller('MainController', function ($scope, cloneFactory) {
 
 });
 
-<<<<<<< HEAD
 app.factory('cloneFactory', function(){
     
     return {
@@ -56,4 +55,14 @@ app.directive('home', function () {
         controller: 'MainController'
     };
 
+})
 
+app.directive('navbar', function () {
+
+    return {
+        restrict: 'E',
+        scope: {},
+        templateUrl: 'window/directives/common/navbar/navbar.html'
+    };
+
+})
