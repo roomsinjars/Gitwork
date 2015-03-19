@@ -35,6 +35,12 @@ var getCommitMessage = function(commit) {
   return commit.message();
 };
 
+cloneRepository.catch(errorAndAttemptOpen)
+  .then(function(repository) {
+    // Access any repository methods here.
+    console.log("Is the repository bare? %s", Boolean(repository.isBare()));
+  });
+
 NodeGit.Repository.open("node_modules/nodegit")
   .then(getMostRecentCommit)
   .then(getCommitMessage)
