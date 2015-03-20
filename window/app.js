@@ -3,21 +3,25 @@
 var app = angular.module('GitWork', []);
 var NodeGit = require("nodegit");
 
-app.controller('MainController', function ($scope, cloneFactory) {
+app.controller('MainController', function ($scope, repoFactory) {
 
     $scope.cloneRepo = function (repoUrl) {
-        cloneFactory.cloneRepo(repoUrl)
+        repoFactory.cloneRepo(repoUrl)
         $scope.repoUrl = ''
+    }
+
+    $scope.createRepo = function (repoName) {
+        repoFactory.createRepo(repoName)
+        $scope.repoName = ''
     }
 
 
 });
 
-app.factory('cloneFactory', function(){
+app.factory('repoFactory', function(){
     
     return {
         cloneRepo: function(url){
-            console.log(url)
             var __dirname = "repos"
             var cloneURL = url;
             var repoName = url.split('/').pop()
@@ -41,6 +45,18 @@ app.factory('cloneFactory', function(){
                 // Access any repository methods here.
                 console.log("Is the repository bare? %s", Boolean(repository.isBare()));
               });
+        },
+        createRepo: function (name) {
+            var pathToRepo = require("path").resolve("./repos/" + name);
+            var isBare = 0; // lets create a .git subfolder
+
+            NodeGit.Repository.init(pathToRepo, isBare).then(function (repo) {
+              // In this function we have a repo object that we can perform git operations
+              // on.
+
+              // Note that with a new repository many functions will fail until there is
+              // an initial commit.
+            });
         }
     }
 
