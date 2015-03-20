@@ -105,7 +105,8 @@ app.factory('repoFactory', function(){
             var fse = promisify(require("fs-extra"));
             var fileName = "newfile.txt";
             var fileContent = "hello world";
-            var directoryName = "salad/toast/strangerinastrangeland/theresnowaythisexists";
+            var directoryName = "./";
+            var __dirname = path.resolve(path.dirname());
             // ensureDir is an alias to mkdirp, which has the callback with a weird name
             // and in the 3rd position of 4 (the 4th being used for recursion). We have to
             // force promisify it, because promisify-node won't detect it on its
@@ -122,9 +123,10 @@ app.factory('repoFactory', function(){
             var index;
             var oid;
 
-            nodegit.Repository.open(path.resolve(__dirname, "../.git"))
+            NodeGit.Repository.open(path.resolve(__dirname, "./repos/test/.git"))
             .then(function(repoResult) {
               repo = repoResult;
+              console.log('opened repo', repo)
               return fse.ensureDir(path.join(repo.workdir(), directoryName));
             }).then(function(){
               return fse.writeFile(path.join(repo.workdir(), fileName), fileContent);
@@ -159,16 +161,16 @@ app.factory('repoFactory', function(){
             })
             .then(function(oidResult) {
               oid = oidResult;
-              return nodegit.Reference.nameToId(repo, "HEAD");
+              return NodeGit.Reference.nameToId(repo, "HEAD");
             })
             .then(function(head) {
               return repo.getCommit(head);
             })
             .then(function(parent) {
-              var author = nodegit.Signature.create("Scott Chacon",
-                "schacon@gmail.com", 123456789, 60);
-              var committer = nodegit.Signature.create("Scott A Chacon",
-                "scott@github.com", 987654321, 90);
+              var author = NodeGit.Signature.create("Blake Robinson",
+                "bprobinson@zoho.com", 123456789, 60);
+              var committer = NodeGit.Signature.create("Blake Robinson",
+                "bprobinson@zoho.com", 987654321, 90);
 
               return repo.createCommit("HEAD", author, committer, "message", oid, [parent]);
             })
