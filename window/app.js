@@ -2,8 +2,19 @@
 
 var app = angular.module('GitWork', []);
 var NodeGit = require("nodegit");
+var fs = require("fs");
 
 app.controller('MainController', function ($scope, repoFactory) {
+
+    $scope.checkRepo = function(){
+        fs.readdir('./', function(err,data){
+            if (err) throw err;
+                for (var i=0; i<data.length; i++){
+                    if (data[i]===".git") return false;
+                }
+            })
+        return true;
+    }
 
     $scope.cloneRepo = function (repoUrl) {
         repoFactory.cloneRepo(repoUrl)
@@ -23,6 +34,7 @@ app.factory('repoFactory', function(){
 
     
     return {
+
         cloneRepo: function(url){
             var __dirname = "repos"
             var cloneURL = url;
