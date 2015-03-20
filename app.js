@@ -15,6 +15,7 @@ app.config(function($stateProvider, $urlRouterProvider){
 
 });
 
+//app.constant() put in path--process.env.PWD;
 
 
 
@@ -58,17 +59,19 @@ app.controller('MainController', function ($scope, repoFactory) {
 
 
 app.factory('repoFactory', function(){
+    var path = require("path");
 
     
     return {
 
         cloneRepo: function(url){
-            var __dirname = "repos"
+            var __dirname = process.env.PWD;
             var cloneURL = url;
             var repoName = url.split('/').pop()
         
-            console.log(repoName)
+            console.log(__dirname)
             var localPath = require("path").join(__dirname, repoName);
+            console.log(localPath)
             var cloneOptions = {};
 
             var errorAndAttemptOpen = function() {
@@ -88,8 +91,11 @@ app.factory('repoFactory', function(){
               });
         },
         createRepo: function (name) {
-            var pathToRepo = require("path").resolve("./repos/" + name);
+            var __dirname = process.env.PWD;
+            var pathToRepo = require("path").resolve(__dirname + '/' + name);
             var isBare = 0; // lets create a .git subfolder
+            var fs = require('fs')
+            console.log(__dirname)
 
             return NodeGit.Repository.init(pathToRepo, isBare).then(function (repo) {
               return repo
