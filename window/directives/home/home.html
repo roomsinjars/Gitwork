@@ -1,6 +1,13 @@
 <div ng-controller="MainController" ng-show="checkRepo()">
   <div class='container theme-showcase' role='main'>
       <!-- Main jumbotron for a primary marketing message or call to action -->
+      <div class="panel panel-default">
+        <div class="panel-body">
+       	<a class="btn btn-primary btn-lg">Commit</a>
+       	<a class="btn btn-primary btn-lg">Merge with master</a>
+       	<a class="btn btn-primary btn-lg">Make pull request</a>
+        </div>
+      </div>
       <div class="form-group">
         <label class="control-label">Clone a Repo</label>
         <div class="input-group">
@@ -9,21 +16,22 @@
           <span class="input-group-btn">
             <button class="btn btn-default" type="button" ng-click="cloneRepo(repoUrl)">clone</button>
           </span>
+
         </div>
-      </div>
-      <div class="form-group">
-        <label class="control-label">Create a Repo</label>
-        <div class="input-group">
-          <span class="input-group-addon">repo name</span>
-          <input type="text" class="form-control" ng-model="repoName">
-          <span class="input-group-btn">
-            <button class="btn btn-default" type="button" ng-click="createRepo(repoName)">create</button>
-          </span>
+        <div class="form-group">
+          <label class="control-label">Create a Repo</label>
+          <div class="input-group">
+            <span class="input-group-addon">repo name</span>
+            <input type="text" class="form-control" ng-model="repoName">
+            <span class="input-group-btn">
+              <button class="btn btn-default" type="button" ng-click="createRepo(repoName)">create</button>
+            </span>
+          </div>
         </div>
-      </div>
-      <div class='jumbotron'>
-          <h1>Git Work</h1>
-          <p>We can add some cool stuff here</p>
-      </div>
-  </div> <!-- /container -->
+        <div class='jumbotron'>
+            <h1>Git Work</h1>
+            <p>We can add some cool stuff here</p>
+        </div>
+    </div> <!-- /container -->
+  </div>
 </div>
