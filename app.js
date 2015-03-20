@@ -1,8 +1,25 @@
 'use strict';
 
-var app = angular.module('GitWork', []);
+var app = angular.module('GitWork', ['ui.router']);
 var NodeGit = require("nodegit");
 var fs = require("fs");
+
+app.config(function($stateProvider, $urlRouterProvider){
+
+    $stateProvider
+        .state('home', {
+            url: '',
+            templateUrl: 'window/directives/home/home.html',
+            controller: 'MainController'
+        })
+
+});
+
+
+
+
+
+
 
 app.controller('MainController', function ($scope, repoFactory) {
 
