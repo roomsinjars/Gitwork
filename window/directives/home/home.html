@@ -1,12 +1,22 @@
 <div class='container theme-showcase' role='main'>
     <!-- Main jumbotron for a primary marketing message or call to action -->
     <div class="form-group">
-      <label class="control-label"></label>
+      <label class="control-label">Clone a Repo</label>
       <div class="input-group">
         <span class="input-group-addon">repo url</span>
         <input type="text" class="form-control" ng-model="repoUrl">
         <span class="input-group-btn">
-          <button class="btn btn-default" type="button" ng-click="cloneRepo(repoUrl)">Clone</button>
+          <button class="btn btn-default" type="button" ng-click="cloneRepo(repoUrl)">clone</button>
+        </span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label">Create a Repo</label>
+      <div class="input-group">
+        <span class="input-group-addon">repo name</span>
+        <input type="text" class="form-control" ng-model="repoName">
+        <span class="input-group-btn">
+          <button class="btn btn-default" type="button" ng-click="createRepo(repoName)">create</button>
         </span>
       </div>
     </div>
