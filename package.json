@@ -19,6 +19,7 @@
   "homepage": "https://github.com/BLevine11/Gitwork",
   "dependencies": {
     "fs-extra": "^0.16.5",
+    "nodegit-promise": "^1.0.0",
     "path": "^0.11.14",
     "promisify": "0.0.3",
     "promisify-node": "^0.1.5"
