@@ -54,6 +54,9 @@ app.controller('MainController', function ($scope, repoFactory, $rootScope) {
     $scope.commit = function () {
         repoFactory.commit($rootScope.repo, $rootScope.repoName)
     }
+    $scope.createBranch = function (branchName) {
+      repoFactory.createBranch(branchName, $rootScope.repoName )
+    }
 
 
 });
@@ -65,12 +68,12 @@ app.factory('repoFactory', function ($rootScope){
     var path = require("path");
     var promisify = require("promisify-node");
     var fse = promisify(require("fs-extra"));
+    var __dirname = process.env.PWD;
 
     
     return {
 
         cloneRepo: function(url){
-            var __dirname = process.env.PWD;
             var cloneURL = url;
             var repoName = url.split('/').pop()
             var localPath = require("path").join(__dirname, repoName);
@@ -149,12 +152,29 @@ app.factory('repoFactory', function ($rootScope){
             //Couldn't figure out how to make this function return a promise for the 
             //value of the commitId.
         },
+
+        createBranch: function(branchName, repoName) {
+            NodeGit.Repository.open(path.resolve(__dirname + '/' + repoName))
+              .then(function(repo) {
+                // Create a new branch on head
+                return repo.getHeadCommit()
+                .then(function(commit) {
+                  return repo.createBranch(
+                    branchName,
+                    commit,
+                    0,
+                    repo.defaultSignature(),
+                    "Created" + branchName + "on HEAD");
+                });
+              }).done(function() {
+                console.log("All done!");
+              });
+        },
         commit: function (repository, repoName) {
             var repo = repository;
             var fileName = "newfile.txt";
             var fileContent = "hello world";
             var directoryName = "./";
-            var __dirname = process.env.PWD;
             // ensureDir is an alias to mkdirp, which has the callback with a weird name
             // and in the 3rd position of 4 (the 4th being used for recursion). We have to
             // force promisify it, because promisify-node won't detect it on its
