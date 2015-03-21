@@ -158,15 +158,19 @@ app.factory('repoFactory', function ($rootScope){
               .then(function(repo) {
                 // Create a new branch on head
                 return repo.getHeadCommit()
-                .then(function(commit) {
+                .then(function (commit) {
                   return repo.createBranch(
                     branchName,
                     commit,
                     0,
                     repo.defaultSignature(),
-                    "Created" + branchName + "on HEAD");
+                    "Created" + branchName + "on HEAD")
+                  .then(function (branch) {
+                    return repo.checkoutBranch(branch)
+                  });
                 });
-              }).done(function() {
+              })
+              .done(function() {
                 console.log("All done!");
               });
         },
