@@ -16,7 +16,6 @@
           <span class="input-group-btn">
             <button class="btn btn-default" type="button" ng-click="cloneRepo(repoUrl)">clone</button>
           </span>
-
         </div>
         <div class="form-group">
           <label class="control-label">Create a Repo</label>
@@ -35,6 +34,16 @@
             <input type="text" class="form-control" ng-model="branchName">
             <span class="input-group-btn">
               <button class="btn btn-default" type="button" ng-click="createBranch(branchName)">create</button>
+            </span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="control-label">Commit all</label>
+          <div class="input-group">
+            <span class="input-group-addon">message</span>
+            <input type="text" class="form-control" ng-model="commitMessage">
+            <span class="input-group-btn">
+              <button class="btn btn-default" type="button" ng-click="commit(commitMessage)">commit</button>
             </span>
           </div>
         </div>

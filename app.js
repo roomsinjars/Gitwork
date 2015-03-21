@@ -51,11 +51,12 @@ app.controller('MainController', function ($scope, repoFactory, $rootScope) {
 
 
     }
-    $scope.commit = function () {
-        repoFactory.commit($rootScope.repo, $rootScope.repoName)
+    $scope.commit = function (commitMessage) {
+        repoFactory.commit(commitMessage, $rootScope.repo, $rootScope.repoName)
     }
     $scope.createBranch = function (branchName) {
       repoFactory.createBranch(branchName, $rootScope.repoName )
+      $scope.branchName = ''
     }
 
 
@@ -174,7 +175,7 @@ app.factory('repoFactory', function ($rootScope){
                 console.log("All done!");
               });
         },
-        commit: function (repository, repoName) {
+        commit: function (commitMessage, repository, repoName) {
             var repo = repository;
             var fileName = "newfile.txt";
             var fileContent = "hello world";
@@ -194,8 +195,6 @@ app.factory('repoFactory', function ($rootScope){
             var repo;
             var index;
             var oid;
-            console.log(repoName)
-            console.log('filepath to open for commit', __dirname + '/' + repoName)
             NodeGit.Repository.open(path.resolve(__dirname + '/' + repoName))
             .then(function(repoResult) {
               repo = repoResult;
@@ -245,7 +244,7 @@ app.factory('repoFactory', function ($rootScope){
               var committer = NodeGit.Signature.create("Blake Robinson",
                 "bprobinson@zoho.com", 987654321, 90);
 
-              return repo.createCommit("HEAD", author, committer, "message", oid, [parent]);
+              return repo.createCommit("HEAD", author, committer, commitMessage, oid, [parent]);
             })
             .done(function(commitId) {
               console.log("New Commit: ", commitId);
