@@ -1,8 +1,7 @@
 'use strict';
 
 var app = angular.module('GitWork', ['ui.router']);
-var NodeGit = require("nodegit");
-var fs = require("fs");
+
 
 app.config(function($stateProvider, $urlRouterProvider){
 
@@ -22,7 +21,8 @@ app.config(function($stateProvider, $urlRouterProvider){
 
 
 
-app.controller('MainController', function ($scope, repoFactory) {
+app.controller('MainController', function ($scope, repoFactory, $rootScope) {
+    var fs = require("fs");
 
     $scope.checkRepo = function(){
         fs.readdir('./', function(err,data){
@@ -45,21 +45,26 @@ app.controller('MainController', function ($scope, repoFactory) {
     }
 
     $scope.createRepo = function (repoName) {
-        repoFactory.createRepo(repoName).then(function (repo) {
-            $scope.repo = repo
-        })
-        $scope.repoName = ''
+        repoFactory.createRepo(repoName)
+        $rootScope.repoName = repoName;
+        $scope.repoName = '';
+
+
     }
     $scope.commit = function () {
-        repoFactory.commit($scope.repo)
+        repoFactory.commit($rootScope.repo, $rootScope.repoName)
     }
 
 
 });
 
 
-app.factory('repoFactory', function(){
+app.factory('repoFactory', function ($rootScope){
+    var NodeGit = require("nodegit");
+    var fs = require("fs");
     var path = require("path");
+    var promisify = require("promisify-node");
+    var fse = promisify(require("fs-extra"));
 
     
     return {
@@ -68,10 +73,7 @@ app.factory('repoFactory', function(){
             var __dirname = process.env.PWD;
             var cloneURL = url;
             var repoName = url.split('/').pop()
-        
-            console.log(__dirname)
             var localPath = require("path").join(__dirname, repoName);
-            console.log(localPath)
             var cloneOptions = {};
 
             var errorAndAttemptOpen = function() {
@@ -91,28 +93,68 @@ app.factory('repoFactory', function(){
               });
         },
         createRepo: function (name) {
+            // var __dirname = process.env.PWD;
+            // var pathToRepo = require("path").resolve(__dirname + '/' + name);
+            // var isBare = 0; // lets create a .git subfolder
+            
+            var fileName = "README.md";
+            var fileContent = "README";
             var __dirname = process.env.PWD;
-            var pathToRepo = require("path").resolve(__dirname + '/' + name);
-            var isBare = 0; // lets create a .git subfolder
-            var fs = require('fs')
-            console.log(__dirname)
+            var repoDir = require("path").resolve(__dirname + '/' + name);
 
-            return NodeGit.Repository.init(pathToRepo, isBare).then(function (repo) {
-              return repo
+            fse.ensureDir = promisify(fse.ensureDir);
+
+            var repository;
+            var index;
+
+            fse.ensureDir(path.resolve(__dirname, repoDir))
+            .then(function() {
+              return NodeGit.Repository.init(path.resolve(__dirname, repoDir), 0);
+            })
+            .then(function(repo) {
+              repository = repo;
+              $rootScope.repo = repo;
+              console.log($rootScope.repo)
+              return fse.writeFile(path.join(repository.workdir(), fileName), fileContent);
+            })
+            .then(function(){
+              return repository.openIndex();
+            })
+            .then(function(idx) {
+              index = idx;
+              return index.read(1);
+            })
+            .then(function() {
+              return index.addByPath(fileName);
+            })
+            .then(function() {
+              return index.write();
+            })
+            .then(function() {
+              return index.writeTree();
+            })
+            .then(function(oid) {
+              var author = NodeGit.Signature.create("Scott Chacon",
+                "schacon@gmail.com", 123456789, 60);
+              var committer = NodeGit.Signature.create("Scott A Chacon",
+                "scott@github.com", 987654321, 90);
+
+              // Since we're creating an inital commit, it has no parents. Note that unlike
+              // normal we don't get the head either, because there isn't one yet.
+              return repository.createCommit("HEAD", author, committer, "Initial Commit", oid, []);
+            })
+            .done(function(commitId) {
+              console.log(commitId);
             });
+            //Couldn't figure out how to make this function return a promise for the 
+            //value of the commitId.
         },
-        commit: function (repository) {
+        commit: function (repository, repoName) {
             var repo = repository;
-
-            //var oid = Commit.create(repo, update_ref, author, committer, message_encoding, message, tree, parent_count, parents);
-
-            var path = require("path");
-            var promisify = require("promisify-node");
-            var fse = promisify(require("fs-extra"));
             var fileName = "newfile.txt";
             var fileContent = "hello world";
             var directoryName = "./";
-            var __dirname = path.resolve(path.dirname());
+            var __dirname = process.env.PWD;
             // ensureDir is an alias to mkdirp, which has the callback with a weird name
             // and in the 3rd position of 4 (the 4th being used for recursion). We have to
             // force promisify it, because promisify-node won't detect it on its
@@ -128,8 +170,9 @@ app.factory('repoFactory', function(){
             var repo;
             var index;
             var oid;
-
-            NodeGit.Repository.open(path.resolve(__dirname, "./repos/test/.git"))
+            console.log(repoName)
+            console.log('filepath to open for commit', __dirname + '/' + repoName)
+            NodeGit.Repository.open(path.resolve(__dirname + '/' + repoName))
             .then(function(repoResult) {
               repo = repoResult;
               console.log('opened repo', repo)
