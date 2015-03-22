@@ -3,7 +3,13 @@ app.directive('navbar', function () {
     return {
         restrict: 'E',
         scope: {},
-        templateUrl: 'window/directives/common/navbar/navbar.html'
+        templateUrl: 'window/common/navbar/navbar.html'
     };
 
 });
+
+
+
+
+
+

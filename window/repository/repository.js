@@ -3,7 +3,7 @@ app.config(function($stateProvider, $urlRouterProvider){
     $stateProvider
         .state('noRepo', {
             url: '',
-            templateUrl: 'repository.html',
+            templateUrl: 'window/repository/repository.html',
             controller: 'RepoCtrl'
         })
 });

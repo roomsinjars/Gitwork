@@ -1,11 +1,18 @@
 {
   "name": "gitwork",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "",
   "main": "index.html",
   "scripts": {
     "start": "nw",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "window": {
+    "height": 600,
+    "width": 800,
+    "min_height": 400,
+    "min_width": 500,
+    "position": "center"
   },
   "repository": {
     "type": "git",
@@ -19,8 +26,15 @@
   "homepage": "https://github.com/BLevine11/Gitwork",
   "dependencies": {
     "fs-extra": "^0.16.5",
+    "gulp-sourcemaps": "^1.5.1",
     "path": "^0.11.14",
     "promisify": "0.0.3",
     "promisify-node": "^0.1.5"
+  },
+  "devDependencies": {
+    "gulp": "^3.8.11",
+    "gulp-concat": "^2.5.2",
+    "gulp-ng-annotate": "^0.5.2",
+    "gulp-uglify": "^1.1.0"
   }
 }

@@ -1,16 +1,13 @@
-var NodeGit = require("nodegit");
-
 app.factory('repoFactory', function(){
-
 
     return {
 
         cloneRepo: function(url){
-            var __dirname = "repos"
+            var __dirname = "repos";
             var cloneURL = url;
-            var repoName = url.split('/').pop()
+            var repoName = url.split('/').pop();
 
-            console.log(repoName)
+            console.log(repoName);
             var localPath = require("path").join(__dirname, repoName);
             var cloneOptions = {};
 
@@ -26,7 +23,7 @@ app.factory('repoFactory', function(){
 
             return cloneRepository.catch(errorAndAttemptOpen)
                 .then(function(repository) {
-                    return repository
+                    return repository;
                     console.log("Is the repository bare? %s", Boolean(repository.isBare()));
                 });
         },
@@ -69,7 +66,7 @@ app.factory('repoFactory', function(){
             NodeGit.Repository.open(path.resolve(__dirname, "./repos/test/.git"))
                 .then(function(repoResult) {
                     repo = repoResult;
-                    console.log('opened repo', repo)
+                    console.log('opened repo', repo);
                     return fse.ensureDir(path.join(repo.workdir(), directoryName));
                 }).then(function(){
                     return fse.writeFile(path.join(repo.workdir(), fileName), fileContent);
@@ -124,4 +121,4 @@ app.factory('repoFactory', function(){
 
     }
 
-})
+});

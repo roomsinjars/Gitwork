@@ -1,6 +1,3 @@
-
-var fs = require("fs");
-
 app.controller('RepoCtrl', function ($scope, repoFactory) {
 
     $scope.checkRepo = function(){
