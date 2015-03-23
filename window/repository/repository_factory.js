@@ -36,9 +36,10 @@ app.factory('repoFactory', function ($rootScope){
             });
         },
         commit: function (repo, message) {
-            repo.commit
+            repo.commit(message, true, function (err) {
+                if (err) throw err;
+            })
         }
-
     }
 
 });
