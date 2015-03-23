@@ -9,7 +9,7 @@ var ngAnnotate = require('gulp-ng-annotate');
 gulp.task('default', function () {
     gulp.src(['window/**/*.js'])
         //.pipe(sourcemaps.init())
-        .pipe(concat('app.js'))
+        .pipe(concat('public/app.js'))
         //.pipe(ngAnnotate())
         //.pipe(uglify())
         //.pipe(sourcemaps.write())

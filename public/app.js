@@ -4,6 +4,48 @@ var win = gui.Window.get();
 var fs = require("fs");
 var NodeGit = require("nodegit");
 
+app.config(function($stateProvider, $urlRouterProvider){
+
+    $stateProvider
+        .state('branch', {
+            url: '/',
+            templateUrl: 'window/branch/branch.html',
+            controller: 'BranchCtrl'
+        })
+});
+app.config(function($stateProvider, $urlRouterProvider){
+
+    $stateProvider
+        .state('home', {
+            url: '',
+            templateUrl: 'window/home/home.html',
+            controller: 'HomeController'
+        })
+});
+
+app.controller('HomeController', function ($scope, $state) {
+
+    $scope.changeStateNoRepo = function() {
+        $state.reload();
+        $state.go('noRepo')
+    };
+
+    $scope.changeStateBranch = function() {
+        $state.reload();
+        $state.go('branch')
+
+    };
+
+    fs.readdir('./repos', function(err,data){
+        if (err) throw err;
+        for (var i=0; i<data.length; i++){
+            if (data[i]===".git") return $scope.changeStateBranch();
+            console.log(i, data[i]);
+        }
+        return $scope.changeStateNoRepo();
+    })
+
+});
 
 if (process.platform === "darwin") {
     var mb = new gui.Menu({type: 'menubar'});
