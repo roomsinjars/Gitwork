@@ -1,5 +1,5 @@
 app.factory('repoFactory', function ($rootScope){
-    
+
     return {
 
         cloneRepo: function(url){
@@ -22,10 +22,23 @@ app.factory('repoFactory', function ($rootScope){
                 if (err) throw err;
                 mkdirp(__dirname + '/' + name + '/'+'.git', function (err) {
                   if (err) throw err;
-                  git.init(__dirname+'/'+name, true, function (err, _repo) {
+                  git.init(__dirname+'/'+name, function (err, _repo) {
                       var giftRepo = _repo
                       console.log(giftRepo)
                       $rootScope.repo = giftRepo
+                      fs.writeFile(__dirname+'/'+name + '/README.md', "README", function(err) {
+                          if(err) {
+                              return console.log(err);
+                          }
+                          $rootScope.repo.add('README.md', function (err) {
+                             $rootScope.repo.commit("Initial Commit", true, function (err) {
+                                if (err) throw err;
+                                // $rootScope.repo.create_branch('test', function (err) {
+                                //     if (err) throw err;
+                                // })
+                            })
+                          })
+                      });   
                   })
 
                 })
@@ -37,14 +50,12 @@ app.factory('repoFactory', function ($rootScope){
                 if (err) throw err;
             })
         },
-        commit: function (commitMessage, repository, repoName) {
+        commit: function (repository, commitMsg) {
 
-            giftRepo.commit(commitMessage, true, function (err) {
+            repository.commit(commitMsg, true, function (err) {
                 if (err) throw err;
             })
-
         }
-
     }
 
 })

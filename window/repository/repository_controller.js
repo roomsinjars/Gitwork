@@ -13,11 +13,11 @@ app.controller('RepoCtrl', function ($scope, repoFactory, $rootScope) {
         $rootScope.repoName = repoName;
         $scope.repoName = '';
 
-
     }
     $scope.commit = function (commitMessage) {
         repoFactory.commit(commitMessage, $rootScope.repo, $rootScope.repoName)
     }
+
     $scope.createBranch = function (branchName) {
       repoFactory.createBranch(branchName)
       $scope.branchName = ''
