@@ -1,33 +1,27 @@
-app.controller('RepoCtrl', function ($scope, repoFactory) {
-
-    $scope.checkRepo = function(){
-        fs.readdir('./', function(err,data){
-            if (err) throw err;
-            for (var i=0; i<data.length; i++){
-                if (data[i]===".git") return false;
-            }
-        })
-        return true;
-    }
+app.controller('RepoCtrl', function ($scope, repoFactory, $rootScope) {
 
     $scope.repo;
 
 
     $scope.cloneRepo = function (repoUrl) {
-        repoFactory.cloneRepo(repoUrl).then(function (repo) {
-            $scope.repo = repo
-        })
+        repoFactory.cloneRepo(repoUrl)
         $scope.repoUrl = ''
     }
 
     $scope.createRepo = function (repoName) {
-        repoFactory.createRepo(repoName).then(function (repo) {
-            $scope.repo = repo
-        })
-        $scope.repoName = ''
+        repoFactory.createRepo(repoName)
+        $rootScope.repoName = repoName;
+        $scope.repoName = '';
+
+
     }
-    $scope.commit = function () {
-        repoFactory.commit($rootScope.repo, commitMsg)
+    $scope.commit = function (commitMessage) {
+        repoFactory.commit(commitMessage, $rootScope.repo, $rootScope.repoName)
+    }
+
+    $scope.createBranch = function (branchName) {
+      repoFactory.createBranch(branchName)
+      $scope.branchName = ''
     }
 
 });

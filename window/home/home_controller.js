@@ -11,11 +11,10 @@ app.controller('HomeController', function ($scope, $state) {
 
     };
 
-    fs.readdir('./repos', function(err,data){
+    fs.readdir(__dirname, function(err,data){
         if (err) throw err;
         for (var i=0; i<data.length; i++){
             if (data[i]===".git") return $scope.changeStateBranch();
-            console.log(i, data[i]);
         }
         return $scope.changeStateNoRepo();
     })
