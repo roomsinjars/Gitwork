@@ -1,25 +1,23 @@
-<div ng-controller="MainController">
-  <div class='container theme-showcase' role='main'>
-      <!-- Main jumbotron for a primary marketing message or call to action -->
-      <div class="form-group">
-        <label class="control-label">Switch to Branch</label>
-        <div>
-          <span class="input-group-addon">{{ branch names }}</span>
-          
-          <span class="input-group-btn">
-            <button class="btn btn-default" type="button">Switch</button>
-          </span>
-        </div>
+<div class='container theme-showcase' role='main'>
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="form-group">
+      <label class="control-label">Switch to Branch</label>
+      <div>
+        <span class="input-group-addon">{{ branchNames }}</span>
+        
+        <span class="input-group-btn">
+          <button class="btn btn-default" type="button">Switch</button>
+        </span>
       </div>
-      <div class="form-group">
-        <label class="control-label">Create a Branch</label>
-        <div class="input-group">
-          <span class="input-group-addon">Branch name</span>
-          <input type="text" class="form-control" ng-model="branchName">
-          <span class="input-group-btn">
-            <button class="btn btn-default" type="button">Create</button>
-          </span>
-        </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label">Create a Branch</label>
+      <div class="input-group">
+        <span class="input-group-addon">Branch name</span>
+        <input type="text" class="form-control" ng-model="branchName">
+        <span class="input-group-btn">
+          <button class="btn btn-default" type="button">Create</button>
+        </span>
       </div>
-  </div> <!-- /container -->
-</div>
+    </div>
+</div> <!-- /container -->
