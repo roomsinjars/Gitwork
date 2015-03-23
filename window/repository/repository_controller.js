@@ -27,7 +27,7 @@ app.controller('RepoCtrl', function ($scope, repoFactory) {
         $scope.repoName = ''
     }
     $scope.commit = function () {
-        repoFactory.commit($scope.repo)
+        repoFactory.commit($rootScope.repo, commitMsg)
     }
 
 });
