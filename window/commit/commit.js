@@ -2,7 +2,7 @@ app.config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
         .state('commit', {
-            url: '/',
+            url: '',
             templateUrl: 'window/commit/commit.html',
             controller: 'CommitCtrl'
         })
