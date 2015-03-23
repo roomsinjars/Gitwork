@@ -25,7 +25,7 @@ app.config(function($stateProvider, $urlRouterProvider){
 app.controller('MainController', function ($scope, repoFactory, $rootScope) {
     var fs = require("fs");
 
-    $scope.checkRepo = function(){
+    $scope.checkRepo = function () {
         fs.readdir('./', function(err,data){
             if (err) throw err;
                 for (var i=0; i<data.length; i++){
@@ -39,9 +39,7 @@ app.controller('MainController', function ($scope, repoFactory, $rootScope) {
 
 
     $scope.cloneRepo = function (repoUrl) {
-        repoFactory.cloneRepo(repoUrl).then(function (repo) {
-            $scope.repo = repo
-        })
+        repoFactory.cloneRepo(repoUrl)
         $scope.repoUrl = ''
     }
 
@@ -56,7 +54,7 @@ app.controller('MainController', function ($scope, repoFactory, $rootScope) {
         repoFactory.commit(commitMessage, $rootScope.repo, $rootScope.repoName)
     }
     $scope.createBranch = function (branchName) {
-      repoFactory.createBranch(branchName, $rootScope.repoName )
+      repoFactory.createBranch(branchName)
       $scope.branchName = ''
     }
     $scope.addFilesToIndex = function () {
@@ -74,9 +72,26 @@ app.factory('repoFactory', function ($rootScope){
     var promisify = require("promisify-node");
     var fse = promisify(require("fs-extra"));
     var __dirname = process.env.PWD;
+    var git = require("gift");
+    var mkdirp = require('mkdirp');
+    
+    // console.log(giftRepo)
 
     
     return {
+
+        getChangedFiles: function () {
+            fs.readdir(__dirname, function(err,data){
+
+                if (err) throw err;
+                    for (var i=0; i<data.length; i++){
+                        if (data[i]!==".git") {
+
+                        };
+                    }
+                })
+            return true;
+        },
 
         pull: function () {
 
@@ -246,177 +261,43 @@ app.factory('repoFactory', function ($rootScope){
             var cloneURL = url;
             var repoName = url.split('/').pop()
             var localPath = require("path").join(__dirname, repoName);
-            var cloneOptions = {};
-
-            var errorAndAttemptOpen = function() {
-              return NodeGit.Repository.open(local);
-            };
-
-            cloneOptions.remoteCallbacks = {
-              certificateCheck: function() { return 1; }
-            };
-
-            var cloneRepository = NodeGit.Clone(cloneURL, localPath, cloneOptions);
-
-            return cloneRepository.catch(errorAndAttemptOpen)
-              .then(function(repository) {
-                    return repository
-                console.log("Is the repository bare? %s", Boolean(repository.isBare()));
-              });
+            
+            mkdirp(__dirname + '/' + repoName, function (err) {
+                git.clone(cloneURL, localPath, function (err, _repo) {
+                    if (err) throw err;
+                    var giftRepo = _repo
+                    console.log(giftRepo)
+                    $rootScope.repo = giftRepo
+                    console.log('this is the rootScope.repo', $rootScope.repo)
+                })
+            })                  
         },
         createRepo: function (name) {
-            // var __dirname = process.env.PWD;
-            // var pathToRepo = require("path").resolve(__dirname + '/' + name);
-            // var isBare = 0; // lets create a .git subfolder
-            
-            var fileName = "README.md";
-            var fileContent = "README";
-            var __dirname = process.env.PWD;
-            var repoDir = require("path").resolve(__dirname + '/' + name);
+            mkdirp(__dirname + '/' + name, function (err) {
+                if (err) throw err;
+                mkdirp(__dirname + '/' + name + '/'+'.git', function (err) {
+                  if (err) throw err;
+                  git.init(__dirname+'/'+name+ '/'+'.git', true, function (err, _repo) {
+                      var giftRepo = _repo
+                      console.log(giftRepo)
+                      $rootScope.repo = giftRepo
+                  })
 
-            fse.ensureDir = promisify(fse.ensureDir);
-
-            var repository;
-            var index;
-
-            fse.ensureDir(path.resolve(__dirname, repoDir))
-            .then(function() {
-              return NodeGit.Repository.init(path.resolve(__dirname, repoDir), 0);
+                })
             })
-            .then(function(repo) {
-              repository = repo;
-              $rootScope.repo = repo;
-              console.log($rootScope.repo)
-              return fse.writeFile(path.join(repository.workdir(), fileName), fileContent);
-            })
-            .then(function(){
-              return repository.openIndex();
-            })
-            .then(function(idx) {
-              index = idx;
-              return index.read(1);
-            })
-            .then(function() {
-              return index.addByPath(fileName);
-            })
-            .then(function() {
-              return index.write();
-            })
-            .then(function() {
-              return index.writeTree();
-            })
-            .then(function(oid) {
-              var author = NodeGit.Signature.create("Scott Chacon",
-                "schacon@gmail.com", 123456789, 60);
-              var committer = NodeGit.Signature.create("Scott A Chacon",
-                "scott@github.com", 987654321, 90);
-
-              // Since we're creating an inital commit, it has no parents. Note that unlike
-              // normal we don't get the head either, because there isn't one yet.
-              return repository.createCommit("HEAD", author, committer, "Initial Commit", oid, []);
-            })
-            .done(function(commitId) {
-              console.log(commitId);
-            });
-            //Couldn't figure out how to make this function return a promise for the 
-            //value of the commitId.
         },
 
-        createBranch: function(branchName, repoName) {
-            NodeGit.Repository.open(path.resolve(__dirname + '/' + repoName))
-              .then(function(repo) {
-                // Create a new branch on head
-                return repo.getHeadCommit()
-                .then(function (commit) {
-                  return repo.createBranch(
-                    branchName,
-                    commit,
-                    0,
-                    repo.defaultSignature(),
-                    "Created" + branchName + "on HEAD")
-                  .then(function (branch) {
-                    return repo.checkoutBranch(branch)
-                  });
-                });
-              })
-              .done(function() {
-                console.log("All done!");
-              });
+        createBranch: function(branchName) {
+            $rootScope.repo.create_branch(branchName, function (err) {
+                if (err) throw err;
+            })
         },
         commit: function (commitMessage, repository, repoName) {
-            var repo = repository;
-            var fileName = "newfile.txt";
-            var fileContent = "hello world";
-            var directoryName = "./";
-            // ensureDir is an alias to mkdirp, which has the callback with a weird name
-            // and in the 3rd position of 4 (the 4th being used for recursion). We have to
-            // force promisify it, because promisify-node won't detect it on its
-            // own and assumes sync
-            fse.ensureDir = promisify(fse.ensureDir);
 
-            /**
-             * This example creates a certain file `newfile.txt`, adds it to the git
-             * index and commits it to head. Similar to a `git add newfile.txt`
-             * followed by a `git commit`
-            **/
+            giftRepo.commit(commitMessage, true, function (err) {
+                if (err) throw err;
+            })
 
-            var repo;
-            var index;
-            var oid;
-            NodeGit.Repository.open(path.resolve(__dirname + '/' + repoName))
-            .then(function(repoResult) {
-              repo = repoResult;
-              console.log('opened repo', repo)
-              return fse.ensureDir(path.join(repo.workdir(), directoryName));
-            }).then(function(){
-              return fse.writeFile(path.join(repo.workdir(), fileName), fileContent);
-            })
-            .then(function() {
-              return fse.writeFile(
-                path.join(repo.workdir(), directoryName, fileName),
-                fileContent
-              );
-            })
-            .then(function() {
-              return repo.openIndex();
-            })
-            .then(function(indexResult) {
-              index = indexResult;
-              return index.read(1);
-            })
-            .then(function() {
-              // this file is in the root of the directory and doesn't need a full path
-              return index.addByPath(fileName);
-            })
-            .then(function() {
-              // this file is in a subdirectory and can use a relative path
-              return index.addByPath(path.join(directoryName, fileName));
-            })
-            .then(function() {
-              // this will write both files to the index
-              return index.write();
-            })
-            .then(function() {
-              return index.writeTree();
-            })
-            .then(function(oidResult) {
-              oid = oidResult;
-              return NodeGit.Reference.nameToId(repo, "HEAD");
-            })
-            .then(function(head) {
-              return repo.getCommit(head);
-            })
-            .then(function(parent) {
-              var author = NodeGit.Signature.create("Blake Robinson",
-                "bprobinson@zoho.com", 123456789, 60);
-              var committer = NodeGit.Signature.create("Blake Robinson",
-                "bprobinson@zoho.com", 987654321, 90);
-
-              return repo.createCommit("HEAD", author, committer, commitMessage, oid, [parent]);
-            })
-            .done(function(commitId) {
-              console.log("New Commit: ", commitId);
-            });
         }
 
     }
