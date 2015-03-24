@@ -15,7 +15,7 @@ app.config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
         .state('branch', {
-            url: '/',
+            url: '/branch',
             templateUrl: 'window/branch/branch.html',
             controller: 'BranchCtrl'
         })
@@ -27,7 +27,7 @@ app.config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
         .state('commit', {
-            url: '',
+            url: '/commit',
             templateUrl: 'window/commit/commit.html',
             controller: 'CommitCtrl'
         })
@@ -39,6 +39,29 @@ app.controller('CommitCtrl', function ($scope, $state, $rootScope, repoFactory) 
 	}
 
 });
+app.controller('CommitCtrl', function ($scope, $state, $rootScope, repoFactory) {
+
+	$scope.commit = function (commitMsg) {
+		repoFactory.commit($rootScope.repo, commitMsg)
+	}
+
+});
+app.config(function($stateProvider, $urlRouterProvider){
+
+    $stateProvider
+        .state('commit', {
+            url: '/commit',
+            templateUrl: 'window/commit/commit.html',
+            controller: 'CommitCtrl'
+        })
+});
+if (process.platform === "darwin") {
+    var mb = new gui.Menu({type: 'menubar'});
+    mb.createMacBuiltin('RoboPaint', {
+        hideEdit: false
+    });
+    gui.Window.get().menu = mb;
+}
 app.config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
@@ -85,20 +108,22 @@ app.factory('homeFactory', function ($rootScope){
   	}
 	}
 })
-if (process.platform === "darwin") {
-    var mb = new gui.Menu({type: 'menubar'});
-    mb.createMacBuiltin('RoboPaint', {
-        hideEdit: false
-    });
-    gui.Window.get().menu = mb;
-}
+
+app.config(function($stateProvider, $urlRouterProvider){
+
+    $stateProvider
+        .state('merge_ready', {
+            url: '/merge_ready',
+            templateUrl: 'window/merge_ready/merge_ready.html'
+        })
+});
 
 
 app.config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
         .state('noRepo', {
-            url: '',
+            url: '/noRepo',
             templateUrl: 'window/repository/repository.html',
             controller: 'RepoCtrl'
         })
@@ -191,6 +216,16 @@ app.factory('repoFactory', function ($rootScope){
     }
 
 })
+
+app.config(function($stateProvider, $urlRouterProvider){
+
+    $stateProvider
+        .state('work', {
+            url: '/work',
+            templateUrl: 'window/work/work.html'
+        })
+});
+
 
 app.directive('navbar', function () {
 
