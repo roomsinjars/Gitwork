@@ -72,7 +72,8 @@ app.factory('repoFactory', function ($rootScope){
         merge: function () {
             var ourSignature = NodeGit.Signature.now("blakeprobinson",
               "bprobinson@zoho.com");
-            NodeGit.Repository.open('/Users/blakerobinson/documents/fullstack/Gitwork/test')
+            console.log($rootScope.repo.path)
+            NodeGit.Repository.open($rootScope.repo.path)
                 .then(function(repository) {
                     return repository.getBranchCommit('test')
                 .then(function (commitBranch) {

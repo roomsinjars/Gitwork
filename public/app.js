@@ -27,6 +27,38 @@ app.controller('BranchCtrl', function ($scope, $state, repoFactory, $rootScope) 
       $scope.branchName = '';
     }
 });
+app.config(function($stateProvider, $urlRouterProvider){
+
+    $stateProvider
+        .state('commit', {
+            url: '/commit',
+            templateUrl: 'window/commit/commit.html',
+            controller: 'CommitCtrl'
+        })
+});
+app.controller('CommitCtrl', function ($scope, $state, $rootScope, repoFactory) {
+
+	$scope.commit = function (commitMsg) {
+		repoFactory.commit($rootScope.repo, commitMsg)
+	}
+
+});
+app.controller('CommitCtrl', function ($scope, $state, $rootScope, repoFactory) {
+
+	$scope.commit = function (commitMsg) {
+		repoFactory.commit($rootScope.repo, commitMsg)
+	}
+
+});
+app.config(function($stateProvider, $urlRouterProvider){
+
+    $stateProvider
+        .state('commit_final', {
+            url: '/commit_final',
+            templateUrl: 'window/commit_final/commit_final.html',
+            controller: 'CommitCtrl'
+        })
+});
 app.factory('fileSystemFactory', function ($rootScope){
 	return {
 		makeDir: function (name, cb) {
@@ -108,17 +140,19 @@ if (process.platform === "darwin") {
 app.config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
-        .state('commit', {
-            url: '/commit',
-            templateUrl: 'window/commit/commit.html',
-            controller: 'CommitCtrl'
+        .state('merge', {
+            url: '/merge',
+            templateUrl: 'window/merge/merge.html',
+            controller: 'MergeCtrl'
         })
 });
-app.controller('CommitCtrl', function ($scope, $state, $rootScope, repoFactory) {
 
-	$scope.commit = function (commitMsg) {
-		repoFactory.commit($rootScope.repo, commitMsg)
-	}
+app.controller('MergeCtrl', function ($scope, repoFactory, $rootScope) {
+
+    $scope.merge = function () {
+        repoFactory.merge()
+    }
+
 
 });
 app.config(function($stateProvider, $urlRouterProvider){
@@ -136,40 +170,6 @@ app.config(function($stateProvider, $urlRouterProvider){
         .state('push', {
             url: '/push',
             templateUrl: 'window/push/push.html',
-        })
-});
-app.config(function($stateProvider, $urlRouterProvider){
-
-    $stateProvider
-        .state('merge', {
-            url: '/merge',
-            templateUrl: 'window/merge/merge.html',
-            controller: 'MergeCtrl'
-        })
-});
-
-app.controller('MergeCtrl', function ($scope, repoFactory, $rootScope) {
-
-    $scope.merge = function () {
-        repoFactory.merge()
-    }
-
-
-});
-app.controller('CommitCtrl', function ($scope, $state, $rootScope, repoFactory) {
-
-	$scope.commit = function (commitMsg) {
-		repoFactory.commit($rootScope.repo, commitMsg)
-	}
-
-});
-app.config(function($stateProvider, $urlRouterProvider){
-
-    $stateProvider
-        .state('commit_final', {
-            url: '/commit_final',
-            templateUrl: 'window/commit_final/commit_final.html',
-            controller: 'CommitCtrl'
         })
 });
 app.config(function($stateProvider, $urlRouterProvider){
@@ -278,7 +278,8 @@ app.factory('repoFactory', function ($rootScope){
         merge: function () {
             var ourSignature = NodeGit.Signature.now("blakeprobinson",
               "bprobinson@zoho.com");
-            NodeGit.Repository.open('/Users/blakerobinson/documents/fullstack/Gitwork/test')
+            console.log($rootScope.repo.path)
+            NodeGit.Repository.open($rootScope.repo.path)
                 .then(function(repository) {
                     return repository.getBranchCommit('test')
                 .then(function (commitBranch) {
