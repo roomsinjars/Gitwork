@@ -27,11 +27,9 @@ app.config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
         .state('commit', {
-<<<<<<< HEAD
-            url: '',
-=======
+
             url: '/commit',
->>>>>>> master
+
             templateUrl: 'window/commit/commit.html',
             controller: 'CommitCtrl'
         })
@@ -43,32 +41,7 @@ app.controller('CommitCtrl', function ($scope, $state, $rootScope, repoFactory) 
 	}
 
 });
-<<<<<<< HEAD
-app.factory('fileSystemFactory', function ($rootScope){
-	return {
-		makeDir: function (name, cb) {
-			var filePath = __dirname + '/' + name;
-			mkdirp(filePath, function (err) {
-				console.log('into the makeDir function')
-			    if (err) throw err;
-			})
-		},
-		makeDotGitDir: function (name) {
-			var filePath = __dirname + '/' + name + '/.git';
-			mkdirp(filePath, function (err) {
-				console.log('into the makeDotGitDir function')
-			    if (err) throw err;
-			})
-		},
-		makeFile: function (dirName, fileName, fileType) {
-			var filePath = __dirname + '/' + dirName + '/' + fileName;
-			fs.writeFile(filePath, fileName, function(err) {
-			    console.log('into write file function')
-			    if(err) throw err
-			})
-		}
-	}
-=======
+
 app.controller('CommitCtrl', function ($scope, $state, $rootScope, repoFactory) {
 
 	$scope.commit = function (commitMsg) {
@@ -84,7 +57,7 @@ app.config(function($stateProvider, $urlRouterProvider){
             templateUrl: 'window/commit_final/commit_final.html',
             controller: 'CommitCtrl'
         })
->>>>>>> master
+
 });
 app.config(function($stateProvider, $urlRouterProvider){
 
