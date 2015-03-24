@@ -1,6 +1,7 @@
-app.controller('BranchCtrl', function ($scope, $state, repoFactory) {
+app.controller('BranchCtrl', function ($scope, $state, repoFactory, $rootScope) {
 	$scope.createBranch = function (branchName) {
       repoFactory.createBranch(branchName)
-      $scope.branchName = ''
+      $rootScope.branchName = branchName;
+      $scope.branchName = '';
     }
 });

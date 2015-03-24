@@ -20,43 +20,12 @@ app.config(function($stateProvider, $urlRouterProvider){
             controller: 'BranchCtrl'
         })
 });
-app.controller('BranchCtrl', function ($scope, $state, repoFactory) {
+app.controller('BranchCtrl', function ($scope, $state, repoFactory, $rootScope) {
 	$scope.createBranch = function (branchName) {
       repoFactory.createBranch(branchName)
-      $scope.branchName = ''
+      $rootScope.branchName = branchName;
+      $scope.branchName = '';
     }
-});
-app.config(function($stateProvider, $urlRouterProvider){
-
-    $stateProvider
-        .state('commit', {
-            url: '/commit',
-            templateUrl: 'window/commit/commit.html',
-            controller: 'CommitCtrl'
-        })
-});
-app.controller('CommitCtrl', function ($scope, $state, $rootScope, repoFactory) {
-
-	$scope.commit = function (commitMsg) {
-		repoFactory.commit($rootScope.repo, commitMsg)
-	}
-
-});
-app.controller('CommitCtrl', function ($scope, $state, $rootScope, repoFactory) {
-
-	$scope.commit = function (commitMsg) {
-		repoFactory.commit($rootScope.repo, commitMsg)
-	}
-
-});
-app.config(function($stateProvider, $urlRouterProvider){
-
-    $stateProvider
-        .state('commit_final', {
-            url: '/commit_final',
-            templateUrl: 'window/commit_final/commit_final.html',
-            controller: 'CommitCtrl'
-        })
 });
 app.factory('fileSystemFactory', function ($rootScope){
 	return {
@@ -139,12 +108,19 @@ if (process.platform === "darwin") {
 app.config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
-        .state('merge', {
-            url: '/merge',
-            templateUrl: 'window/merge/merge.html',
+        .state('commit', {
+            url: '/commit',
+            templateUrl: 'window/commit/commit.html',
+            controller: 'CommitCtrl'
         })
 });
+app.controller('CommitCtrl', function ($scope, $state, $rootScope, repoFactory) {
 
+	$scope.commit = function (commitMsg) {
+		repoFactory.commit($rootScope.repo, commitMsg)
+	}
+
+});
 app.config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
@@ -160,6 +136,40 @@ app.config(function($stateProvider, $urlRouterProvider){
         .state('push', {
             url: '/push',
             templateUrl: 'window/push/push.html',
+        })
+});
+app.config(function($stateProvider, $urlRouterProvider){
+
+    $stateProvider
+        .state('merge', {
+            url: '/merge',
+            templateUrl: 'window/merge/merge.html',
+            controller: 'MergeCtrl'
+        })
+});
+
+app.controller('MergeCtrl', function ($scope, repoFactory, $rootScope) {
+
+    $scope.merge = function () {
+        repoFactory.merge()
+    }
+
+
+});
+app.controller('CommitCtrl', function ($scope, $state, $rootScope, repoFactory) {
+
+	$scope.commit = function (commitMsg) {
+		repoFactory.commit($rootScope.repo, commitMsg)
+	}
+
+});
+app.config(function($stateProvider, $urlRouterProvider){
+
+    $stateProvider
+        .state('commit_final', {
+            url: '/commit_final',
+            templateUrl: 'window/commit_final/commit_final.html',
+            controller: 'CommitCtrl'
         })
 });
 app.config(function($stateProvider, $urlRouterProvider){
@@ -264,6 +274,37 @@ app.factory('repoFactory', function ($rootScope){
             repository.commit(commitMsg, options, function (err) {
                 if (err) throw err;
             })
+        }, 
+        merge: function () {
+            var ourSignature = NodeGit.Signature.now("blakeprobinson",
+              "bprobinson@zoho.com");
+            NodeGit.Repository.open('/Users/blakerobinson/documents/fullstack/Gitwork/test')
+                .then(function(repository) {
+                    return repository.getBranchCommit('test')
+                .then(function (commitBranch) {
+                    return repository.getBranchCommit('master')
+                .then(function (commitMaster) {
+                        console.log('commitBranch', commitBranch);
+                        console.log('commitMaster', commitMaster);
+                    return NodeGit.Merge.commits(repository, commitBranch, commitMaster)
+                .then(function (index) {
+                    if (!index.hasConflicts()) {
+                        index.write();
+                        console.log('this is the index', index)
+                        return index.writeTreeTo(repository);
+                    }
+                    })
+                .then(function (oid) {
+                    console.log('this is the oid', oid)
+                    return repository.createCommit('HEAD', ourSignature,
+                        ourSignature, "we merged their commit", oid, [commitBranch, commitMaster]);
+                })
+                .done(function (commitId) {
+                    console.log("New Commit: ", commitId);
+                })
+                    })
+                })
+            });
         }
     }
 

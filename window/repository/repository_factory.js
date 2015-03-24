@@ -68,6 +68,37 @@ app.factory('repoFactory', function ($rootScope){
             repository.commit(commitMsg, options, function (err) {
                 if (err) throw err;
             })
+        }, 
+        merge: function () {
+            var ourSignature = NodeGit.Signature.now("blakeprobinson",
+              "bprobinson@zoho.com");
+            NodeGit.Repository.open('/Users/blakerobinson/documents/fullstack/Gitwork/test')
+                .then(function(repository) {
+                    return repository.getBranchCommit('test')
+                .then(function (commitBranch) {
+                    return repository.getBranchCommit('master')
+                .then(function (commitMaster) {
+                        console.log('commitBranch', commitBranch);
+                        console.log('commitMaster', commitMaster);
+                    return NodeGit.Merge.commits(repository, commitBranch, commitMaster)
+                .then(function (index) {
+                    if (!index.hasConflicts()) {
+                        index.write();
+                        console.log('this is the index', index)
+                        return index.writeTreeTo(repository);
+                    }
+                    })
+                .then(function (oid) {
+                    console.log('this is the oid', oid)
+                    return repository.createCommit('HEAD', ourSignature,
+                        ourSignature, "we merged their commit", oid, [commitBranch, commitMaster]);
+                })
+                .done(function (commitId) {
+                    console.log("New Commit: ", commitId);
+                })
+                    })
+                })
+            });
         }
     }
 
