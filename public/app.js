@@ -252,9 +252,6 @@ app.directive('navbar', function () {
 
 });
 
-app.run(['$state', function ($state) {
-  $state.transitionTo('home');
-}])
 
 
 
