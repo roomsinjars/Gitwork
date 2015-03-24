@@ -19,11 +19,49 @@ app.config(function($stateProvider, $urlRouterProvider){
             controller: 'BranchCtrl'
         })
 });
-app.controller('BranchCtrl', function ($scope) {
-    $scope.branchNames = [
-    {name: 'master'},
-    {name: 'myFeature'}
-    ]
+app.controller('BranchCtrl', function ($scope, $state) {
+
+});
+app.config(function($stateProvider, $urlRouterProvider){
+
+    $stateProvider
+        .state('commit', {
+            url: '',
+            templateUrl: 'window/commit/commit.html',
+            controller: 'CommitCtrl'
+        })
+});
+app.controller('CommitCtrl', function ($scope, $state, $rootScope, repoFactory) {
+
+	$scope.commit = function (commitMsg) {
+		repoFactory.commit($rootScope.repo, commitMsg)
+	}
+
+});
+app.factory('fileSystemFactory', function ($rootScope){
+	return {
+		makeDir: function (name, cb) {
+			var filePath = __dirname + '/' + name;
+			mkdirp(filePath, function (err) {
+				console.log('into the makeDir function')
+			    if (err) throw err;
+			})
+		},
+		makeDotGitDir: function (name) {
+			var filePath = __dirname + '/' + name + '/.git';
+			mkdirp(filePath, function (err) {
+				console.log('into the makeDotGitDir function')
+			    if (err) throw err;
+			})
+		},
+		makeFile: function (dirName, fileName, fileType) {
+			var filePath = __dirname + '/' + dirName + '/' + fileName;
+			fs.writeFile(filePath, fileName, function(err) {
+			    console.log('into write file function')
+			    if(err) throw err
+			})
+		}
+	}
 });
 app.config(function($stateProvider, $urlRouterProvider){
 
@@ -90,11 +128,11 @@ app.controller('RepoCtrl', function ($scope, repoFactory, $rootScope) {
         $rootScope.repoName = repoName;
         $scope.repoName = '';
 
-
     }
     $scope.commit = function (commitMessage) {
         repoFactory.commit(commitMessage, $rootScope.repo, $rootScope.repoName)
     }
+
     $scope.createBranch = function (branchName) {
       repoFactory.createBranch(branchName)
       $scope.branchName = ''
@@ -102,7 +140,7 @@ app.controller('RepoCtrl', function ($scope, repoFactory, $rootScope) {
 
 });
 app.factory('repoFactory', function ($rootScope){
-    
+
     return {
 
         cloneRepo: function(url){
@@ -125,10 +163,29 @@ app.factory('repoFactory', function ($rootScope){
                 if (err) throw err;
                 mkdirp(__dirname + '/' + name + '/'+'.git', function (err) {
                   if (err) throw err;
-                  git.init(__dirname+'/'+name, true, function (err, _repo) {
+                  git.init(__dirname+'/'+name, function (err, _repo) {
                       var giftRepo = _repo
                       console.log(giftRepo)
                       $rootScope.repo = giftRepo
+                      fs.writeFile(__dirname+'/'+name + '/README.md', "README", function(err) {
+                          if(err) throw err
+                          $rootScope.repo.add('README.md', function (err) {
+                             if (err) throw err;
+                             var author = "blakeprobinson <bprobinson@zoho.com>";
+                             $rootScope.repo.identify(author, function (err) {
+                                console.log('entered identify function')
+                                console.log('post-identify repo', $rootScope.repo.identity)
+                                var options = {
+                                all: true,
+                                amend: false,
+                                author: "blakeprobinson <bprobinson@zoho.com>"
+                                }
+                                 $rootScope.repo.commit("Initial Commit", options, function (err) {
+                                    if (err) throw err;
+                                })
+                             })                             
+                          })
+                      });   
                   })
 
                 })
@@ -140,14 +197,12 @@ app.factory('repoFactory', function ($rootScope){
                 if (err) throw err;
             })
         },
-        commit: function (commitMessage, repository, repoName) {
+        commit: function (repository, commitMsg) {
 
-            giftRepo.commit(commitMessage, true, function (err) {
+            repository.commit(commitMsg, true, function (err) {
                 if (err) throw err;
             })
-
         }
-
     }
 
 })
