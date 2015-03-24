@@ -9,12 +9,13 @@ var fse = promisify(require("fs-extra"));
 var __dirname = process.env.PWD;
 var git = require("gift");
 var mkdirp = require('mkdirp');
+var install = require('./install.json');
 
 app.config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
         .state('branch', {
-            url: '/',
+            url: '/branch',
             templateUrl: 'window/branch/branch.html',
             controller: 'BranchCtrl'
         })
@@ -26,7 +27,11 @@ app.config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
         .state('commit', {
+<<<<<<< HEAD
             url: '',
+=======
+            url: '/commit',
+>>>>>>> master
             templateUrl: 'window/commit/commit.html',
             controller: 'CommitCtrl'
         })
@@ -38,6 +43,7 @@ app.controller('CommitCtrl', function ($scope, $state, $rootScope, repoFactory) 
 	}
 
 });
+<<<<<<< HEAD
 app.factory('fileSystemFactory', function ($rootScope){
 	return {
 		makeDir: function (name, cb) {
@@ -62,12 +68,29 @@ app.factory('fileSystemFactory', function ($rootScope){
 			})
 		}
 	}
+=======
+app.controller('CommitCtrl', function ($scope, $state, $rootScope, repoFactory) {
+
+	$scope.commit = function (commitMsg) {
+		repoFactory.commit($rootScope.repo, commitMsg)
+	}
+
+});
+app.config(function($stateProvider, $urlRouterProvider){
+
+    $stateProvider
+        .state('commit_final', {
+            url: '/commit_final',
+            templateUrl: 'window/commit_final/commit_final.html',
+            controller: 'CommitCtrl'
+        })
+>>>>>>> master
 });
 app.config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
         .state('home', {
-            url: '',
+            url: '/home',
             templateUrl: 'window/home/home.html',
             controller: 'HomeController'
         })
@@ -85,6 +108,11 @@ app.controller('HomeController', function ($scope, $state) {
         $state.go('branch')
 
     };
+    console.log("HomeController", install.value);
+    if (install.value==="false") {
+        
+        console.log("got here");
+    }
 
     fs.readdir(__dirname, function(err,data){
         if (err) throw err;
@@ -93,9 +121,17 @@ app.controller('HomeController', function ($scope, $state) {
         }
         return $scope.changeStateNoRepo();
     })
-
 });
 
+app.factory('homeFactory', function ($rootScope){
+    
+  return {
+
+  	getDirectory: function(){
+  		return directoryName;
+  	}
+	}
+})
 if (process.platform === "darwin") {
     var mb = new gui.Menu({type: 'menubar'});
     mb.createMacBuiltin('RoboPaint', {
@@ -106,8 +142,34 @@ if (process.platform === "darwin") {
 app.config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
+        .state('merge', {
+            url: '/merge',
+            templateUrl: 'window/merge/merge.html',
+        })
+});
+
+app.config(function($stateProvider, $urlRouterProvider){
+
+    $stateProvider
+        .state('merge_ready', {
+            url: '/merge_ready',
+            templateUrl: 'window/merge_ready/merge_ready.html'
+        })
+});
+
+app.config(function($stateProvider, $urlRouterProvider){
+
+    $stateProvider
+        .state('push', {
+            url: '/push',
+            templateUrl: 'window/push/push.html',
+        })
+});
+app.config(function($stateProvider, $urlRouterProvider){
+
+    $stateProvider
         .state('noRepo', {
-            url: '',
+            url: '/noRepo',
             templateUrl: 'window/repository/repository.html',
             controller: 'RepoCtrl'
         })
@@ -184,6 +246,7 @@ app.factory('repoFactory', function ($rootScope){
                                     if (err) throw err;
                                 })
                              })                             
+
                           })
                       });   
                   })
@@ -207,6 +270,16 @@ app.factory('repoFactory', function ($rootScope){
 
 })
 
+app.config(function($stateProvider, $urlRouterProvider){
+
+    $stateProvider
+        .state('work', {
+            url: '/work',
+            templateUrl: 'window/work/work.html'
+        })
+});
+
+
 app.directive('navbar', function () {
 
     return {
@@ -217,7 +290,9 @@ app.directive('navbar', function () {
 
 });
 
-
+app.run(['$state', function ($state) {
+  $state.transitionTo('home');
+}])
 
 
 

@@ -9,3 +9,4 @@ var fse = promisify(require("fs-extra"));
 var __dirname = process.env.PWD;
 var git = require("gift");
 var mkdirp = require('mkdirp');
+var install = require('./install.json');
