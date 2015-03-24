@@ -10,6 +10,11 @@ app.controller('HomeController', function ($scope, $state) {
         $state.go('branch')
 
     };
+    console.log("HomeController", install.value);
+    if (install.value==="false") {
+        
+        console.log("got here");
+    }
 
     fs.readdir(__dirname, function(err,data){
         if (err) throw err;
@@ -18,5 +23,4 @@ app.controller('HomeController', function ($scope, $state) {
         }
         return $scope.changeStateNoRepo();
     })
-
 });
