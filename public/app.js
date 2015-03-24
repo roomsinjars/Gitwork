@@ -11,6 +11,10 @@ var git = require("gift");
 var mkdirp = require('mkdirp');
 var install = require('./install.json');
 
+app.config(function ($urlRouterProvider, $locationProvider) {
+    // If we go to a URL that ui-router doesn't have registered, go to the "/" url.
+    $urlRouterProvider.otherwise('/');
+});
 app.config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
@@ -27,9 +31,7 @@ app.config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
         .state('commit', {
-
             url: '/commit',
-
             templateUrl: 'window/commit/commit.html',
             controller: 'CommitCtrl'
         })
@@ -41,7 +43,6 @@ app.controller('CommitCtrl', function ($scope, $state, $rootScope, repoFactory) 
 	}
 
 });
-
 app.controller('CommitCtrl', function ($scope, $state, $rootScope, repoFactory) {
 
 	$scope.commit = function (commitMsg) {
@@ -57,13 +58,37 @@ app.config(function($stateProvider, $urlRouterProvider){
             templateUrl: 'window/commit_final/commit_final.html',
             controller: 'CommitCtrl'
         })
-
+});
+app.factory('fileSystemFactory', function ($rootScope){
+	return {
+		makeDir: function (name, cb) {
+			var filePath = __dirname + '/' + name;
+			mkdirp(filePath, function (err) {
+				console.log('into the makeDir function')
+			    if (err) throw err;
+			})
+		},
+		makeDotGitDir: function (name) {
+			var filePath = __dirname + '/' + name + '/.git';
+			mkdirp(filePath, function (err) {
+				console.log('into the makeDotGitDir function')
+			    if (err) throw err;
+			})
+		},
+		makeFile: function (dirName, fileName, fileType) {
+			var filePath = __dirname + '/' + dirName + '/' + fileName;
+			fs.writeFile(filePath, fileName, function(err) {
+			    console.log('into write file function')
+			    if(err) throw err
+			})
+		}
+	}
 });
 app.config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
         .state('home', {
-            url: '/home',
+            url: '/',
             templateUrl: 'window/home/home.html',
             controller: 'HomeController'
         })
@@ -219,7 +244,6 @@ app.factory('repoFactory', function ($rootScope){
                                     if (err) throw err;
                                 })
                              })                             
-
                           })
                       });   
                   })
@@ -262,6 +286,7 @@ app.directive('navbar', function () {
     };
 
 });
+
 
 
 
