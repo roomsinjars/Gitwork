@@ -27,7 +27,9 @@ app.config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
         .state('commit', {
+
             url: '/commit',
+
             templateUrl: 'window/commit/commit.html',
             controller: 'CommitCtrl'
         })
@@ -39,6 +41,7 @@ app.controller('CommitCtrl', function ($scope, $state, $rootScope, repoFactory) 
 	}
 
 });
+
 app.controller('CommitCtrl', function ($scope, $state, $rootScope, repoFactory) {
 
 	$scope.commit = function (commitMsg) {
@@ -54,6 +57,7 @@ app.config(function($stateProvider, $urlRouterProvider){
             templateUrl: 'window/commit_final/commit_final.html',
             controller: 'CommitCtrl'
         })
+
 });
 app.config(function($stateProvider, $urlRouterProvider){
 
@@ -199,16 +203,23 @@ app.factory('repoFactory', function ($rootScope){
                       console.log(giftRepo)
                       $rootScope.repo = giftRepo
                       fs.writeFile(__dirname+'/'+name + '/README.md', "README", function(err) {
-                          if(err) {
-                              return console.log(err);
-                          }
+                          if(err) throw err
                           $rootScope.repo.add('README.md', function (err) {
-                             $rootScope.repo.commit("Initial Commit", true, function (err) {
-                                if (err) throw err;
-                                // $rootScope.repo.create_branch('test', function (err) {
-                                //     if (err) throw err;
-                                // })
-                            })
+                             if (err) throw err;
+                             var author = "blakeprobinson <bprobinson@zoho.com>";
+                             $rootScope.repo.identify(author, function (err) {
+                                console.log('entered identify function')
+                                console.log('post-identify repo', $rootScope.repo.identity)
+                                var options = {
+                                all: true,
+                                amend: false,
+                                author: "blakeprobinson <bprobinson@zoho.com>"
+                                }
+                                 $rootScope.repo.commit("Initial Commit", options, function (err) {
+                                    if (err) throw err;
+                                })
+                             })                             
+
                           })
                       });   
                   })
