@@ -14,17 +14,37 @@ app.config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
         .state('branch', {
-            url: '/',
+            url: '/branch',
             templateUrl: 'window/branch/branch.html',
             controller: 'BranchCtrl'
         })
 });
-app.controller('BranchCtrl', function ($scope) {
-    $scope.branchNames = [
-    {name: 'master'},
-    {name: 'myFeature'}
-    ]
+app.controller('BranchCtrl', function ($scope, $state) {
+
 });
+app.config(function($stateProvider, $urlRouterProvider){
+
+    $stateProvider
+        .state('commit', {
+            url: '/commit',
+            templateUrl: 'window/commit/commit.html',
+            controller: 'CommitCtrl'
+        })
+});
+app.controller('CommitCtrl', function ($scope, $state, $rootScope, repoFactory) {
+
+	$scope.commit = function (commitMsg) {
+		repoFactory.commit($rootScope.repo, commitMsg)
+	}
+
+});
+if (process.platform === "darwin") {
+    var mb = new gui.Menu({type: 'menubar'});
+    mb.createMacBuiltin('RoboPaint', {
+        hideEdit: false
+    });
+    gui.Window.get().menu = mb;
+}
 app.config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
@@ -58,18 +78,20 @@ app.controller('HomeController', function ($scope, $state) {
 
 });
 
-if (process.platform === "darwin") {
-    var mb = new gui.Menu({type: 'menubar'});
-    mb.createMacBuiltin('RoboPaint', {
-        hideEdit: false
-    });
-    gui.Window.get().menu = mb;
-}
+app.config(function($stateProvider, $urlRouterProvider){
+
+    $stateProvider
+        .state('merge_ready', {
+            url: '/merge_ready',
+            templateUrl: 'window/merge_ready/merge_ready.html'
+        })
+});
+
 app.config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
         .state('noRepo', {
-            url: '',
+            url: '/noRepo',
             templateUrl: 'window/repository/repository.html',
             controller: 'RepoCtrl'
         })
@@ -90,11 +112,11 @@ app.controller('RepoCtrl', function ($scope, repoFactory, $rootScope) {
         $rootScope.repoName = repoName;
         $scope.repoName = '';
 
-
     }
     $scope.commit = function (commitMessage) {
         repoFactory.commit(commitMessage, $rootScope.repo, $rootScope.repoName)
     }
+
     $scope.createBranch = function (branchName) {
       repoFactory.createBranch(branchName)
       $scope.branchName = ''
@@ -102,7 +124,7 @@ app.controller('RepoCtrl', function ($scope, repoFactory, $rootScope) {
 
 });
 app.factory('repoFactory', function ($rootScope){
-    
+
     return {
 
         cloneRepo: function(url){
@@ -125,10 +147,23 @@ app.factory('repoFactory', function ($rootScope){
                 if (err) throw err;
                 mkdirp(__dirname + '/' + name + '/'+'.git', function (err) {
                   if (err) throw err;
-                  git.init(__dirname+'/'+name, true, function (err, _repo) {
+                  git.init(__dirname+'/'+name, function (err, _repo) {
                       var giftRepo = _repo
                       console.log(giftRepo)
                       $rootScope.repo = giftRepo
+                      fs.writeFile(__dirname+'/'+name + '/README.md', "README", function(err) {
+                          if(err) {
+                              return console.log(err);
+                          }
+                          $rootScope.repo.add('README.md', function (err) {
+                             $rootScope.repo.commit("Initial Commit", true, function (err) {
+                                if (err) throw err;
+                                // $rootScope.repo.create_branch('test', function (err) {
+                                //     if (err) throw err;
+                                // })
+                            })
+                          })
+                      });   
                   })
 
                 })
@@ -140,17 +175,25 @@ app.factory('repoFactory', function ($rootScope){
                 if (err) throw err;
             })
         },
-        commit: function (commitMessage, repository, repoName) {
+        commit: function (repository, commitMsg) {
 
-            giftRepo.commit(commitMessage, true, function (err) {
+            repository.commit(commitMsg, true, function (err) {
                 if (err) throw err;
             })
-
         }
-
     }
 
 })
+
+app.config(function($stateProvider, $urlRouterProvider){
+
+    $stateProvider
+        .state('work', {
+            url: '/work',
+            templateUrl: 'window/work/work.html'
+        })
+});
+
 
 app.directive('navbar', function () {
 
