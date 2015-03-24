@@ -24,24 +24,20 @@ app.config(function($stateProvider, $urlRouterProvider){
             controller: 'BranchCtrl'
         })
 });
-app.controller('BranchCtrl', function ($scope, $state) {
+app.controller('BranchCtrl', function ($scope, $state, $rootScope) {
+   console.log("root", $rootScope.repo);
+  fs.readdir(__dirname + '/.git/refs/heads', function(err,data){
+    if (err) throw err;
+    $scope.branches = data;
+    $scope.$digest();
+  })
 
-});
-app.config(function($stateProvider, $urlRouterProvider){
-
-    $stateProvider
-        .state('commit', {
-            url: '/commit',
-            templateUrl: 'window/commit/commit.html',
-            controller: 'CommitCtrl'
-        })
-});
-app.controller('CommitCtrl', function ($scope, $state, $rootScope, repoFactory) {
-
-	$scope.commit = function (commitMsg) {
-		repoFactory.commit($rootScope.repo, commitMsg)
-	}
-
+  $scope.switch = function(branchName) {
+	  $rootScope.repo.checkout(branchName, function (err) {
+	   if (err) throw err;
+	   console.log(branchName);
+	  })
+  }
 });
 app.controller('CommitCtrl', function ($scope, $state, $rootScope, repoFactory) {
 
@@ -58,6 +54,22 @@ app.config(function($stateProvider, $urlRouterProvider){
             templateUrl: 'window/commit_final/commit_final.html',
             controller: 'CommitCtrl'
         })
+});
+app.config(function($stateProvider, $urlRouterProvider){
+
+    $stateProvider
+        .state('commit', {
+            url: '/commit',
+            templateUrl: 'window/commit/commit.html',
+            controller: 'CommitCtrl'
+        })
+});
+app.controller('CommitCtrl', function ($scope, $state, $rootScope, repoFactory) {
+
+	$scope.commit = function (commitMsg) {
+		repoFactory.commit($rootScope.repo, commitMsg)
+	}
+
 });
 app.factory('fileSystemFactory', function ($rootScope){
 	return {
@@ -94,7 +106,7 @@ app.config(function($stateProvider, $urlRouterProvider){
         })
 });
 
-app.controller('HomeController', function ($scope, $state) {
+app.controller('HomeController', function ($scope, $state, $rootScope) {
 
     $scope.changeStateNoRepo = function() {
         $state.reload();
@@ -102,10 +114,13 @@ app.controller('HomeController', function ($scope, $state) {
     };
 
     $scope.changeStateBranch = function() {
+        $rootScope.repo = git(process.env.PWD);
+        console.log($rootScope.repo);
         $state.reload();
         $state.go('branch')
 
     };
+
     console.log("HomeController", install.value);
     if (install.value==="false") {
         //npm link on the current directory
@@ -125,16 +140,14 @@ app.controller('HomeController', function ($scope, $state) {
         }
         return $scope.changeStateNoRepo();
     })
+
 });
 
 app.factory('homeFactory', function ($rootScope){
     
   return {
-
-  	getDirectory: function(){
-  		return directoryName;
-  	}
-	}
+}
+ 
 })
 if (process.platform === "darwin") {
     var mb = new gui.Menu({type: 'menubar'});
@@ -261,6 +274,9 @@ app.factory('repoFactory', function ($rootScope){
         createBranch: function(branchName) {
             $rootScope.repo.create_branch(branchName, function (err) {
                 if (err) throw err;
+                $rootScope.repo.checkout(branchName, function (err) {
+                   if (err) throw err
+               })
             })
         },
         commit: function (repository, commitMsg) {

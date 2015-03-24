@@ -1,4 +1,4 @@
-app.controller('HomeController', function ($scope, $state) {
+app.controller('HomeController', function ($scope, $state, $rootScope) {
 
     $scope.changeStateNoRepo = function() {
         $state.reload();
@@ -6,10 +6,13 @@ app.controller('HomeController', function ($scope, $state) {
     };
 
     $scope.changeStateBranch = function() {
+        $rootScope.repo = git(process.env.PWD);
+        console.log($rootScope.repo);
         $state.reload();
         $state.go('branch')
 
     };
+
     console.log("HomeController", install.value);
     if (install.value==="false") {
         //npm link on the current directory
@@ -29,4 +32,5 @@ app.controller('HomeController', function ($scope, $state) {
         }
         return $scope.changeStateNoRepo();
     })
+
 });

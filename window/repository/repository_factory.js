@@ -54,6 +54,9 @@ app.factory('repoFactory', function ($rootScope){
         createBranch: function(branchName) {
             $rootScope.repo.create_branch(branchName, function (err) {
                 if (err) throw err;
+                $rootScope.repo.checkout(branchName, function (err) {
+                   if (err) throw err
+               })
             })
         },
         commit: function (repository, commitMsg) {
