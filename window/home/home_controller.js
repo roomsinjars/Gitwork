@@ -13,7 +13,7 @@ app.controller('HomeController', function ($scope, $state) {
     console.log("HomeController", install.value);
     if (install.value==="false") {
         
-        console.log("got here");
+        console.log("got here", __dirname, process.cwd());
     }
 
     fs.readdir(__dirname, function(err,data){

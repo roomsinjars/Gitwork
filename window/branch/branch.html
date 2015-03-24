@@ -1,24 +1,31 @@
-<div class='container theme-showcase' role='main'>
-    <!-- Main jumbotron for a primary marketing message or call to action -->
-    <div class="form-group">
-      <label class="control-label">Switch to Branch</label>
-      <div>
-        <span class="input-group-addon"></span>
-        
-        <span class="input-group-btn">
-          <button class="btn btn-default" type="button" ui-sref="work">Switch</button>
-        </span>
-      </div>
+<div class="alert alert-dismissible alert-info">
+    <h4>Time to make a branch!</h4>
+    <p>If you have a branch you would like to switch to you can do it here.  Otherwise, create a new branch below.</p>
+</div>
+
+<div class="form-group">
+    <h3>Choose a branch to use:</h3>
+    <div class="input-group">
+        <span class="input-group-addon">Branch:</span>
+        <input type="text" class="form-control" ng-model="repoUrl">
+          <span class="input-group-btn">
+            <button class="btn btn-primary" type="button" ui-sref="work">Select</button>
+          </span>
     </div>
-    <div class="form-group">
-      <label class="control-label">Create a Branch</label>
-      <div class="input-group">
-        <span class="input-group-addon">Branch name</span>
+</div>
+
+<div class="form-group">
+    <h3>Create a new branch:</h3>
+    <div class="input-group">
+        <span class="input-group-addon">Feature:</span>
         <input type="text" class="form-control" ng-model="branchName">
-        <span class="input-group-btn">
-          <button class="btn btn-default" type="button" ui-sref="work">Create</button>
-        </span>
-      </div>
+          <span class="input-group-btn">
+            <button class="btn btn-primary" type="button" ui-sref="work">Create</button>
+          </span>
     </div>
-</div> <!-- /container -->
+</div>
+
+
+
+
 
