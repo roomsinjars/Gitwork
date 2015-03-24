@@ -49,19 +49,12 @@ app.controller('CommitCtrl', function ($scope, $state, $rootScope, repoFactory) 
 app.config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
-        .state('commit', {
-            url: '/commit',
-            templateUrl: 'window/commit/commit.html',
+        .state('commit_final', {
+            url: '/commit_final',
+            templateUrl: 'window/commit_final/commit_final.html',
             controller: 'CommitCtrl'
         })
 });
-if (process.platform === "darwin") {
-    var mb = new gui.Menu({type: 'menubar'});
-    mb.createMacBuiltin('RoboPaint', {
-        hideEdit: false
-    });
-    gui.Window.get().menu = mb;
-}
 app.config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
@@ -108,6 +101,21 @@ app.factory('homeFactory', function ($rootScope){
   	}
 	}
 })
+if (process.platform === "darwin") {
+    var mb = new gui.Menu({type: 'menubar'});
+    mb.createMacBuiltin('RoboPaint', {
+        hideEdit: false
+    });
+    gui.Window.get().menu = mb;
+}
+app.config(function($stateProvider, $urlRouterProvider){
+
+    $stateProvider
+        .state('merge', {
+            url: '/merge',
+            templateUrl: 'window/merge/merge.html',
+        })
+});
 
 app.config(function($stateProvider, $urlRouterProvider){
 
@@ -118,7 +126,14 @@ app.config(function($stateProvider, $urlRouterProvider){
         })
 });
 
+app.config(function($stateProvider, $urlRouterProvider){
 
+    $stateProvider
+        .state('push', {
+            url: '/push',
+            templateUrl: 'window/push/push.html',
+        })
+});
 app.config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
@@ -237,7 +252,9 @@ app.directive('navbar', function () {
 
 });
 
-
+app.run(['$state', function ($state) {
+  $state.transitionTo('home');
+}])
 
 
 
