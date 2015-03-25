@@ -18,6 +18,22 @@ app.config(function ($urlRouterProvider, $locationProvider) {
 app.config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
+        .state('commit', {
+            url: '/commit',
+            templateUrl: 'window/commit/commit.html',
+            controller: 'CommitCtrl'
+        })
+});
+app.controller('CommitCtrl', function ($scope, $state, $rootScope, repoFactory) {
+
+	$scope.commit = function (commitMsg) {
+		repoFactory.commit($rootScope.repo, commitMsg)
+	}
+
+});
+app.config(function($stateProvider, $urlRouterProvider){
+
+    $stateProvider
         .state('branch', {
             url: '/branch',
             templateUrl: 'window/branch/branch.html',
@@ -53,22 +69,6 @@ app.controller('BranchCtrl', function ($scope, $state, $rootScope, repoFactory) 
 
   	})
   }
-});
-app.config(function($stateProvider, $urlRouterProvider){
-
-    $stateProvider
-        .state('commit', {
-            url: '/commit',
-            templateUrl: 'window/commit/commit.html',
-            controller: 'CommitCtrl'
-        })
-});
-app.controller('CommitCtrl', function ($scope, $state, $rootScope, repoFactory) {
-
-	$scope.commit = function (commitMsg) {
-		repoFactory.commit($rootScope.repo, commitMsg)
-	}
-
 });
 app.controller('CommitCtrl', function ($scope, $state, $rootScope, repoFactory) {
 
