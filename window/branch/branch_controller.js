@@ -9,13 +9,17 @@ app.controller('BranchCtrl', function ($scope, $state, $rootScope, branchFactory
 
   $scope.switch = function (branchName) {
   	branchFactory.switchBranch(branchName);
-  		$scope.currentBranch = branchName;
+  	branchFactory.currentBranch = branchName;
+  	console.log("this", branchFactory.currentBranch);
+  		// $scope.currentBranch = branchName;
   }
 
   $scope.newBranch = function(branchName) {
 
-  	$branchFactory.createNewBranch(branchName);
-  		$scope.currentBranch = branchName;
+  	branchFactory.createNewBranch(branchName);
+  	branchFactory.currentBranch = branchName;
+  		// $scope.currentBranch = branchName;
   }
+
 
 });
