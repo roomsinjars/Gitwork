@@ -11,6 +11,10 @@ var git = require("gift");
 var mkdirp = require('mkdirp');
 var install = require('./install.json');
 
+app.config(function ($urlRouterProvider, $locationProvider) {
+    // If we go to a URL that ui-router doesn't have registered, go to the "/" url.
+    $urlRouterProvider.otherwise('/');
+});
 app.config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
@@ -20,12 +24,35 @@ app.config(function($stateProvider, $urlRouterProvider){
             controller: 'BranchCtrl'
         })
 });
-app.controller('BranchCtrl', function ($scope, $state, repoFactory, $rootScope) {
-	$scope.createBranch = function (branchName) {
-      repoFactory.createBranch(branchName)
+app.controller('BranchCtrl', function ($scope, $state, $rootScope, repoFactory) {
+   console.log("root", $rootScope.repo);
+  fs.readdir(__dirname + '/.git/refs/heads', function(err,data){
+    if (err) throw err;
+    $scope.branches = data;
+    $scope.$digest();
+  })
+  	// $scope.createBranch = function (branchName) {
+   //      repoFactory.createBranch(branchName)
+        
+   //      ;
+   //    }
+
+  $scope.switch = function(branchName) {
+	  $rootScope.repo.checkout(branchName, function (err) {
+	   if (err) throw err;
+	   console.log(branchName);
+	  })
+  }
+
+  $scope.newBranch = function(branchName) {
+  	$rootScope.repo.create_branch(branchName, function (err){
+  		if (err) throw err;
       $rootScope.branchName = branchName;
-      $scope.branchName = '';
-    }
+      $scope.branchName = ''
+  		$scope.switch(branchName);
+
+  	})
+  }
 });
 app.config(function($stateProvider, $urlRouterProvider){
 
@@ -88,13 +115,13 @@ app.config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
         .state('home', {
-            url: '/home',
+            url: '/',
             templateUrl: 'window/home/home.html',
             controller: 'HomeController'
         })
 });
 
-app.controller('HomeController', function ($scope, $state) {
+app.controller('HomeController', function ($scope, $state, $rootScope) {
 
     $scope.changeStateNoRepo = function() {
         $state.reload();
@@ -102,16 +129,25 @@ app.controller('HomeController', function ($scope, $state) {
     };
 
     $scope.changeStateBranch = function() {
+        $rootScope.repo = git(process.env.PWD);
+        console.log($rootScope.repo);
         $state.reload();
         $state.go('branch')
 
     };
+
     console.log("HomeController", install.value);
     if (install.value==="false") {
-        
-        console.log("got here");
+        //npm link on the current directory
+        var exec = require('child_process').exec;
+        exec('npm link', function(error,stdout){
+            console.log('installed', stdout);
+            fs.writeFile('install.json', '{"value": "true"}', function(err){
+                if (err) throw err;
+                console.log('done');
+            })
+        })
     }
-
     fs.readdir(__dirname, function(err,data){
         if (err) throw err;
         for (var i=0; i<data.length; i++){
@@ -119,16 +155,14 @@ app.controller('HomeController', function ($scope, $state) {
         }
         return $scope.changeStateNoRepo();
     })
+
 });
 
 app.factory('homeFactory', function ($rootScope){
     
   return {
-
-  	getDirectory: function(){
-  		return directoryName;
-  	}
-	}
+}
+ 
 })
 if (process.platform === "darwin") {
     var mb = new gui.Menu({type: 'menubar'});
@@ -263,6 +297,7 @@ app.factory('repoFactory', function ($rootScope){
                 $rootScope.repo.checkout(branchName, function (err) {
                     if (err) throw err
                 })  
+
             })
         },
         commit: function (repository, commitMsg) {
