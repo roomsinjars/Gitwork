@@ -18,9 +18,5 @@ app.controller('RepoCtrl', function ($scope, repoFactory, $rootScope) {
         repoFactory.commit(commitMessage, $rootScope.repo, $rootScope.repoName)
     }
 
-    $scope.createBranch = function (branchName) {
-      repoFactory.createBranch(branchName)
-      $scope.branchName = ''
-    }
 
 });

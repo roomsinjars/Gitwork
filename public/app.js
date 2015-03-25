@@ -24,8 +24,35 @@ app.config(function($stateProvider, $urlRouterProvider){
             controller: 'BranchCtrl'
         })
 });
-app.controller('BranchCtrl', function ($scope, $state) {
+app.controller('BranchCtrl', function ($scope, $state, $rootScope, repoFactory) {
+   console.log("root", $rootScope.repo);
+  fs.readdir(__dirname + '/.git/refs/heads', function(err,data){
+    if (err) throw err;
+    $scope.branches = data;
+    $scope.$digest();
+  })
+  	// $scope.createBranch = function (branchName) {
+   //      repoFactory.createBranch(branchName)
+        
+   //      ;
+   //    }
 
+  $scope.switch = function(branchName) {
+	  $rootScope.repo.checkout(branchName, function (err) {
+	   if (err) throw err;
+	   console.log(branchName);
+	  })
+  }
+
+  $scope.newBranch = function(branchName) {
+  	$rootScope.repo.create_branch(branchName, function (err){
+  		if (err) throw err;
+      $rootScope.branchName = branchName;
+      $scope.branchName = ''
+  		$scope.switch(branchName);
+
+  	})
+  }
 });
 app.config(function($stateProvider, $urlRouterProvider){
 
@@ -94,7 +121,7 @@ app.config(function($stateProvider, $urlRouterProvider){
         })
 });
 
-app.controller('HomeController', function ($scope, $state) {
+app.controller('HomeController', function ($scope, $state, $rootScope) {
 
     $scope.changeStateNoRepo = function() {
         $state.reload();
@@ -102,16 +129,25 @@ app.controller('HomeController', function ($scope, $state) {
     };
 
     $scope.changeStateBranch = function() {
+        $rootScope.repo = git(process.env.PWD);
+        console.log($rootScope.repo);
         $state.reload();
         $state.go('branch')
 
     };
+
     console.log("HomeController", install.value);
     if (install.value==="false") {
-        
-        console.log("got here", __dirname, process.cwd());
+        //npm link on the current directory
+        var exec = require('child_process').exec;
+        exec('npm link', function(error,stdout){
+            console.log('installed', stdout);
+            fs.writeFile('install.json', '{"value": "true"}', function(err){
+                if (err) throw err;
+                console.log('done');
+            })
+        })
     }
-
     fs.readdir(__dirname, function(err,data){
         if (err) throw err;
         for (var i=0; i<data.length; i++){
@@ -119,16 +155,14 @@ app.controller('HomeController', function ($scope, $state) {
         }
         return $scope.changeStateNoRepo();
     })
+
 });
 
 app.factory('homeFactory', function ($rootScope){
     
   return {
-
-  	getDirectory: function(){
-  		return directoryName;
-  	}
-	}
+}
+ 
 })
 app.config(function($stateProvider, $urlRouterProvider){
 
@@ -136,9 +170,18 @@ app.config(function($stateProvider, $urlRouterProvider){
         .state('merge', {
             url: '/merge',
             templateUrl: 'window/merge/merge.html',
+            controller: 'MergeCtrl'
         })
 });
 
+app.controller('MergeCtrl', function ($scope, repoFactory, $rootScope) {
+
+    $scope.merge = function () {
+        repoFactory.merge()
+    }
+
+
+});
 app.config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
@@ -202,10 +245,6 @@ app.controller('RepoCtrl', function ($scope, repoFactory, $rootScope) {
         repoFactory.commit(commitMessage, $rootScope.repo, $rootScope.repoName)
     }
 
-    $scope.createBranch = function (branchName) {
-      repoFactory.createBranch(branchName)
-      $scope.branchName = ''
-    }
 
 });
 app.factory('repoFactory', function ($rootScope){
@@ -264,13 +303,53 @@ app.factory('repoFactory', function ($rootScope){
         createBranch: function(branchName) {
             $rootScope.repo.create_branch(branchName, function (err) {
                 if (err) throw err;
+                $rootScope.repo.checkout(branchName, function (err) {
+                    if (err) throw err
+                })  
+
             })
         },
         commit: function (repository, commitMsg) {
-
-            repository.commit(commitMsg, true, function (err) {
+            var options = {
+            all: true,
+            amend: false,
+            author: "blakeprobinson <bprobinson@zoho.com>"
+            }
+            repository.commit(commitMsg, options, function (err) {
                 if (err) throw err;
             })
+        }, 
+        merge: function () {
+            var ourSignature = NodeGit.Signature.now("blakeprobinson",
+              "bprobinson@zoho.com");
+            console.log($rootScope.repo.path)
+            NodeGit.Repository.open($rootScope.repo.path)
+                .then(function(repository) {
+                    return repository.getBranchCommit('test')
+                .then(function (commitBranch) {
+                    return repository.getBranchCommit('master')
+                .then(function (commitMaster) {
+                        console.log('commitBranch', commitBranch);
+                        console.log('commitMaster', commitMaster);
+                    return NodeGit.Merge.commits(repository, commitBranch, commitMaster)
+                .then(function (index) {
+                    if (!index.hasConflicts()) {
+                        index.write();
+                        console.log('this is the index', index)
+                        return index.writeTreeTo(repository);
+                    }
+                    })
+                .then(function (oid) {
+                    console.log('this is the oid', oid)
+                    return repository.createCommit('HEAD', ourSignature,
+                        ourSignature, "we merged their commit", oid, [commitBranch, commitMaster]);
+                })
+                .done(function (commitId) {
+                    console.log("New Commit: ", commitId);
+                })
+                    })
+                })
+            });
         }
     }
 
