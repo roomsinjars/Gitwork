@@ -12,4 +12,11 @@ app.controller('BranchCtrl', function ($scope, $state, $rootScope) {
 	   console.log(branchName);
 	  })
   }
+
+  $scope.newBranch = function(branchName) {
+  	$rootScope.repo.create_branch(branchName, function (err){
+  		if (err) throw err;
+  		$scope.switch(branchName);
+  	})
+  }
 });
