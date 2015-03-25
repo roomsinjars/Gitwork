@@ -8,20 +8,15 @@
     <div class="input-group">
         <span class="input-group-addon">Merge</span>
         <span class="input-group-btn">
-          <button class="btn btn-primary" type="button" ui-sref="commit_final" ng-click='merge()'>Merge</button>
+          <button class="btn btn-primary" type="button" ng-click='merge()'>Merge</button>
         </span>
     </div>
 </div>
 
-<div class="list-group">
-  <a href="#" class="list-group-item">
-    <h4 class="list-group-item-heading">List group item heading</h4>
-    <p class="list-group-item-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
-  </a>
-  <a href="#" class="list-group-item">
-    <h4 class="list-group-item-heading">List group item heading</h4>
-    <p class="list-group-item-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
-  </a>
+<div class="alert alert-dismissible alert-warning" ng-show='mergeConflictError'>
+  <button type="button" class="close" data-dismiss="alert">×</button>
+  <h4>Warning!</h4>
+  <p>This merge has conflicts.  Go to the files with the conflicts, resolve them and commit the changes.</p>
 </div>
 
 

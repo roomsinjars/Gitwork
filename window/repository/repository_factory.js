@@ -69,6 +69,20 @@ app.factory('repoFactory', function ($rootScope){
             repository.commit(commitMsg, options, function (err) {
                 if (err) throw err;
             })
+        },
+        mergeConflictError: function (errMsg) {
+            return errMsg
+        },
+        statusObject: function (statusObject) {
+            return statusObject
+        },
+
+        status: function (repo) {
+            console.log('this is the repo object', repo)
+            repo.status(function (err, status) {
+                console.log(status.files)
+                this.statusObject(status.files)
+            })
         }, 
         merge: function () {
             var ourSignature = NodeGit.Signature.now("blakeprobinson",
@@ -91,7 +105,7 @@ app.factory('repoFactory', function ($rootScope){
                     } else {
                         //on branch...findInFiles('<<<<<<<<master')
                         //$Q is the promise library for angular
-                        throw new Error('merge conflicts')
+                        throw new Error('This merge has conflicts')
                         //get user to fix merge conflicts before writing
                         //to tree...
                     }   
@@ -102,8 +116,9 @@ app.factory('repoFactory', function ($rootScope){
                         ourSignature, "we merged their commit", oid, [commitBranch, commitMaster]);
                 })
                 .catch(function(error) {
-                    console.log(error)
-                    //return undefined
+                    $rootScope.mergeConflictError = error;
+                    console.log($rootScope.mergeConflictError)
+                    this.mergeConflictError(error)
                 })
                 .done(function (commitId) {
                     if (commitId) {
