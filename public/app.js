@@ -18,6 +18,18 @@ app.config(function ($urlRouterProvider, $locationProvider) {
 app.config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
+        .state('branch', {
+            url: '/branch',
+            templateUrl: 'window/branch/branch.html',
+            controller: 'BranchCtrl'
+        })
+});
+app.controller('BranchCtrl', function ($scope, $state) {
+
+});
+app.config(function($stateProvider, $urlRouterProvider){
+
+    $stateProvider
         .state('commit', {
             url: '/commit',
             templateUrl: 'window/commit/commit.html',
@@ -29,18 +41,6 @@ app.controller('CommitCtrl', function ($scope, $state, $rootScope, repoFactory) 
 	$scope.commit = function (commitMsg) {
 		repoFactory.commit($rootScope.repo, commitMsg)
 	}
-
-});
-app.config(function($stateProvider, $urlRouterProvider){
-
-    $stateProvider
-        .state('branch', {
-            url: '/branch',
-            templateUrl: 'window/branch/branch.html',
-            controller: 'BranchCtrl'
-        })
-});
-app.controller('BranchCtrl', function ($scope, $state) {
 
 });
 app.factory('fileSystemFactory', function ($rootScope){
@@ -130,13 +130,6 @@ app.factory('homeFactory', function ($rootScope){
   	}
 	}
 })
-if (process.platform === "darwin") {
-    var mb = new gui.Menu({type: 'menubar'});
-    mb.createMacBuiltin('RoboPaint', {
-        hideEdit: false
-    });
-    gui.Window.get().menu = mb;
-}
 app.config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
@@ -155,14 +148,30 @@ app.config(function($stateProvider, $urlRouterProvider){
         })
 });
 
+if (process.platform === "darwin") {
+    var mb = new gui.Menu({type: 'menubar'});
+    mb.createMacBuiltin('RoboPaint', {
+        hideEdit: false
+    });
+    gui.Window.get().menu = mb;
+}
 app.config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
         .state('push', {
             url: '/push',
             templateUrl: 'window/push/push.html',
+            controller: 'PushCtrl'
         })
 });
+app.controller('PushCtrl', function ($scope, $rootScope) {
+
+    $scope.push = function () {
+        console.log($rootScope)
+
+    }
+});
+
 app.config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
