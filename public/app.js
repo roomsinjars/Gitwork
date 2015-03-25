@@ -18,18 +18,6 @@ app.config(function ($urlRouterProvider, $locationProvider) {
 app.config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
-        .state('branch', {
-            url: '/branch',
-            templateUrl: 'window/branch/branch.html',
-            controller: 'BranchCtrl'
-        })
-});
-app.controller('BranchCtrl', function ($scope, $state) {
-
-});
-app.config(function($stateProvider, $urlRouterProvider){
-
-    $stateProvider
         .state('commit', {
             url: '/commit',
             templateUrl: 'window/commit/commit.html',
@@ -43,21 +31,17 @@ app.controller('CommitCtrl', function ($scope, $state, $rootScope, repoFactory) 
 	}
 
 });
-app.controller('CommitCtrl', function ($scope, $state, $rootScope, repoFactory) {
-
-	$scope.commit = function (commitMsg) {
-		repoFactory.commit($rootScope.repo, commitMsg)
-	}
-
-});
 app.config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
-        .state('commit_final', {
-            url: '/commit_final',
-            templateUrl: 'window/commit_final/commit_final.html',
-            controller: 'CommitCtrl'
+        .state('branch', {
+            url: '/branch',
+            templateUrl: 'window/branch/branch.html',
+            controller: 'BranchCtrl'
         })
+});
+app.controller('BranchCtrl', function ($scope, $state) {
+
 });
 app.factory('fileSystemFactory', function ($rootScope){
 	return {
@@ -83,6 +67,22 @@ app.factory('fileSystemFactory', function ($rootScope){
 			})
 		}
 	}
+});
+app.controller('CommitCtrl', function ($scope, $state, $rootScope, repoFactory) {
+
+	$scope.commit = function (commitMsg) {
+		repoFactory.commit($rootScope.repo, commitMsg)
+	}
+
+});
+app.config(function($stateProvider, $urlRouterProvider){
+
+    $stateProvider
+        .state('commit_final', {
+            url: '/commit_final',
+            templateUrl: 'window/commit_final/commit_final.html',
+            controller: 'CommitCtrl'
+        })
 });
 app.config(function($stateProvider, $urlRouterProvider){
 
