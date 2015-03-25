@@ -18,6 +18,22 @@ app.config(function ($urlRouterProvider, $locationProvider) {
 app.config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
+        .state('commit', {
+            url: '/commit',
+            templateUrl: 'window/commit/commit.html',
+            controller: 'CommitCtrl'
+        })
+});
+app.controller('CommitCtrl', function ($scope, $state, $rootScope, repoFactory) {
+
+	$scope.commit = function (commitMsg) {
+		repoFactory.commit($rootScope.repo, commitMsg)
+	}
+
+});
+app.config(function($stateProvider, $urlRouterProvider){
+
+    $stateProvider
         .state('branch', {
             url: '/branch',
             templateUrl: 'window/branch/branch.html',
@@ -54,21 +70,21 @@ app.controller('BranchCtrl', function ($scope, $state, $rootScope, repoFactory) 
   	})
   }
 });
-app.config(function($stateProvider, $urlRouterProvider){
-
-    $stateProvider
-        .state('commit', {
-            url: '/commit',
-            templateUrl: 'window/commit/commit.html',
-            controller: 'CommitCtrl'
-        })
-});
 app.controller('CommitCtrl', function ($scope, $state, $rootScope, repoFactory) {
 
 	$scope.commit = function (commitMsg) {
 		repoFactory.commit($rootScope.repo, commitMsg)
 	}
 
+});
+app.config(function($stateProvider, $urlRouterProvider){
+
+    $stateProvider
+        .state('commit_final', {
+            url: '/commit_final',
+            templateUrl: 'window/commit_final/commit_final.html',
+            controller: 'CommitCtrl'
+        })
 });
 app.factory('fileSystemFactory', function ($rootScope){
 	return {
@@ -94,22 +110,6 @@ app.factory('fileSystemFactory', function ($rootScope){
 			})
 		}
 	}
-});
-app.controller('CommitCtrl', function ($scope, $state, $rootScope, repoFactory) {
-
-	$scope.commit = function (commitMsg) {
-		repoFactory.commit($rootScope.repo, commitMsg)
-	}
-
-});
-app.config(function($stateProvider, $urlRouterProvider){
-
-    $stateProvider
-        .state('commit_final', {
-            url: '/commit_final',
-            templateUrl: 'window/commit_final/commit_final.html',
-            controller: 'CommitCtrl'
-        })
 });
 app.config(function($stateProvider, $urlRouterProvider){
 
@@ -164,6 +164,13 @@ app.factory('homeFactory', function ($rootScope){
 }
  
 })
+if (process.platform === "darwin") {
+    var mb = new gui.Menu({type: 'menubar'});
+    mb.createMacBuiltin('RoboPaint', {
+        hideEdit: false
+    });
+    gui.Window.get().menu = mb;
+}
 app.config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
@@ -191,13 +198,6 @@ app.config(function($stateProvider, $urlRouterProvider){
         })
 });
 
-if (process.platform === "darwin") {
-    var mb = new gui.Menu({type: 'menubar'});
-    mb.createMacBuiltin('RoboPaint', {
-        hideEdit: false
-    });
-    gui.Window.get().menu = mb;
-}
 app.config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
@@ -210,8 +210,13 @@ app.config(function($stateProvider, $urlRouterProvider){
 app.controller('PushCtrl', function ($scope, $rootScope) {
 
     $scope.push = function () {
-        console.log($rootScope)
+        console.log($rootScope.repo)
 
+        $rootScope.repo.remote_push(hold, function (err) {
+            if (err) throw err;
+            console.log("got here");
+            console.log(hold);
+        })
     }
 });
 
