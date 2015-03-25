@@ -17,7 +17,7 @@
     "min_height": 400,
     "min_width": 500,
     "position": "center",
-    "toolbar": false
+    "toolbar": true
   },
   "repository": {
     "type": "git",
