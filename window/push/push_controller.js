@@ -1,12 +1,10 @@
-app.controller('PushCtrl', function ($scope, $rootScope) {
+app.controller('PushCtrl', function ($scope, $rootScope, branchFactory) {
 
     $scope.push = function () {
-        console.log($rootScope.repo)
 
-        $rootScope.repo.remote_push(hold, function (err) {
+        $rootScope.repo.remote_push("origin", branchFactory.currentBranch, function(err) {
             if (err) throw err;
-            console.log("got here");
-            console.log(hold);
+            console.log("Branch pushed");
         })
     }
 });
