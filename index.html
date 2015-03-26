@@ -15,15 +15,17 @@
         <link rel='stylesheet' href='bower_components/bootstrap/dist/css/bootswatch.min.css'>
         <link rel='stylesheet' href='public/style.css'>
     </head>
-    <script src='angular-ui-states-min.js'></script>
+
     <body ng-app='GitWork' role='document'>
 
         <!--custon navbar-->
         <navbar></navbar>
 
         <!--where content is injected-->
-        <div class="tabs">
-            <div ui-view ng-class="slide"></div>
+        <div class="row">
+            <div class="span12 ui-view-container">
+                <div class="well" ui-view></div>
+            </div>
         </div>
 
         <!--javascript formatting -->
@@ -31,8 +33,7 @@
         <script src='bower_components/bootstrap/dist/js/bootstrap.min.js'></script>
         <script src='bower_components/angular/angular.min.js'></script>
         <script src='bower_components/angular-ui-router/release/angular-ui-router.min.js'></script>
-        <script src="http://code.angularjs.org/1.2.11/angular-animate.min.js"></script>
-
+        <script src="bower_components/angular-animate/angular-animate.js"></script>
 
         <!--Angular gulp file-->
         <script src='public/app.js'></script>

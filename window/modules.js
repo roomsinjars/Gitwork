@@ -1,4 +1,4 @@
-var app = angular.module('GitWork', ['ui.router','ngAnimate']);
+var app = angular.module('GitWork', ['ui.router', 'ngAnimate']);
 var gui = require('nw.gui');
 var win = gui.Window.get();
 var fs = require("fs");
