@@ -1,12 +1,9 @@
-app.controller('BranchCtrl', function ($scope, $state, $rootScope, branchFactory) {
+app.controller('BranchCtrl', function ($scope, $state, $rootScope, branches, branchFactory) {
    console.log("root", $rootScope.repo);
-  fs.readdir(__dirname + '/.git/refs/heads', function(err,data){
-    if (err) throw err;
-    branchFactory.branches = data;
-    $scope.branches = data;
-    $scope.$digest();
-  })
 
+  branchFactory.branches = branches.data;
+  $scope.branches = branches.data;
+  $scope.$digest();
 
   $scope.switch = function (branchName) {
   	branchFactory.switchBranch(branchName);
