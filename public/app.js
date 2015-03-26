@@ -43,6 +43,22 @@ app.config(function($stateProvider, $urlRouterProvider){
 app.controller('BranchCtrl', function ($scope, $state) {
 
 });
+app.controller('CommitCtrl', function ($scope, $state, $rootScope, repoFactory) {
+
+	$scope.commit = function (commitMsg) {
+		repoFactory.commit($rootScope.repo, commitMsg)
+	}
+
+});
+app.config(function($stateProvider, $urlRouterProvider){
+
+    $stateProvider
+        .state('commit_final', {
+            url: '/commit_final',
+            templateUrl: 'window/commit_final/commit_final.html',
+            controller: 'CommitCtrl'
+        })
+});
 app.factory('fileSystemFactory', function ($rootScope){
 	return {
 		makeDir: function (name, cb) {
@@ -67,22 +83,6 @@ app.factory('fileSystemFactory', function ($rootScope){
 			})
 		}
 	}
-});
-app.controller('CommitCtrl', function ($scope, $state, $rootScope, repoFactory) {
-
-	$scope.commit = function (commitMsg) {
-		repoFactory.commit($rootScope.repo, commitMsg)
-	}
-
-});
-app.config(function($stateProvider, $urlRouterProvider){
-
-    $stateProvider
-        .state('commit_final', {
-            url: '/commit_final',
-            templateUrl: 'window/commit_final/commit_final.html',
-            controller: 'CommitCtrl'
-        })
 });
 app.config(function($stateProvider, $urlRouterProvider){
 
@@ -155,14 +155,6 @@ app.config(function($stateProvider, $urlRouterProvider){
         })
 });
 
-app.config(function($stateProvider, $urlRouterProvider){
-
-    $stateProvider
-        .state('push', {
-            url: '/push',
-            templateUrl: 'window/push/push.html',
-        })
-});
 app.config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
@@ -267,6 +259,14 @@ app.factory('repoFactory', function ($rootScope){
 
 })
 
+app.config(function($stateProvider, $urlRouterProvider){
+
+    $stateProvider
+        .state('push', {
+            url: '/push',
+            templateUrl: 'window/push/push.html',
+        })
+});
 app.config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
