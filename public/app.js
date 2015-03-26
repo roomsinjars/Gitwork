@@ -28,6 +28,7 @@ app.controller('BranchCtrl', function ($scope, $state, $rootScope, branchFactory
    console.log("root", $rootScope.repo);
   fs.readdir(__dirname + '/.git/refs/heads', function(err,data){
     if (err) throw err;
+    branchFactory.branches = data;
     $scope.branches = data;
     $scope.$digest();
   })
@@ -65,7 +66,9 @@ app.factory('branchFactory', function ($rootScope){
 			})
 		},
 
-		currentBranch: ""
+		currentBranch: "",
+
+		branches: []
 	}
 });
 app.config(function($stateProvider, $urlRouterProvider){
@@ -363,11 +366,65 @@ app.factory('repoFactory', function ($rootScope){
 app.config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
-        .state('work', {
-            url: '/work',
-            templateUrl: 'window/work/work.html'
+        .state('status', {
+            url: '/status',
+            templateUrl: 'window/status/status.html',
+            controller: 'StatusCtrl'
         })
 });
+app.controller('StatusCtrl', function ($scope, repoFactory, $rootScope) {
+
+    $scope.status = function () {
+        repoFactory.status($rootScope.repo)
+        $scope.statusObject = repoFactory.statusObject
+        console.log($scope.statusObject)
+    }
+
+
+
+});
+app.config(function($stateProvider, $urlRouterProvider){
+
+    $stateProvider
+        .state('work', {
+            url: '/work',
+            templateUrl: 'window/work/work.html',
+            controller: 'workCtrl'
+        })
+});
+
+app.controller('workCtrl', function ($scope, $rootScope, branchFactory){
+	console.log('work', branchFactory.currentbranch);
+	$scope.branches = branchFactory.branches;
+	$scope.currentBranch = branchFactory.currentBranch;
+
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 app.directive('navbar', function () {

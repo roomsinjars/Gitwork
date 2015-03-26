@@ -14,6 +14,8 @@ app.factory('branchFactory', function ($rootScope){
 			})
 		},
 
-		currentBranch: ""
+		currentBranch: "",
+
+		branches: []
 	}
 });

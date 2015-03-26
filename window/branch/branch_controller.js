@@ -2,6 +2,7 @@ app.controller('BranchCtrl', function ($scope, $state, $rootScope, branchFactory
    console.log("root", $rootScope.repo);
   fs.readdir(__dirname + '/.git/refs/heads', function(err,data){
     if (err) throw err;
+    branchFactory.branches = data;
     $scope.branches = data;
     $scope.$digest();
   })

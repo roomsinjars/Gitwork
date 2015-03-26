@@ -2,7 +2,12 @@
     <h4>Git to Work!</h4>
     <p>When you are done working on your feature, click the next button.</p>
 </div>
-
+<div>
+	<p>Local Branches:</p>
+	<li ng-repeat="branch in branches">{{ branch }}</li>
+	<h4>Currently on branch:    </h4>
+	<h4>{{ currentBranch }}</h4>
+</div>
 <div class="form-group">
     <div class="input-group">
           <span class="input-group-btn">
