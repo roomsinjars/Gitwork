@@ -69,18 +69,32 @@ app.factory('repoFactory', function ($rootScope){
             repository.commit(commitMsg, options, function (err) {
                 if (err) throw err;
             })
+        },
+        mergeConflictError: function (errMsg) {
+            return errMsg
+        },
+        statusObject: function (statusObject) {
+            return statusObject
+        },
+
+        status: function (repo) {
+            console.log('this is the repo object', repo)
+            repo.status(function (err, status) {
+                console.log(status.files)
+                this.statusObject(status.files)
+            })
         }, 
         merge: function () {
             var ourSignature = NodeGit.Signature.now("blakeprobinson",
               "bprobinson@zoho.com");
-            console.log($rootScope.repo.path)
-            NodeGit.Repository.open($rootScope.repo.path)
+            NodeGit.Repository.open('/Users/blakerobinson/documents/fullstack/Gitwork/test')
                 .then(function(repository) {
+                    console.log('this is the repo object', repository)
                     return repository.getBranchCommit('test')
                 .then(function (commitBranch) {
+                    console.log('commitBranch', commitBranch);
                     return repository.getBranchCommit('master')
                 .then(function (commitMaster) {
-                        console.log('commitBranch', commitBranch);
                         console.log('commitMaster', commitMaster);
                     return NodeGit.Merge.commits(repository, commitBranch, commitMaster)
                 .then(function (index) {
@@ -88,15 +102,29 @@ app.factory('repoFactory', function ($rootScope){
                         index.write();
                         console.log('this is the index', index)
                         return index.writeTreeTo(repository);
-                    }
+                    } else {
+                        //on branch...findInFiles('<<<<<<<<master')
+                        //$Q is the promise library for angular
+                        throw new Error('This merge has conflicts')
+                        //get user to fix merge conflicts before writing
+                        //to tree...
+                    }   
                     })
                 .then(function (oid) {
                     console.log('this is the oid', oid)
                     return repository.createCommit('HEAD', ourSignature,
                         ourSignature, "we merged their commit", oid, [commitBranch, commitMaster]);
                 })
+                .catch(function(error) {
+                    $rootScope.mergeConflictError = error;
+                    console.log($rootScope.mergeConflictError)
+                    this.mergeConflictError(error)
+                })
                 .done(function (commitId) {
-                    console.log("New Commit: ", commitId);
+                    if (commitId) {
+                        console.log("New Commit: ", commitId);
+                    }
+                    
                 })
                     })
                 })
