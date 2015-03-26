@@ -9,8 +9,13 @@ app.config(function($stateProvider, $urlRouterProvider){
 });
 
 app.controller('workCtrl', function ($scope, $rootScope, branchFactory){
-	console.log('work', branchFactory.currentbranch);
-	$scope.branches = branchFactory.branches;
+	
+	$scope.branches = branchFactory.getAllBranches().then(function(data){
+		console.log(data);
+		$scope.branchList = data;
+		return data;
+	});
+	
 	$scope.currentBranch = branchFactory.currentBranch;
 
 })

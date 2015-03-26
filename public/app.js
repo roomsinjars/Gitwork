@@ -21,36 +21,40 @@ app.config(function($stateProvider, $urlRouterProvider){
         .state('branch', {
             url: '/branch',
             templateUrl: 'window/branch/branch.html',
-            controller: 'BranchCtrl'
+            controller: 'BranchCtrl',
+            resolve: {
+ 							branches: function(branchFactory){
+ 								return branchFactory.getAllBranches().then(function(data){
+ 									return data; 
+ 								}, function failed(err){
+ 									return err; 
+ 								})
+ 							}
+            }
         })
 });
-app.controller('BranchCtrl', function ($scope, $state, $rootScope, branchFactory) {
-   console.log("root", $rootScope.repo);
-  fs.readdir(__dirname + '/.git/refs/heads', function(err,data){
-    if (err) throw err;
-    branchFactory.branches = data;
-    $scope.branches = data;
-    $scope.$digest();
-  })
+app.controller('BranchCtrl', function ($scope, $state, $rootScope, branches, branchFactory) {
+
+  console.log('branches: ', branches);
+
+  $scope.branches = branches;
+
+  console.log($scope.branches);
 
 
   $scope.switch = function (branchName) {
   	branchFactory.switchBranch(branchName);
   	branchFactory.currentBranch = branchName;
-  	console.log("this", branchFactory.currentBranch);
-  		// $scope.currentBranch = branchName;
   }
 
   $scope.newBranch = function(branchName) {
-
   	branchFactory.createNewBranch(branchName);
   	branchFactory.currentBranch = branchName;
-  		// $scope.currentBranch = branchName;
   }
 
 
 });
-app.factory('branchFactory', function ($rootScope){
+app.factory('branchFactory', function ($rootScope, $q){
 	return {
 
 		switchBranch: function(branchName) {
@@ -66,9 +70,17 @@ app.factory('branchFactory', function ($rootScope){
 			})
 		},
 
-		currentBranch: "",
+		getAllBranches: function(){
+			return $q(function (resolve, reject){
+				fs.readdir(__dirname + '/.git/refs/heads', function(err, data){
+					if (err) return reject(err);
+	        resolve(data)
+	      })
+			})
+		},
 
-		branches: []
+		currentBranch: ""
+
 	}
 });
 app.config(function($stateProvider, $urlRouterProvider){
@@ -165,6 +177,7 @@ app.controller('HomeController', function ($scope, $state, $rootScope) {
             })
         })
     }
+
     fs.readdir(__dirname, function(err,data){
         if (err) throw err;
         for (var i=0; i<data.length; i++){
@@ -221,8 +234,20 @@ app.config(function($stateProvider, $urlRouterProvider){
         .state('push', {
             url: '/push',
             templateUrl: 'window/push/push.html',
+            controller: 'PushCtrl'
         })
 });
+app.controller('PushCtrl', function ($scope, $rootScope, branchFactory) {
+
+    $scope.push = function () {
+
+        $rootScope.repo.remote_push("origin", branchFactory.currentBranch, function(err) {
+            if (err) throw err;
+            console.log("Branch pushed");
+        })
+    }
+});
+
 app.config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
@@ -394,8 +419,13 @@ app.config(function($stateProvider, $urlRouterProvider){
 });
 
 app.controller('workCtrl', function ($scope, $rootScope, branchFactory){
-	console.log('work', branchFactory.currentbranch);
-	$scope.branches = branchFactory.branches;
+	
+	$scope.branches = branchFactory.getAllBranches().then(function(data){
+		console.log(data);
+		$scope.branchList = data;
+		return data;
+	});
+	
 	$scope.currentBranch = branchFactory.currentBranch;
 
 })

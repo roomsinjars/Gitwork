@@ -1,9 +1,11 @@
 app.controller('BranchCtrl', function ($scope, $state, $rootScope, branches, branchFactory) {
-   console.log("root", $rootScope.repo);
 
-  branchFactory.branches = branches.data;
-  $scope.branches = branches.data;
-  $scope.$digest();
+  console.log('branches: ', branches);
+
+  $scope.branches = branches;
+
+  console.log($scope.branches);
+
 
   $scope.switch = function (branchName) {
   	branchFactory.switchBranch(branchName);

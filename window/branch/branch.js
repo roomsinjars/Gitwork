@@ -6,12 +6,13 @@ app.config(function($stateProvider, $urlRouterProvider){
             templateUrl: 'window/branch/branch.html',
             controller: 'BranchCtrl',
             resolve: {
-            	branches: function() {
-            		fs.readdir(__dirname + '/.git/refs/heads', function(err,data){
-    							if (err) throw err;
-    							return data;
-    						})
-            	}
+ 							branches: function(branchFactory){
+ 								return branchFactory.getAllBranches().then(function(data){
+ 									return data; 
+ 								}, function failed(err){
+ 									return err; 
+ 								})
+ 							}
             }
         })
 });
