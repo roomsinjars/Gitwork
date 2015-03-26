@@ -12,7 +12,8 @@ app.factory('branchFactory', function ($rootScope){
 				if (err) throw err;
 				$scope.switch(branchName);
 			})
-		}
+		},
 
+        currentBranch: ""
 	}
 });

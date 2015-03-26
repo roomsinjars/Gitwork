@@ -4,5 +4,6 @@ app.config(function($stateProvider, $urlRouterProvider){
         .state('push', {
             url: '/push',
             templateUrl: 'window/push/push.html',
+            controller: 'PushCtrl'
         })
 });
