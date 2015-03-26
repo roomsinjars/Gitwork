@@ -4,5 +4,6 @@ app.config(function($stateProvider, $urlRouterProvider){
         .state('merge', {
             url: '/merge',
             templateUrl: 'window/merge/merge.html',
+            controller: 'MergeCtrl'
         })
 });

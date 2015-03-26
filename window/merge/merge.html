@@ -6,8 +6,17 @@
 <div class="form-group">
     <h3>Merge with master:</h3>
     <div class="input-group">
-        <button class="btn btn-primary" type="button" ui-sref="commit_final">Merge</button>
+        <span class="input-group-addon">Merge</span>
+        <span class="input-group-btn">
+          <button class="btn btn-primary" type="button" ng-click='merge()'>Merge</button>
+        </span>
     </div>
+</div>
+
+<div class="alert alert-dismissible alert-warning" ng-show='mergeConflictError'>
+  <button type="button" class="close" data-dismiss="alert">×</button>
+  <h4>Warning!</h4>
+  <p>This merge has conflicts.  Go to the files with the conflicts, resolve them and commit the changes.</p>
 </div>
 
 

@@ -7,7 +7,8 @@
     <h3>Choose a branch to use:</h3>
     <div class="input-group">
         <span class="input-group-addon">Branch:</span>
-        <input type="text" class="form-control" ng-model="repoUrl">
+        <a ng-repeat="branch in branches" class="btn-primary btn-sm" ng-click="switch(branch)" ui-sref="work">{{ branch }}</a>
+
           <span class="input-group-btn">
             <button class="btn btn-primary" type="button" ui-sref="work">Select</button>
           </span>
@@ -20,12 +21,22 @@
         <span class="input-group-addon">Feature:</span>
         <input type="text" class="form-control" ng-model="branchName">
           <span class="input-group-btn">
-            <button class="btn btn-primary" type="button" ui-sref="work">Create</button>
+            <button class="btn btn-primary" type="button" ui-sref="work" ng-click="newBranch(branchName)">Create</button>
           </span>
     </div>
 </div>
 
+<div class="form-group">
+    <h3>Delete a Branch:  Be careful, can not undo</h3>
+    <div class="input-group">
+        <span class="input-group-addon">Branch:</span>
+        <a ng-repeat="branch in branches" class="btn-primary btn-sm" ng-click="delete(branch)" ui-sref="work">{{ branch }}</a>
 
+          <span class="input-group-btn">
+            <button class="btn btn-primary" type="button" ui-sref="work">Select</button>
+          </span>
+    </div>
+</div>
 
 
 
