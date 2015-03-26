@@ -36,36 +36,13 @@ app.controller('BranchCtrl', function ($scope, $state, $rootScope, branchFactory
   $scope.switch = function (branchName) {
   	branchFactory.switchBranch(branchName);
       branchFactory.currentBranch = branchName;
-
   }
 
   $scope.newBranch = function(branchName) {
 
   	$branchFactory.createNewBranch(branchName);
-  		$scope.currentBranch = branchName;
+      branchFactory.currentBranch = branchName;
   }
-
-});
-app.factory('branchFactory', function ($rootScope){
-	return {
-
-		switchBranch: function(branchName) {
-		  $rootScope.repo.checkout(branchName, function (err) {
-		   if (err) throw err;
-		  })
-		},
-
-		createNewBranch: function(branchName) {
-			$rootScope.repo.create_branch(branchName, function (err){
-				if (err) throw err;
-				$scope.switch(branchName);
-			})
-		}
-
-	}
-});
-app.config(function($stateProvider, $urlRouterProvider){
-
 
 });
 app.factory('branchFactory', function ($rootScope){
@@ -144,6 +121,23 @@ app.factory('fileSystemFactory', function ($rootScope){
 		}
 	}
 });
+
+app.controller('CommitCtrl', function ($scope, $state, $rootScope, repoFactory) {
+
+	$scope.commit = function (commitMsg) {
+		repoFactory.commit($rootScope.repo, commitMsg)
+	}
+
+});
+app.config(function($stateProvider, $urlRouterProvider){
+
+    $stateProvider
+        .state('commit_final', {
+            url: '/commit_final',
+            templateUrl: 'window/commit_final/commit_final.html',
+            controller: 'CommitCtrl'
+        })
+});
 app.config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
@@ -207,23 +201,33 @@ if (process.platform === "darwin") {
 app.config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
-        .state('merge', {
-            url: '/merge',
-            templateUrl: 'window/merge/merge.html',
-            controller: 'MergeCtrl'
+        .state('branch', {
+            url: '/branch',
+            templateUrl: 'window/branch/branch.html',
+            controller: 'BranchCtrl'
         })
 });
+app.controller('BranchCtrl', function ($scope, $state, $rootScope, branchFactory) {
+   console.log("root", $rootScope.repo);
+  fs.readdir(__dirname + '/.git/refs/heads', function(err,data){
+    if (err) throw err;
+    $scope.branches = data;
+    $scope.$digest();
+  })
 
-app.controller('MergeCtrl', function ($scope, repoFactory, $rootScope) {
-
-    $scope.merge = function () {
-        repoFactory.merge()
-        $scope.mergeConflictError = repoFactory.mergeConflictError
-    }
 
 
-});
-app.config(function($stateProvider, $urlRouterProvider){
+  $scope.switch = function (branchName) {
+  	branchFactory.switchBranch(branchName);
+      branchFactory.currentBranch = branchName;
+  }
+
+
+  $scope.newBranch = function(branchName) {
+
+  	$branchFactory.createNewBranch(branchName);
+      branchFactory.currentBranch = branchName;
+  }
 
     $stateProvider
         .state('merge_ready', {
@@ -260,17 +264,52 @@ app.config(function($stateProvider, $urlRouterProvider){
             controller: 'PushCtrl'
         })
 });
-app.controller('PushCtrl', function ($scope, $rootScope, branchFactory) {
+app.factory('branchFactory', function ($rootScope){
+	return {
 
-    $scope.push = function () {
+		switchBranch: function(branchName) {
+		  $rootScope.repo.checkout(branchName, function (err) {
+		   if (err) throw err;
+		  })
+		},
 
-        $rootScope.repo.remote_push("origin", branchFactory.currentBranch, function(err) {
-            if (err) throw err;
-            console.log("Branch pushed");
+		createNewBranch: function(branchName) {
+			$rootScope.repo.create_branch(branchName, function (err){
+				if (err) throw err;
+				$scope.switch(branchName);
+			})
+		},
+
+        currentBranch: ""
+	}
+});
+if (process.platform === "darwin") {
+    var mb = new gui.Menu({type: 'menubar'});
+    mb.createMacBuiltin('RoboPaint', {
+        hideEdit: false
+    });
+    gui.Window.get().menu = mb;
+}
+
+app.config(function($stateProvider, $urlRouterProvider){
+
+    $stateProvider
+        .state('merge', {
+            url: '/merge',
+            templateUrl: 'window/merge/merge.html',
+            controller: 'MergeCtrl'
         })
-    }
 });
 
+app.controller('MergeCtrl', function ($scope, repoFactory, $rootScope) {
+
+    $scope.merge = function () {
+        repoFactory.merge()
+        $scope.mergeConflictError = repoFactory.mergeConflictError
+    }
+
+
+});
 app.config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
@@ -382,11 +421,11 @@ app.factory('repoFactory', function ($rootScope){
             return statusObject
         },
 
-        status: function (repo) {
+        status: function (repo, cb) {
             console.log('this is the repo object', repo)
             repo.status(function (err, status) {
                 console.log(status.files)
-                this.statusObject(status.files)
+                cb(status.files)
             })
         }, 
         merge: function () {
@@ -442,21 +481,18 @@ app.factory('repoFactory', function ($rootScope){
 app.config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
-        .state('status', {
-            url: '/status',
-            templateUrl: 'window/status/status.html',
-            controller: 'StatusCtrl'
+        .state('merge', {
+            url: '/merge',
+            templateUrl: 'window/merge/merge.html',
+            controller: 'MergeCtrl'
         })
 });
-app.controller('StatusCtrl', function ($scope, repoFactory, $rootScope) {
 
-    $scope.status = function () {
-        repoFactory.status($rootScope.repo)
-        $scope.statusObject = repoFactory.statusObject
-        console.log($scope.statusObject)
+app.controller('MergeCtrl', function ($scope, repoFactory, $rootScope) {
+
+    $scope.merge = function () {
+        repoFactory.merge()
     }
-
-
 
 });
 app.config(function($stateProvider, $urlRouterProvider){
@@ -468,6 +504,35 @@ app.config(function($stateProvider, $urlRouterProvider){
         })
 });
 
+
+app.config(function($stateProvider, $urlRouterProvider){
+
+    $stateProvider
+        .state('push', {
+            url: '/push',
+            templateUrl: 'window/push/push.html',
+            controller: 'PushCtrl'
+        })
+});
+app.controller('PushCtrl', function ($scope, $rootScope, branchFactory) {
+
+    $scope.push = function () {
+
+        $rootScope.repo.remote_push("origin", branchFactory.currentBranch, function(err) {
+            if (err) throw err;
+            console.log("Branch pushed");
+        })
+    }
+});
+
+app.config(function($stateProvider, $urlRouterProvider){
+
+    $stateProvider
+        .state('merge_ready', {
+            url: '/merge_ready',
+            templateUrl: 'window/merge_ready/merge_ready.html'
+        })
+});
 
 app.directive('navbar', function () {
 
@@ -484,3 +549,56 @@ app.directive('navbar', function () {
 
 
 
+
+app.config(function($stateProvider, $urlRouterProvider){
+
+    $stateProvider
+        .state('commit', {
+            url: '/commit',
+            templateUrl: 'window/commit/commit.html',
+            controller: 'CommitCtrl'
+        })
+});
+app.controller('CommitCtrl', function ($scope, $state, $rootScope, repoFactory) {
+
+	$scope.commit = function (commitMsg) {
+		repoFactory.commit($rootScope.repo, commitMsg)
+	}
+
+});
+app.config(function($stateProvider, $urlRouterProvider){
+
+    $stateProvider
+        .state('status', {
+            url: '/status',
+            templateUrl: 'window/status/status.html',
+            controller: 'StatusCtrl'
+        })
+});
+app.controller('StatusCtrl', function ($scope, repoFactory, $rootScope) {
+
+    $scope.status = function () {
+        repoFactory.status($rootScope.repo, function (statusObj) {
+        	var array = []
+	        	var counter = 0
+	        	for (var key in statusObj) {
+	        		if (statusObj.hasOwnProperty(key)) {
+	        	   		array[counter] = {};
+	        	   		array[counter].fileName = key;
+	        	        for (var prop in statusObj[key]) {
+	        	        	if(statusObj[key].hasOwnProperty(prop)){
+	        	        	    if (prop === 'staged') {
+	        	        		    array[counter].staged = statusObj[key][prop]
+	        	        	    } else {
+	        	        	        array[counter].tracked = statusObj[key][prop]
+	        	        	    }
+	        	          }
+	        	       }
+	        	    }counter++
+	        	}
+	        	$scope.files = array
+	        	$scope.$digest();
+	        	console.log('this is scope.files', $scope.files)
+        })
+    }
+});
