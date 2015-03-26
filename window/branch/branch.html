@@ -26,7 +26,17 @@
     </div>
 </div>
 
+<div class="form-group">
+    <h3>Delete a Branch:  Be careful, can not undo</h3>
+    <div class="input-group">
+        <span class="input-group-addon">Branch:</span>
+        <a ng-repeat="branch in branches" class="btn-primary btn-sm" ng-click="delete(branch)" ui-sref="work">{{ branch }}</a>
 
+          <span class="input-group-btn">
+            <button class="btn btn-primary" type="button" ui-sref="work">Select</button>
+          </span>
+    </div>
+</div>
 
 
 
