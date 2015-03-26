@@ -17,7 +17,8 @@
     "min_height": 400,
     "min_width": 500,
     "position": "center",
-    "toolbar": true
+    "toolbar": true,
+    "icon": "./img/GWicon.icns"
   },
   "repository": {
     "type": "git",
