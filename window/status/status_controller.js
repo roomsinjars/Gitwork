@@ -1,14 +1,17 @@
 app.controller('StatusCtrl', function ($scope, statusFactory, $rootScope) {
 
-	$scope.status = statusFactory.getStatus.then(function(data){
-		console.log(data);
-		return data;
-	}, function failed(err){
-		return err;
-	}
-	});
+	console.log('got to status controller');
+	
+	$scope.status = statusFactory.getStatus();
+	console.log('scope status', $scope.status);
 
-});
+	$scope.status.then(function(data){
+		if (err) reject(err);
+		console.log('in status controller', data);
+		resolve(data)
+	})
+
+})
 
 
 

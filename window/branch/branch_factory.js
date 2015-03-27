@@ -2,15 +2,20 @@ app.factory('branchFactory', function ($rootScope, $q){
 	return {
 
 		switchBranch: function(branchName) {
-		  $rootScope.repo.checkout(branchName, function (err) {
-		   if (err) throw err;
+			return $q(function (resolve, reject){
+			  $rootScope.repo.checkout(branchName, function (err) {
+			  	if (err) return reject(err);
+					resolve(data)
+				})
 		  })
 		},
 
 		createNewBranch: function(branchName) {
-			$rootScope.repo.create_branch(branchName, function (err){
-				if (err) throw err;
-				$scope.switch(branchName);
+			return $q(function (resolve, reject){
+				$rootScope.repo.create_branch(branchName, function (err, data){
+				if (err) return reject(err);
+				resolve(data)
+				})
 			})
 		},
 
@@ -27,3 +32,8 @@ app.factory('branchFactory', function ($rootScope, $q){
 
 	}
 });
+
+// $rootScope.repo.create_branch(branchName, function (err){
+// 				if (err) throw err;
+// 				$scope.switch(branchName);
+// 			})
