@@ -3,7 +3,7 @@ app.factory('branchFactory', function ($rootScope, $q){
 
 		switchBranch: function(branchName) {
 			return $q(function (resolve, reject){
-			  $rootScope.repo.checkout(branchName, function (err) {
+			  $rootScope.repo.checkout(branchName, function (err, data) {
 			  	if (err) return reject(err);
 					resolve(data)
 				})
@@ -32,8 +32,3 @@ app.factory('branchFactory', function ($rootScope, $q){
 
 	}
 });
-
-// $rootScope.repo.create_branch(branchName, function (err){
-// 				if (err) throw err;
-// 				$scope.switch(branchName);
-// 			})
