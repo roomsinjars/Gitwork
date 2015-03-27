@@ -77,7 +77,6 @@ app.controller('BranchCtrl', function ($scope, $state, $rootScope, branches, bra
 
   $scope.switch = function (branchName) {
   	branchFactory.switchBranch(branchName);
-
   	branchFactory.currentBranch = branchName;
   }
 
@@ -104,9 +103,34 @@ app.factory('branchFactory', function ($rootScope, $q){
 			})
 		},
 
+		getAllBranches: function(){
+			return $q(function (resolve, reject){
+				fs.readdir(__dirname + '/.git/refs/heads', function(err, data){
+					if (err) return reject(err);
+	        resolve(data)
+	      })
+			})
+		},
+
 		currentBranch: ""
 
 	}
+});
+app.config(function($stateProvider, $urlRouterProvider){
+
+    $stateProvider
+        .state('commit', {
+            url: '/commit',
+            templateUrl: 'window/commit/commit.html',
+            controller: 'CommitCtrl'
+        })
+});
+app.controller('CommitCtrl', function ($scope, $state, $rootScope, repoFactory) {
+
+	$scope.commit = function (commitMsg) {
+		repoFactory.commit($rootScope.repo, commitMsg)
+	}
+
 });
 app.controller('CommitCtrl', function ($scope, $state, $rootScope, repoFactory) {
 
@@ -194,7 +218,6 @@ app.controller('HomeController', function ($scope, $state, $rootScope) {
         }
         return $scope.changeStateNoRepo();
     })
-
 });
 
 app.factory('homeFactory', function ($rootScope){
@@ -203,32 +226,6 @@ app.factory('homeFactory', function ($rootScope){
 }
  
 })
-app.config(function($stateProvider, $urlRouterProvider){
-
-    $stateProvider
-        .state('commit', {
-            url: '/commit',
-            templateUrl: 'window/commit/commit.html',
-            controller: 'CommitCtrl'
-        })
-});
-app.controller('CommitCtrl', function ($scope, $state, $rootScope, repoFactory) {
-
-	$scope.commit = function (commitMsg) {
-		repoFactory.commit($rootScope.repo, commitMsg)
-	}
-
-});
-app.config(function($stateProvider, $urlRouterProvider){
-
-    $stateProvider
-        .state('merge_ready', {
-            url: '/merge_ready',
-            templateUrl: 'window/merge_ready/merge_ready.html',
-            controller: 'PullCtrl'
-        })
-});
-
 if (process.platform === "darwin") {
     var mb = new gui.Menu({type: 'menubar'});
     mb.createMacBuiltin('RoboPaint', {
@@ -245,7 +242,6 @@ app.config(function($stateProvider, $urlRouterProvider){
             controller: 'MergeCtrl'
         })
 });
-
 
 app.controller('MergeCtrl', function ($scope, repoFactory, $rootScope, mergeFactory) {
 
@@ -321,21 +317,11 @@ app.factory('mergeFactory', function ($rootScope, $q, branchFactory) {
 app.config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
-        .state('push', {
-            url: '/push',
-            templateUrl: 'window/push/push.html',
-            controller: 'PushCtrl'
+        .state('merge_ready', {
+            url: '/merge_ready',
+            templateUrl: 'window/merge_ready/merge_ready.html',
+            controller: 'PullCtrl'
         })
-});
-app.controller('PushCtrl', function ($scope, $rootScope, branchFactory) {
-
-    $scope.push = function () {
-
-        $rootScope.repo.remote_push("origin", branchFactory.currentBranch, function(err) {
-            if (err) throw err;
-            console.log("Branch pushed");
-        })
-    }
 });
 
 app.controller('PullCtrl', function ($scope, $rootScope, pullFactory) {
@@ -359,47 +345,21 @@ app.factory('pullFactory', function ($rootScope){
 app.config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
-        .state('status', {
-            url: '/status',
-            templateUrl: 'window/status/status.html',
-            controller: 'StatusCtrl'
+        .state('push', {
+            url: '/push',
+            templateUrl: 'window/push/push.html',
+            controller: 'PushCtrl'
         })
 });
+app.controller('PushCtrl', function ($scope, $rootScope, branchFactory) {
 
-app.controller('StatusCtrl', function ($scope, repoFactory, $rootScope) {
+    $scope.push = function () {
 
-    $scope.status = function () {
-        repoFactory.status($rootScope.repo, function (statusObj) {
-        	var array = []
-	        	var counter = 0
-	        	for (var key in statusObj) {
-	        		if (statusObj.hasOwnProperty(key)) {
-	        	   		array[counter] = {};
-	        	   		array[counter].fileName = key;
-	        	        for (var prop in statusObj[key]) {
-	        	        	if(statusObj[key].hasOwnProperty(prop)){
-	        	        	    if (prop === 'staged') {
-	        	        		    array[counter].staged = statusObj[key][prop]
-	        	        	    } else {
-	        	        	        array[counter].tracked = statusObj[key][prop]
-	        	        	    }
-	        	          }
-	        	       }
-	        	    }counter++
-	        	}
-	        	$scope.files = array
-	        	$scope.$digest();
-	        	console.log('this is scope.files', $scope.files)
+        $rootScope.repo.remote_push("origin", branchFactory.currentBranch, function(err) {
+            if (err) throw err;
+            console.log("Branch pushed");
         })
     }
-});
-app.config(function($stateProvider, $urlRouterProvider){
-
-    $stateProvider
-        .state('work', {
-            url: '/work',
-            templateUrl: 'window/work/work.html'
-        })
 });
 
 app.config(function($stateProvider, $urlRouterProvider){
@@ -533,13 +493,30 @@ app.config(function($stateProvider, $urlRouterProvider){
 app.controller('StatusCtrl', function ($scope, repoFactory, $rootScope) {
 
     $scope.status = function () {
-        repoFactory.status($rootScope.repo)
-        $scope.statusObject = repoFactory.statusObject
-        console.log($scope.statusObject)
 
+        repoFactory.status($rootScope.repo, function (statusObj) {
+        	var array = []
+	        	var counter = 0
+	        	for (var key in statusObj) {
+	        		if (statusObj.hasOwnProperty(key)) {
+	        	   		array[counter] = {};
+	        	   		array[counter].fileName = key;
+	        	        for (var prop in statusObj[key]) {
+	        	        	if(statusObj[key].hasOwnProperty(prop)){
+	        	        	    if (prop === 'staged') {
+	        	        		    array[counter].staged = statusObj[key][prop]
+	        	        	    } else {
+	        	        	        array[counter].tracked = statusObj[key][prop]
+	        	        	    }
+	        	          }
+	        	       }
+	        	    }counter++
+	        	}
+	        	$scope.files = array
+	        	$scope.$digest();
+	        	console.log('this is scope.files', $scope.files)
+        })
     }
-
-
 
 });
 app.config(function($stateProvider, $urlRouterProvider){
@@ -563,6 +540,32 @@ app.controller('workCtrl', function ($scope, $rootScope, branchFactory){
 	$scope.currentBranch = branchFactory.currentBranch;
 
 })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 app.directive('navbar', function () {
