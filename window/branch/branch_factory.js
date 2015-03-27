@@ -1,4 +1,4 @@
-app.factory('branchFactory', function ($rootScope){
+app.factory('branchFactory', function ($rootScope, $q){
 	return {
 
 		switchBranch: function(branchName) {
@@ -14,6 +14,16 @@ app.factory('branchFactory', function ($rootScope){
 			})
 		},
 
-        currentBranch: ""
+		getAllBranches: function(){
+			return $q(function (resolve, reject){
+				fs.readdir(__dirname + '/.git/refs/heads', function(err, data){
+					if (err) return reject(err);
+	        resolve(data)
+	      })
+			})
+		},
+
+		currentBranch: ""
+
 	}
 });

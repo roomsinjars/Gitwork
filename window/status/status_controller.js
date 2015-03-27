@@ -1,6 +1,7 @@
 app.controller('StatusCtrl', function ($scope, repoFactory, $rootScope) {
 
     $scope.status = function () {
+
         repoFactory.status($rootScope.repo, function (statusObj) {
         	var array = []
 	        	var counter = 0
@@ -24,4 +25,5 @@ app.controller('StatusCtrl', function ($scope, repoFactory, $rootScope) {
 	        	console.log('this is scope.files', $scope.files)
         })
     }
+
 });

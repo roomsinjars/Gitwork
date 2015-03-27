@@ -7,7 +7,7 @@ var ngAnnotate = require('gulp-ng-annotate');
 //uncomment code before deployment
 
 gulp.task('default', function () {
-    gulp.src(['window/**/*.js'])
+    gulp.src(['modules.js','window/**/*.js'])
         //.pipe(sourcemaps.init())
         .pipe(concat('public/app.js'))
         //.pipe(ngAnnotate())

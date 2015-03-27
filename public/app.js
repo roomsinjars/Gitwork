@@ -1,4 +1,4 @@
-var app = angular.module('GitWork', ['ui.router']);
+var app = angular.module('GitWork', ['ui.router', 'ngAnimate']);
 var gui = require('nw.gui');
 var win = gui.Window.get();
 var fs = require("fs");
@@ -54,31 +54,41 @@ app.config(function($stateProvider, $urlRouterProvider){
         .state('branch', {
             url: '/branch',
             templateUrl: 'window/branch/branch.html',
-            controller: 'BranchCtrl'
+            controller: 'BranchCtrl',
+            resolve: {
+ 							branches: function(branchFactory){
+ 								return branchFactory.getAllBranches().then(function(data){
+ 									return data; 
+ 								}, function failed(err){
+ 									return err; 
+ 								})
+ 							}
+            }
         })
 });
-app.controller('BranchCtrl', function ($scope, $state, $rootScope, branchFactory) {
-   console.log("root", $rootScope.repo);
-  fs.readdir(__dirname + '/.git/refs/heads', function(err,data){
-    if (err) throw err;
-    $scope.branches = data;
-    $scope.$digest();
-  })
+app.controller('BranchCtrl', function ($scope, $state, $rootScope, branches, branchFactory) {
+
+  console.log('branches: ', branches);
+
+  $scope.branches = branches;
+
+  console.log($scope.branches);
 
 
   $scope.switch = function (branchName) {
   	branchFactory.switchBranch(branchName);
-      branchFactory.currentBranch = branchName;
+
+  	branchFactory.currentBranch = branchName;
   }
 
   $scope.newBranch = function(branchName) {
-
-  	$branchFactory.createNewBranch(branchName);
-      branchFactory.currentBranch = branchName;
+  	branchFactory.createNewBranch(branchName);
+  	branchFactory.currentBranch = branchName;
   }
 
+
 });
-app.factory('branchFactory', function ($rootScope){
+app.factory('branchFactory', function ($rootScope, $q){
 	return {
 
 		switchBranch: function(branchName) {
@@ -94,7 +104,8 @@ app.factory('branchFactory', function ($rootScope){
 			})
 		},
 
-        currentBranch: ""
+		currentBranch: ""
+
 	}
 });
 app.controller('CommitCtrl', function ($scope, $state, $rootScope, repoFactory) {
@@ -150,6 +161,40 @@ app.config(function($stateProvider, $urlRouterProvider){
 
 app.controller('HomeController', function ($scope, $state, $rootScope) {
 
+    $scope.changeStateNoRepo = function() {
+        $state.reload();
+        $state.go('noRepo')
+    };
+
+    $scope.changeStateBranch = function() {
+        $rootScope.repo = git(process.env.PWD);
+        console.log($rootScope.repo);
+        $state.reload();
+        $state.go('branch')
+
+    };
+
+    console.log("HomeController", install.value);
+    if (install.value==="false") {
+        //npm link on the current directory
+        var exec = require('child_process').exec;
+        exec('npm link', function(error,stdout){
+            console.log('installed', stdout);
+            fs.writeFile('install.json', '{"value": "true"}', function(err){
+                if (err) throw err;
+                console.log('done');
+            })
+        })
+    }
+
+    fs.readdir(__dirname, function(err,data){
+        if (err) throw err;
+        for (var i=0; i<data.length; i++){
+            if (data[i]===".git") return $scope.changeStateBranch();
+        }
+        return $scope.changeStateNoRepo();
+    })
+
 });
 
 app.factory('homeFactory', function ($rootScope){
@@ -200,6 +245,7 @@ app.config(function($stateProvider, $urlRouterProvider){
             controller: 'MergeCtrl'
         })
 });
+
 
 app.controller('MergeCtrl', function ($scope, repoFactory, $rootScope, mergeFactory) {
 
@@ -319,6 +365,7 @@ app.config(function($stateProvider, $urlRouterProvider){
             controller: 'StatusCtrl'
         })
 });
+
 app.controller('StatusCtrl', function ($scope, repoFactory, $rootScope) {
 
     $scope.status = function () {
@@ -354,7 +401,6 @@ app.config(function($stateProvider, $urlRouterProvider){
             templateUrl: 'window/work/work.html'
         })
 });
-
 
 app.config(function($stateProvider, $urlRouterProvider){
 
@@ -474,6 +520,50 @@ app.factory('repoFactory', function ($rootScope, $q, branchFactory){
     }
 
 })
+
+app.config(function($stateProvider, $urlRouterProvider){
+
+    $stateProvider
+        .state('status', {
+            url: '/status',
+            templateUrl: 'window/status/status.html',
+            controller: 'StatusCtrl'
+        })
+});
+app.controller('StatusCtrl', function ($scope, repoFactory, $rootScope) {
+
+    $scope.status = function () {
+        repoFactory.status($rootScope.repo)
+        $scope.statusObject = repoFactory.statusObject
+        console.log($scope.statusObject)
+
+    }
+
+
+
+});
+app.config(function($stateProvider, $urlRouterProvider){
+
+    $stateProvider
+        .state('work', {
+            url: '/work',
+            templateUrl: 'window/work/work.html',
+            controller: 'workCtrl'
+        })
+});
+
+app.controller('workCtrl', function ($scope, $rootScope, branchFactory){
+	
+	$scope.branches = branchFactory.getAllBranches().then(function(data){
+		console.log(data);
+		$scope.branchList = data;
+		return data;
+	});
+	
+	$scope.currentBranch = branchFactory.currentBranch;
+
+})
+
 
 app.directive('navbar', function () {
 
