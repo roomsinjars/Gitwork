@@ -36,36 +36,13 @@ app.controller('BranchCtrl', function ($scope, $state, $rootScope, branchFactory
   $scope.switch = function (branchName) {
   	branchFactory.switchBranch(branchName);
       branchFactory.currentBranch = branchName;
-
   }
 
   $scope.newBranch = function(branchName) {
 
   	$branchFactory.createNewBranch(branchName);
-  		$scope.currentBranch = branchName;
+      branchFactory.currentBranch = branchName;
   }
-
-});
-app.factory('branchFactory', function ($rootScope){
-	return {
-
-		switchBranch: function(branchName) {
-		  $rootScope.repo.checkout(branchName, function (err) {
-		   if (err) throw err;
-		  })
-		},
-
-		createNewBranch: function(branchName) {
-			$rootScope.repo.create_branch(branchName, function (err){
-				if (err) throw err;
-				$scope.switch(branchName);
-			})
-		}
-
-	}
-});
-app.config(function($stateProvider, $urlRouterProvider){
-
 
 });
 app.factory('branchFactory', function ($rootScope){
@@ -144,22 +121,6 @@ app.factory('fileSystemFactory', function ($rootScope){
 		}
 	}
 });
-app.controller('CommitCtrl', function ($scope, $state, $rootScope, repoFactory) {
-
-	$scope.commit = function (commitMsg) {
-		repoFactory.commit($rootScope.repo, commitMsg)
-	}
-
-});
-app.config(function($stateProvider, $urlRouterProvider){
-
-    $stateProvider
-        .state('commit_final', {
-            url: '/commit_final',
-            templateUrl: 'window/commit_final/commit_final.html',
-            controller: 'CommitCtrl'
-        })
-});
 app.config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
@@ -223,33 +184,23 @@ if (process.platform === "darwin") {
 app.config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
-        .state('branch', {
-            url: '/branch',
-            templateUrl: 'window/branch/branch.html',
-            controller: 'BranchCtrl'
+        .state('merge', {
+            url: '/merge',
+            templateUrl: 'window/merge/merge.html',
+            controller: 'MergeCtrl'
         })
 });
-app.controller('BranchCtrl', function ($scope, $state, $rootScope, branchFactory) {
-   console.log("root", $rootScope.repo);
-  fs.readdir(__dirname + '/.git/refs/heads', function(err,data){
-    if (err) throw err;
-    $scope.branches = data;
-    $scope.$digest();
-  })
+
+app.controller('MergeCtrl', function ($scope, repoFactory, $rootScope) {
+
+    $scope.merge = function () {
+        repoFactory.merge()
+        $scope.mergeConflictError = repoFactory.mergeConflictError
+    }
 
 
-
-  $scope.switch = function (branchName) {
-  	branchFactory.switchBranch(branchName);
-      branchFactory.currentBranch = branchName;
-  }
-
-
-  $scope.newBranch = function(branchName) {
-
-  	$branchFactory.createNewBranch(branchName);
-      branchFactory.currentBranch = branchName;
-  }
+});
+app.config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
         .state('merge_ready', {
@@ -286,32 +237,16 @@ app.config(function($stateProvider, $urlRouterProvider){
             controller: 'PushCtrl'
         })
 });
-app.factory('branchFactory', function ($rootScope){
-	return {
+app.controller('PushCtrl', function ($scope, $rootScope, branchFactory) {
 
-		switchBranch: function(branchName) {
-		  $rootScope.repo.checkout(branchName, function (err) {
-		   if (err) throw err;
-		  })
-		},
+    $scope.push = function () {
 
-		createNewBranch: function(branchName) {
-			$rootScope.repo.create_branch(branchName, function (err){
-				if (err) throw err;
-				$scope.switch(branchName);
-			})
-		},
-
-        currentBranch: ""
-	}
+        $rootScope.repo.remote_push("origin", branchFactory.currentBranch, function(err) {
+            if (err) throw err;
+            console.log("Branch pushed");
+        })
+    }
 });
-if (process.platform === "darwin") {
-    var mb = new gui.Menu({type: 'menubar'});
-    mb.createMacBuiltin('RoboPaint', {
-        hideEdit: false
-    });
-    gui.Window.get().menu = mb;
-}
 
 app.config(function($stateProvider, $urlRouterProvider){
 
@@ -484,18 +419,21 @@ app.factory('repoFactory', function ($rootScope){
 app.config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
-        .state('merge', {
-            url: '/merge',
-            templateUrl: 'window/merge/merge.html',
-            controller: 'MergeCtrl'
+        .state('status', {
+            url: '/status',
+            templateUrl: 'window/status/status.html',
+            controller: 'StatusCtrl'
         })
 });
+app.controller('StatusCtrl', function ($scope, repoFactory, $rootScope) {
 
-app.controller('MergeCtrl', function ($scope, repoFactory, $rootScope) {
-
-    $scope.merge = function () {
-        repoFactory.merge()
+    $scope.status = function () {
+        repoFactory.status($rootScope.repo)
+        $scope.statusObject = repoFactory.statusObject
+        console.log($scope.statusObject)
     }
+
+
 
 });
 app.config(function($stateProvider, $urlRouterProvider){
@@ -507,35 +445,6 @@ app.config(function($stateProvider, $urlRouterProvider){
         })
 });
 
-
-app.config(function($stateProvider, $urlRouterProvider){
-
-    $stateProvider
-        .state('push', {
-            url: '/push',
-            templateUrl: 'window/push/push.html',
-            controller: 'PushCtrl'
-        })
-});
-app.controller('PushCtrl', function ($scope, $rootScope, branchFactory) {
-
-    $scope.push = function () {
-
-        $rootScope.repo.remote_push("origin", branchFactory.currentBranch, function(err) {
-            if (err) throw err;
-            console.log("Branch pushed");
-        })
-    }
-});
-
-app.config(function($stateProvider, $urlRouterProvider){
-
-    $stateProvider
-        .state('merge_ready', {
-            url: '/merge_ready',
-            templateUrl: 'window/merge_ready/merge_ready.html'
-        })
-});
 
 app.directive('navbar', function () {
 
