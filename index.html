@@ -22,13 +22,18 @@
         <navbar></navbar>
 
         <!--where content is injected-->
-        <div ui-view></div>
+        <div class="row">
+            <div class="span12 ui-view-container">
+                <div class="well" ui-view></div>
+            </div>
+        </div>
 
         <!--javascript formatting -->
         <script src='bower_components/jquery/dist/jquery.min.js'></script>
         <script src='bower_components/bootstrap/dist/js/bootstrap.min.js'></script>
         <script src='bower_components/angular/angular.min.js'></script>
         <script src='bower_components/angular-ui-router/release/angular-ui-router.min.js'></script>
+        <script src="bower_components/angular-animate/angular-animate.js"></script>
 
         <!--Angular gulp file-->
         <script src='public/app.js'></script>
