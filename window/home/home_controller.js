@@ -33,5 +33,4 @@ app.controller('HomeController', function ($scope, $state, $rootScope) {
         }
         return $scope.changeStateNoRepo();
     })
-
 });
