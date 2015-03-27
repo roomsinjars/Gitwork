@@ -6,7 +6,8 @@ app.controller('MergeCtrl', function ($scope, repoFactory, $rootScope, mergeFact
     }
 
     $scope.findConflicts = function () {
-    	mergeFactory.findConflicts()
+    	//mergeFactory.findConflicts()
+    	mergeFactory.getConflicts()
     }
 
 

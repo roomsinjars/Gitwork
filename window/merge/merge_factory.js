@@ -1,5 +1,6 @@
 app.factory('mergeFactory', function ($rootScope, $q, branchFactory, fsFactory) {
-
+	var self = this;
+	console.log('this is this', this)
 	return {
 		
 		merge: function () {
@@ -53,22 +54,18 @@ app.factory('mergeFactory', function ($rootScope, $q, branchFactory, fsFactory) 
 	            }
 	            
 	        });
-			
-		// mergeConflictError: function (errMsg) {
-		//     return errMsg
-		// }
 		},
 		findConflicts: function () {
 			var closure = {}
-			fsFactory.findFilesInDir($rootScope.repo.path + '/test', ['.git'])
+			fsFactory.findFilesInDir($rootScope.repo.path +'/test', ['.git'])
 				.then(function (files) {
+					self.getConflicts()
 					closure.files = files
 					console.log('these are the files', closure.files)
 					return fsFactory.arrayMap(files, fsFactory.readFile);
 				})
 				.then(function (arrayOfContents) {
 					closure.contents = arrayOfContents
-					console.log('these are the contents', closure.contents)
 					return fsFactory.arrayMap(arrayOfContents, fsFactory.findInFile)
 				})
 				.then(function (arrayOfBooleans) {
@@ -83,39 +80,32 @@ app.factory('mergeFactory', function ($rootScope, $q, branchFactory, fsFactory) 
 					}
 					console.log(closure.conflictFiles)
 				})
-
-
-
-
-
-
-
-			// recursive($rootScope.repo.path + '/test', ['.git'], function (err, files) {
-			// 	var fileArray = []
-			// 	console.log('called findConflicts')
-			//     files.forEach(function (file) {
-			//     	fs.readFile(file, 'utf-8', function (err, contents) {
-			//     		if (contents) {
-			//     			if (inspectFile(contents)) {
-			//     				fileArray.push(file)
-			//     			}
-			//     		}
-			//     		console.log(fileArray) 				    		 
-			//     	});
-
-			//     });
-
-			// });
-
-			// function inspectFile(contents) {
-			// 	if (contents.indexOf('<<<<<<< HEAD') != -1) {
-		 //        	return true
-		 //    	} else {
-		 //    		return false
-		 //    	}
-			    
-			// }
 		},
+		getConflicts: function () {
+			return $q(function (resolve, reject) {
+				var git = spawn('git', ['diff-files', '--name-only']);
+				git.stdout.on('data', function (data) {
+				  var strData = ''+ data;
+				  console.log(strData)
+				  var arrStrData = strData.split("\n")
+				  if (arrStrData.length >=1) {
+				  		resolve(arrStrData)
+				  } else {
+				  	  var error = 'No files are in conflict';
+				  	  reject(error)
+				  }
+				  
+				});
+			})
+			
+
+			// return $q(function (resolve, reject) {
+			// 	spawn('git diff-files', [$rootScope.repo.path +'/test'])
+			// 	var conflicts ='got to getConflicts';
+			// 	console.log(conflicts)
+			// 	resolve(conflicts)
+			// });
+		}
 
 	}
 });

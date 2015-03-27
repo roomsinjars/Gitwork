@@ -12,3 +12,4 @@ var mkdirp = require('mkdirp');
 var install = require('./install.json');
 var recursive = require('recursive-readdir');
 var async = require ('async');
+var spawn = require('child_process').spawn
