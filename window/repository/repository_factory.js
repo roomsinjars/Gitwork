@@ -77,11 +77,11 @@ app.factory('repoFactory', function ($rootScope){
             return statusObject
         },
 
-        status: function (repo) {
+        status: function (repo, cb) {
             console.log('this is the repo object', repo)
             repo.status(function (err, status) {
                 console.log(status.files)
-                this.statusObject(status.files)
+                cb(status.files)
             })
         }, 
         merge: function () {

@@ -25,6 +25,7 @@ app.controller('HomeController', function ($scope, $state, $rootScope) {
             })
         })
     }
+
     fs.readdir(__dirname, function(err,data){
         if (err) throw err;
         for (var i=0; i<data.length; i++){

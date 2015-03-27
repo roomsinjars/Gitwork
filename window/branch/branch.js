@@ -4,6 +4,15 @@ app.config(function($stateProvider, $urlRouterProvider){
         .state('branch', {
             url: '/branch',
             templateUrl: 'window/branch/branch.html',
-            controller: 'BranchCtrl'
+            controller: 'BranchCtrl',
+            resolve: {
+ 							branches: function(branchFactory){
+ 								return branchFactory.getAllBranches().then(function(data){
+ 									return data; 
+ 								}, function failed(err){
+ 									return err; 
+ 								})
+ 							}
+            }
         })
 });
