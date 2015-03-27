@@ -176,6 +176,15 @@ app.factory('fileSystemFactory', function ($rootScope){
 app.config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
+        .state('end', {
+            url: '/end',
+            templateUrl: 'window/end/end.html',
+        })
+});
+
+app.config(function($stateProvider, $urlRouterProvider){
+
+    $stateProvider
         .state('home', {
             url: '/',
             templateUrl: 'window/home/home.html',
@@ -568,15 +577,7 @@ app.controller('workCtrl', function ($scope, $rootScope, branchFactory){
 
 
 
-app.directive('navbar', function () {
 
-    return {
-        restrict: 'E',
-        scope: {},
-        templateUrl: 'window/common/navbar/navbar.html'
-    };
-
-});
 
 
 
