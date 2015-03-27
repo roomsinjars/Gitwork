@@ -38,6 +38,3 @@ app.factory('Status', function($rootScope, $q, repoFactory){
 		})
 	}
 })
-			  	// $scope.files = array
-			  	// $scope.$digest();
-			  	// console.log('this is scope.files', $scope.files)
