@@ -1,7 +1,7 @@
-app.controller('MergeCtrl', function ($scope, repoFactory, $rootScope) {
+app.controller('MergeCtrl', function ($scope, repoFactory, $rootScope, mergeFactory) {
 
     $scope.merge = function () {
-        repoFactory.merge()
+        mergeFactory.merge()
         $scope.mergeConflictError = repoFactory.mergeConflictError
     }
 
