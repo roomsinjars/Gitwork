@@ -12,12 +12,11 @@
   },
   "perferGlobal": true,
   "window": {
-    "height": 480,
+    "height": 600,
     "width": 800,
-    "min_height": 400,
-    "min_width": 500,
+    "resizable": false,
     "position": "center",
-    "toolbar": true,
+    "toolbar": false,
     "icon": "./img/GWicon.icns"
   },
   "repository": {
