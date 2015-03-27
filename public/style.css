@@ -1,26 +1,11 @@
-.form-group {
-    width: 80%;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.repository{
-    text-align: center;
-}
-
-.ui-view-container {
-    position: relative;
-    height: 100%;
-}
-
 [ui-view].ng-enter, [ui-view].ng-leave {
     position: absolute;
     left: 0;
     right: 0;
-    -webkit-transition:all .5s ease-in-out;
-    -moz-transition:all .5s ease-in-out;
-    -o-transition:all .5s ease-in-out;
-    transition:all .5s ease-in-out;
+    -webkit-transition:all 1s ease-in-out;
+    -moz-transition:all 1s ease-in-out;
+    -o-transition:all 1s ease-in-out;
+    transition:all 1s ease-in-out;
 }
 
 [ui-view].ng-enter {
@@ -49,5 +34,14 @@
     -webkit-transform:translate3d(100px, 0, 0);
     -moz-transform:translate3d(100px, 0, 0);
     transform:translate3d(100px, 0, 0);
+}
+
+body {
+    background-color: white;
+}
+
+.progress-text{
+    text-align: center;
+    display: inline-block;
 }
 
