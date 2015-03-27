@@ -10,6 +10,8 @@ var __dirname = process.env.PWD;
 var git = require("gift");
 var mkdirp = require('mkdirp');
 var install = require('./install.json');
+var recursive = require('recursive-readdir');
+var async = require ('async');
 
 app.config(function ($urlRouterProvider, $locationProvider) {
     // If we go to a URL that ui-router doesn't have registered, go to the "/" url.
@@ -77,7 +79,6 @@ app.controller('BranchCtrl', function ($scope, $state, $rootScope, branches, bra
 
   $scope.switch = function (branchName) {
   	branchFactory.switchBranch(branchName);
-
   	branchFactory.currentBranch = branchName;
   }
 
@@ -104,9 +105,34 @@ app.factory('branchFactory', function ($rootScope, $q){
 			})
 		},
 
+		getAllBranches: function(){
+			return $q(function (resolve, reject){
+				fs.readdir(__dirname + '/.git/refs/heads', function(err, data){
+					if (err) return reject(err);
+	        resolve(data)
+	      })
+			})
+		},
+
 		currentBranch: ""
 
 	}
+});
+app.config(function($stateProvider, $urlRouterProvider){
+
+    $stateProvider
+        .state('commit', {
+            url: '/commit',
+            templateUrl: 'window/commit/commit.html',
+            controller: 'CommitCtrl'
+        })
+});
+app.controller('CommitCtrl', function ($scope, $state, $rootScope, repoFactory) {
+
+	$scope.commit = function (commitMsg) {
+		repoFactory.commit($rootScope.repo, commitMsg)
+	}
+
 });
 app.controller('CommitCtrl', function ($scope, $state, $rootScope, repoFactory) {
 
@@ -124,7 +150,7 @@ app.config(function($stateProvider, $urlRouterProvider){
             controller: 'CommitCtrl'
         })
 });
-app.factory('fileSystemFactory', function ($rootScope){
+app.factory('fsFactory', function ($rootScope, $q){
 	return {
 		makeDir: function (name, cb) {
 			var filePath = __dirname + '/' + name;
@@ -146,6 +172,43 @@ app.factory('fileSystemFactory', function ($rootScope){
 			    console.log('into write file function')
 			    if(err) throw err
 			})
+		},
+		findFilesInDir: function (path, arrToIgnore) {
+			return $q(function (resolve, reject) {
+				if (!arrToIgnore) {
+					recursive(path, function (err, files) {
+						if (err) return reject(err)
+						resolve(files)
+				});
+				} else {
+					recursive(path, arrToIgnore, function (err, files) {
+						if (err) return reject(err)
+						resolve(files)
+					})
+				}	
+			})	
+		},
+		readFile: function (file) {
+			return $q(function (resolve, reject) {
+				fs.readFile(file, 'utf-8', function (err, contents) {
+					if (err) return reject(err);
+					resolve(contents)			    		 
+				});
+			})
+		},
+		findInFile: function(str) {
+			var conflict;
+			return $q(function (resolve, reject) {
+				if (str.indexOf('<<<<<<< HEAD') != -1) {
+		        conflict = true;
+			    } else { conflict = false; }
+			    resolve(conflict)
+			})
+			
+		},
+		arrayMap: function (array, func) {
+			var promises = array.map(func);
+			return $q.all(promises);
 		}
 	}
 });
@@ -194,7 +257,6 @@ app.controller('HomeController', function ($scope, $state, $rootScope) {
         }
         return $scope.changeStateNoRepo();
     })
-
 });
 
 app.factory('homeFactory', function ($rootScope){
@@ -203,32 +265,6 @@ app.factory('homeFactory', function ($rootScope){
 }
  
 })
-app.config(function($stateProvider, $urlRouterProvider){
-
-    $stateProvider
-        .state('commit', {
-            url: '/commit',
-            templateUrl: 'window/commit/commit.html',
-            controller: 'CommitCtrl'
-        })
-});
-app.controller('CommitCtrl', function ($scope, $state, $rootScope, repoFactory) {
-
-	$scope.commit = function (commitMsg) {
-		repoFactory.commit($rootScope.repo, commitMsg)
-	}
-
-});
-app.config(function($stateProvider, $urlRouterProvider){
-
-    $stateProvider
-        .state('merge_ready', {
-            url: '/merge_ready',
-            templateUrl: 'window/merge_ready/merge_ready.html',
-            controller: 'PullCtrl'
-        })
-});
-
 if (process.platform === "darwin") {
     var mb = new gui.Menu({type: 'menubar'});
     mb.createMacBuiltin('RoboPaint', {
@@ -246,17 +282,20 @@ app.config(function($stateProvider, $urlRouterProvider){
         })
 });
 
-
 app.controller('MergeCtrl', function ($scope, repoFactory, $rootScope, mergeFactory) {
-
+	console.log(mergeFactory)
     $scope.merge = function () {
         mergeFactory.merge()
         $scope.mergeConflictError = repoFactory.mergeConflictError
     }
 
+    $scope.findConflicts = function () {
+    	mergeFactory.findConflicts()
+    }
+
 
 });
-app.factory('mergeFactory', function ($rootScope, $q, branchFactory) {
+app.factory('mergeFactory', function ($rootScope, $q, branchFactory, fsFactory) {
 
 	return {
 		
@@ -315,27 +354,76 @@ app.factory('mergeFactory', function ($rootScope, $q, branchFactory) {
 		// mergeConflictError: function (errMsg) {
 		//     return errMsg
 		// }
-		}
+		},
+		findConflicts: function () {
+			var closure = {}
+			fsFactory.findFilesInDir($rootScope.repo.path + '/test', ['.git'])
+				.then(function (files) {
+					closure.files = files
+					console.log('these are the files', closure.files)
+					return fsFactory.arrayMap(files, fsFactory.readFile);
+				})
+				.then(function (arrayOfContents) {
+					closure.contents = arrayOfContents
+					console.log('these are the contents', closure.contents)
+					return fsFactory.arrayMap(arrayOfContents, fsFactory.findInFile)
+				})
+				.then(function (arrayOfBooleans) {
+					closure.booleans = arrayOfBooleans
+					closure.conflictFiles = []
+					var booleanIndex = 0;
+					console.log('this is the array of Booleans', closure.booleans)
+					for (var i = 0, len = arrayOfBooleans.length; i < len; i++) {
+						if (arrayOfBooleans[i]) {
+							closure.conflictFiles.push(closure.contents[i])
+						}
+					}
+					console.log(closure.conflictFiles)
+				})
+
+
+
+
+
+
+
+			// recursive($rootScope.repo.path + '/test', ['.git'], function (err, files) {
+			// 	var fileArray = []
+			// 	console.log('called findConflicts')
+			//     files.forEach(function (file) {
+			//     	fs.readFile(file, 'utf-8', function (err, contents) {
+			//     		if (contents) {
+			//     			if (inspectFile(contents)) {
+			//     				fileArray.push(file)
+			//     			}
+			//     		}
+			//     		console.log(fileArray) 				    		 
+			//     	});
+
+			//     });
+
+			// });
+
+			// function inspectFile(contents) {
+			// 	if (contents.indexOf('<<<<<<< HEAD') != -1) {
+		 //        	return true
+		 //    	} else {
+		 //    		return false
+		 //    	}
+			    
+			// }
+		},
+
 	}
 });
 app.config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
-        .state('push', {
-            url: '/push',
-            templateUrl: 'window/push/push.html',
-            controller: 'PushCtrl'
+        .state('merge_ready', {
+            url: '/merge_ready',
+            templateUrl: 'window/merge_ready/merge_ready.html',
+            controller: 'PullCtrl'
         })
-});
-app.controller('PushCtrl', function ($scope, $rootScope, branchFactory) {
-
-    $scope.push = function () {
-
-        $rootScope.repo.remote_push("origin", branchFactory.currentBranch, function(err) {
-            if (err) throw err;
-            console.log("Branch pushed");
-        })
-    }
 });
 
 app.controller('PullCtrl', function ($scope, $rootScope, pullFactory) {
@@ -359,47 +447,21 @@ app.factory('pullFactory', function ($rootScope){
 app.config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
-        .state('status', {
-            url: '/status',
-            templateUrl: 'window/status/status.html',
-            controller: 'StatusCtrl'
+        .state('push', {
+            url: '/push',
+            templateUrl: 'window/push/push.html',
+            controller: 'PushCtrl'
         })
 });
+app.controller('PushCtrl', function ($scope, $rootScope, branchFactory) {
 
-app.controller('StatusCtrl', function ($scope, repoFactory, $rootScope) {
+    $scope.push = function () {
 
-    $scope.status = function () {
-        repoFactory.status($rootScope.repo, function (statusObj) {
-        	var array = []
-	        	var counter = 0
-	        	for (var key in statusObj) {
-	        		if (statusObj.hasOwnProperty(key)) {
-	        	   		array[counter] = {};
-	        	   		array[counter].fileName = key;
-	        	        for (var prop in statusObj[key]) {
-	        	        	if(statusObj[key].hasOwnProperty(prop)){
-	        	        	    if (prop === 'staged') {
-	        	        		    array[counter].staged = statusObj[key][prop]
-	        	        	    } else {
-	        	        	        array[counter].tracked = statusObj[key][prop]
-	        	        	    }
-	        	          }
-	        	       }
-	        	    }counter++
-	        	}
-	        	$scope.files = array
-	        	$scope.$digest();
-	        	console.log('this is scope.files', $scope.files)
+        $rootScope.repo.remote_push("origin", branchFactory.currentBranch, function(err) {
+            if (err) throw err;
+            console.log("Branch pushed");
         })
     }
-});
-app.config(function($stateProvider, $urlRouterProvider){
-
-    $stateProvider
-        .state('work', {
-            url: '/work',
-            templateUrl: 'window/work/work.html'
-        })
 });
 
 app.config(function($stateProvider, $urlRouterProvider){
@@ -533,13 +595,30 @@ app.config(function($stateProvider, $urlRouterProvider){
 app.controller('StatusCtrl', function ($scope, repoFactory, $rootScope) {
 
     $scope.status = function () {
-        repoFactory.status($rootScope.repo)
-        $scope.statusObject = repoFactory.statusObject
-        console.log($scope.statusObject)
 
+        repoFactory.status($rootScope.repo, function (statusObj) {
+        	var array = []
+	        	var counter = 0
+	        	for (var key in statusObj) {
+	        		if (statusObj.hasOwnProperty(key)) {
+	        	   		array[counter] = {};
+	        	   		array[counter].fileName = key;
+	        	        for (var prop in statusObj[key]) {
+	        	        	if(statusObj[key].hasOwnProperty(prop)){
+	        	        	    if (prop === 'staged') {
+	        	        		    array[counter].staged = statusObj[key][prop]
+	        	        	    } else {
+	        	        	        array[counter].tracked = statusObj[key][prop]
+	        	        	    }
+	        	          }
+	        	       }
+	        	    }counter++
+	        	}
+	        	$scope.files = array
+	        	$scope.$digest();
+	        	console.log('this is scope.files', $scope.files)
+        })
     }
-
-
 
 });
 app.config(function($stateProvider, $urlRouterProvider){
@@ -563,6 +642,32 @@ app.controller('workCtrl', function ($scope, $rootScope, branchFactory){
 	$scope.currentBranch = branchFactory.currentBranch;
 
 })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 app.directive('navbar', function () {

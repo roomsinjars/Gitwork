@@ -1,4 +1,4 @@
-app.factory('mergeFactory', function ($rootScope, $q, branchFactory) {
+app.factory('mergeFactory', function ($rootScope, $q, branchFactory, fsFactory) {
 
 	return {
 		
@@ -57,6 +57,65 @@ app.factory('mergeFactory', function ($rootScope, $q, branchFactory) {
 		// mergeConflictError: function (errMsg) {
 		//     return errMsg
 		// }
-		}
+		},
+		findConflicts: function () {
+			var closure = {}
+			fsFactory.findFilesInDir($rootScope.repo.path + '/test', ['.git'])
+				.then(function (files) {
+					closure.files = files
+					console.log('these are the files', closure.files)
+					return fsFactory.arrayMap(files, fsFactory.readFile);
+				})
+				.then(function (arrayOfContents) {
+					closure.contents = arrayOfContents
+					console.log('these are the contents', closure.contents)
+					return fsFactory.arrayMap(arrayOfContents, fsFactory.findInFile)
+				})
+				.then(function (arrayOfBooleans) {
+					closure.booleans = arrayOfBooleans
+					closure.conflictFiles = []
+					var booleanIndex = 0;
+					console.log('this is the array of Booleans', closure.booleans)
+					for (var i = 0, len = arrayOfBooleans.length; i < len; i++) {
+						if (arrayOfBooleans[i]) {
+							closure.conflictFiles.push(closure.contents[i])
+						}
+					}
+					console.log(closure.conflictFiles)
+				})
+
+
+
+
+
+
+
+			// recursive($rootScope.repo.path + '/test', ['.git'], function (err, files) {
+			// 	var fileArray = []
+			// 	console.log('called findConflicts')
+			//     files.forEach(function (file) {
+			//     	fs.readFile(file, 'utf-8', function (err, contents) {
+			//     		if (contents) {
+			//     			if (inspectFile(contents)) {
+			//     				fileArray.push(file)
+			//     			}
+			//     		}
+			//     		console.log(fileArray) 				    		 
+			//     	});
+
+			//     });
+
+			// });
+
+			// function inspectFile(contents) {
+			// 	if (contents.indexOf('<<<<<<< HEAD') != -1) {
+		 //        	return true
+		 //    	} else {
+		 //    		return false
+		 //    	}
+			    
+			// }
+		},
+
 	}
 });
