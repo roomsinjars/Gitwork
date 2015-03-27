@@ -1,15 +1,20 @@
-app.controller('StatusCtrl', function ($scope, statusFactory, $rootScope) {
+app.controller('StatusCtrl', function ($scope, Status, $rootScope) {
 
 	console.log('got to status controller');
-	
-	$scope.status = statusFactory.getStatus();
-	console.log('scope status', $scope.status);
+	$scope.getStatus = function() {
+		Status.get().then(function(data) {
+			$scope.status = data;
+			$scope.files = data;
+			$scope.$digest();
+			console.log('scope status', $scope.status);
+		})
+	}
 
-	$scope.status.then(function(data){
-		if (err) reject(err);
-		console.log('in status controller', data);
-		resolve(data)
-	})
+	// $scope.status.then(function(data){
+	// 	if (err) reject(err);
+	// 	console.log('in status controller', data);
+	// 	resolve(data)
+	// })
 
 })
 
