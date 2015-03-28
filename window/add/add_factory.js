@@ -9,12 +9,13 @@ app.factory('addFactory', function($rootScope, Status){
 			})
 		}
 
-		addFiles: function() {
-			return $q(function (resolve, reject){
-				$rootScope.repo.add(file, function (err, data){
-					if (err) return reject(err);
-					resolve(data)
-				})
-			})
-		}
+		// addFiles: function() {
+		// 	return $q(function (resolve, reject){
+		// 		$rootScope.repo.add(file, function (err, data){
+		// 			if (err) return reject(err);
+		// 			resolve(data)
+		// 		})
+		// 	})
+		// }
 	}
+})
