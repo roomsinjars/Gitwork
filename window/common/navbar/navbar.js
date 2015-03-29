@@ -4,10 +4,8 @@ app.directive('navbar', function () {
         restrict: 'E',
         scope: {},
         templateUrl: 'window/common/navbar/navbar.html'
-    };
-
+     };
 });
-
 
 
 

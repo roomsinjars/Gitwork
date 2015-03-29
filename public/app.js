@@ -53,61 +53,48 @@ app.config(function($stateProvider, $urlRouterProvider){
       .state('add', {
           url: '/add',
           templateUrl: 'window/add/add.html',
-          controller: 'AddCtrl'
+          controller: 'addCtrl'
       })
 });
-app.controller('addCtrl', function ($scope, $state, $rootScope, repoFactory, Status, addFactory) {
+app.controller('addCtrl', function ($scope, $state, $rootScope, Status, addFactory) {
 		
 	$scope.add = function(file) {
-		addFactory.addFile(file);
-		$state.go('add');
+		addFactory.addFiles(file);
+	}
+
+	$scope.getStatus = function() {
+		Status.get().then(function(data) {
+			$scope.filesUnstaged = [];
+			$scope.filesStaged = [];
+			console.log('data', data);
+			for (var i=0; i< data.length; i++){
+				console.log(data[i].tracked);
+				if (data[i].tracked === "M" || data[i].tracked === "A"){
+					if (data[i].staged == false) {
+						$scope.filesUnstaged.push(data[i]);
+					} else {
+						$scope.filesStaged.push(data[i]);
+					}
+				}
+			}
+		})
 	}
 });
-app.factory('addFactory', function($rootScope, Status){
+app.factory('addFactory', function($rootScope, $q){
 	return {
-		getStatus : function() {
-			console.log('get status');
-			Status.get().then(function(data) {
-				$scope.files = data;
-				$scope.$digest();
-				console.log('scope files', $scope.files);
-			})
-		}
+	
 
-		addFiles: function() {
+		addFiles: function(file) {
 			return $q(function (resolve, reject){
 				$rootScope.repo.add(file, function (err, data){
 					if (err) return reject(err);
+					console.log('factory', data);
 					resolve(data)
 				})
 			})
 		}
 	}
-app.factory('fileSystemFactory', function ($rootScope){
-	return {
-		makeDir: function (name, cb) {
-			var filePath = __dirname + '/' + name;
-			mkdirp(filePath, function (err) {
-				console.log('into the makeDir function')
-			    if (err) throw err;
-			})
-		},
-		makeDotGitDir: function (name) {
-			var filePath = __dirname + '/' + name + '/.git';
-			mkdirp(filePath, function (err) {
-				console.log('into the makeDotGitDir function')
-			    if (err) throw err;
-			})
-		},
-		makeFile: function (dirName, fileName, fileType) {
-			var filePath = __dirname + '/' + dirName + '/' + fileName;
-			fs.writeFile(filePath, fileName, function(err) {
-			    console.log('into write file function')
-			    if(err) throw err
-			})
-		}
-	}
-});
+})
 app.config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
@@ -182,6 +169,40 @@ app.factory('branchFactory', function ($rootScope, $q){
 	}
 });
 
+app.factory('fileSystemFactory', function ($rootScope){
+	return {
+		makeDir: function (name, cb) {
+			var filePath = __dirname + '/' + name;
+			mkdirp(filePath, function (err) {
+				console.log('into the makeDir function')
+			    if (err) throw err;
+			})
+		},
+		makeDotGitDir: function (name) {
+			var filePath = __dirname + '/' + name + '/.git';
+			mkdirp(filePath, function (err) {
+				console.log('into the makeDotGitDir function')
+			    if (err) throw err;
+			})
+		},
+		makeFile: function (dirName, fileName, fileType) {
+			var filePath = __dirname + '/' + dirName + '/' + fileName;
+			fs.writeFile(filePath, fileName, function(err) {
+			    console.log('into write file function')
+			    if(err) throw err
+			})
+		}
+	}
+});
+app.config(function($stateProvider, $urlRouterProvider){
+
+    $stateProvider
+        .state('end', {
+            url: '/end',
+            templateUrl: 'window/end/end.html',
+        })
+});
+
 app.config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
@@ -235,6 +256,22 @@ app.factory('homeFactory', function ($rootScope){
 }
  
 })
+app.controller('CommitFinalCtrl', function ($scope, $state, $rootScope, repoFactory) {
+
+	$scope.commit = function (commitMsg) {
+		repoFactory.commit($rootScope.repo, commitMsg)
+	}
+
+});
+app.config(function($stateProvider, $urlRouterProvider){
+
+    $stateProvider
+        .state('commit_final', {
+            url: '/commit_final',
+            templateUrl: 'window/commit_final/commit_final.html',
+            controller: 'CommitFinalCtrl'
+        })
+});
 app.config(function($stateProvider, $urlRouterProvider){
     $stateProvider
       .state('commit', {
@@ -265,22 +302,6 @@ app.controller('CommitCtrl', function ($scope, $state, $rootScope, repoFactory) 
 
 // 	}
 // })
-app.controller('CommitFinalCtrl', function ($scope, $state, $rootScope, repoFactory) {
-
-	$scope.commit = function (commitMsg) {
-		repoFactory.commit($rootScope.repo, commitMsg)
-	}
-
-});
-app.config(function($stateProvider, $urlRouterProvider){
-
-    $stateProvider
-        .state('commit_final', {
-            url: '/commit_final',
-            templateUrl: 'window/commit_final/commit_final.html',
-            controller: 'CommitFinalCtrl'
-        })
-});
 app.config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
@@ -598,10 +619,7 @@ app.controller('StatusCtrl', function ($scope, Status, $rootScope) {
 
 	$scope.getStatus = function() {
 		Status.get().then(function(data) {
-			$scope.status = data;
 			$scope.files = data;
-			$scope.$digest();
-			console.log('scope status', $scope.status);
 			console.log('scope files', $scope.files);
 		})
 	}
@@ -654,10 +672,8 @@ app.directive('navbar', function () {
         restrict: 'E',
         scope: {},
         templateUrl: 'window/common/navbar/navbar.html'
-    };
-
+     };
 });
-
 
 
 

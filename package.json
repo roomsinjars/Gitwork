@@ -14,8 +14,7 @@
   "window": {
     "height": 600,
     "width": 800,
-    "min_height": 400,
-    "min_width": 500,
+    "resizable": false,
     "position": "center",
     "toolbar": true,
     "icon": "./img/GWicon.icns"

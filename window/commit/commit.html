@@ -4,7 +4,7 @@
 </div>
 
 <div class="form-group">
-    <a ui-sref='add' class="btn btn-primary">Click for Files or ALL files will be added to Commit</a>
+    <a ui-sref='add' ng-click="getStatus()" class="btn btn-primary">Click for Files or ALL files will be added to Commit</a>
     <h3>Commit Progress</h3>
     <div class="input-group">
         <span class="input-group-addon">Message:</span>
@@ -13,4 +13,26 @@
             <button class="btn btn-primary" type="button" ng-click="commit(commitMsg)" ui-sref="merge_ready">Commit</button>
           </span>
     </div>
+</div>
+
+<div class="progress-text" style="width: 17%">
+    <p> Repo </p>
+</div>
+
+<div class="progress-text" style="width: 16%">
+    <p> Branch </p>
+</div>
+
+<div class="progress-text" style="width: 17%">
+    <p> Develop </p>
+</div>
+
+<div class="progress-text" style="width: 15%">
+    <p> Commit </p>
+</div>
+
+<div class="progress progress-striped">
+    <div class="progress-bar progress-bar-success" style="width: 50%"></div>
+    <div class="progress-bar progress-bar-warning active" style="width: 17%"></div>
+    <div class="progress-bar progress-bar-danger" style="width: 33%"></div>
 </div>
