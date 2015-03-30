@@ -1,5 +1,6 @@
-app.factory('mergeFactory', function ($rootScope, $q, branchFactory) {
-
+app.factory('mergeFactory', function ($rootScope, $q, branchFactory, fsFactory) {
+	var self = this;
+	console.log('this is this', this)
 	return {
 		
 		merge: function () {
@@ -53,10 +54,53 @@ app.factory('mergeFactory', function ($rootScope, $q, branchFactory) {
 	            }
 	            
 	        });
-			
-		// mergeConflictError: function (errMsg) {
-		//     return errMsg
-		// }
+		},
+		// findConflicts: function () {
+		// 	var closure = {}
+		// 	fsFactory.findFilesInDir($rootScope.repo.path +'/test', ['.git'])
+		// 		.then(function (files) {
+		// 			self.getConflicts()
+		// 			closure.files = files
+		// 			console.log('these are the files', closure.files)
+		// 			return fsFactory.arrayMap(files, fsFactory.readFile);
+		// 		})
+		// 		.then(function (arrayOfContents) {
+		// 			closure.contents = arrayOfContents
+		// 			return fsFactory.arrayMap(arrayOfContents, fsFactory.findInFile)
+		// 		})
+		// 		.then(function (arrayOfBooleans) {
+		// 			closure.booleans = arrayOfBooleans
+		// 			closure.conflictFiles = []
+		// 			var booleanIndex = 0;
+		// 			console.log('this is the array of Booleans', closure.booleans)
+		// 			for (var i = 0, len = arrayOfBooleans.length; i < len; i++) {
+		// 				if (arrayOfBooleans[i]) {
+		// 					closure.conflictFiles.push(closure.contents[i])
+		// 				}
+		// 			}
+		// 			console.log(closure.conflictFiles)
+		// 		})
+		// },
+		getConflicts: function () {
+			return $q(function (resolve, reject) {
+				var git = spawn('git', ['diff-files', '--name-only']);
+				git.stdout.on('data', function (data) {
+				  var strData = ''+ data;
+				  var arrStrData = [];
+				  console.log('this is the raw data', strData);
+				  var len = arrStrData.length;
+				  arrStrData = strData.split("\n").slice(0, len-1)
+				  console.log(arrStrData)
+				  if (arrStrData.length >=1) {
+				  		resolve(arrStrData)
+				  } else {
+				  	  var error = 'No files are in conflict';
+				  	  reject(error)
+				  }
+				  
+				});
+			})
 		}
+
 	}
 });
