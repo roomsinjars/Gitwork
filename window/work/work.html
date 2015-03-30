@@ -3,15 +3,33 @@
     <p>When you are done working on your feature, click the next button.</p>
 </div>
 <div>
-	<p>Local Branches:</p>
-	<li ng-repeat="branch in branchList">{{ branch }}</li>
+	<!--<p>Local Branches:</p>-->
+	<!--<li ng-repeat="branch in branchList">{{ branch }}</li>-->
 	<h4>Currently on branch:    </h4>
 	<h4>{{ currentBranch }}</h4>
 </div>
 <div class="form-group">
     <div class="input-group">
           <span class="input-group-btn">
-            <button class="btn btn-primary"  ui-sref="commit" type="button">Next</button>
+            <button class="btn btn-primary work-button"  ui-sref="commit" type="button">Next</button>
           </span>
     </div>
+</div>
+
+<div class="progress-text" style="width: 17%">
+    <p> Repo </p>
+</div>
+
+<div class="progress-text" style="width: 16%">
+    <p> Branch </p>
+</div>
+
+<div class="progress-text" style="width: 17%">
+    <p> Develop </p>
+</div>
+
+<div class="progress progress-striped">
+    <div class="progress-bar progress-bar-success" style="width: 34%"></div>
+    <div class="progress-bar progress-bar-warning active" style="width: 17%"></div>
+    <div class="progress-bar progress-bar-danger" style="width: 49%"></div>
 </div>

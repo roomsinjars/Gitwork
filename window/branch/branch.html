@@ -1,17 +1,13 @@
 <div class="alert alert-dismissible alert-info">
-    <h4>Time to make a branch!</h4>
-    <p>If you have a branch you would like to switch to you can do it here.  Otherwise, create a new branch below.</p>
+    <h4>We've noticed you already have a git repository!</h4>
+    <p>Please select the branch you would like to use, or delete a branch if it is no longer needed.</p>
 </div>
 
 <div class="form-group">
     <h3>Choose a branch to use:</h3>
     <div class="input-group">
         <span class="input-group-addon">Branch:</span>
-        <a ng-repeat="branch in branches" class="btn-primary btn-sm" ng-click="switch(branch)" ui-sref="work">{{ branch }}</a>
-
-          <span class="input-group-btn">
-            <button class="btn btn-primary" type="button" ui-sref="work">Select</button>
-          </span>
+        <a ng-repeat="branch in branches" class="btn btn-primary branch-button" ng-click="switch(branch)" ui-sref="work">{{ branch }}</a>
     </div>
 </div>
 
@@ -26,16 +22,29 @@
     </div>
 </div>
 
-<div class="form-group">
-    <h3>Delete a Branch:  Be careful, can not undo</h3>
-    <div class="input-group">
-        <span class="input-group-addon">Branch:</span>
-        <a ng-repeat="branch in branches" class="btn-primary btn-sm" ng-click="delete(branch)" ui-sref="work">{{ branch }}</a>
+<!--<div class="form-group">-->
+    <!--<h3>Delete a Branch:  Be careful, can not undo</h3>-->
+    <!--<div class="input-group">-->
+        <!--<span class="input-group-addon">Branch:</span>-->
+        <!--<a ng-repeat="branch in branches" class="btn-primary btn-sm" ng-click="delete(branch)" ui-sref="work">{{ branch }}</a>-->
+          <!--<span class="input-group-btn">-->
+            <!--<button class="btn btn-primary" type="button" ui-sref="work">Select</button>-->
+          <!--</span>-->
+    <!--</div>-->
+<!--</div>-->
 
-          <span class="input-group-btn">
-            <button class="btn btn-primary" type="button" ui-sref="work">Select</button>
-          </span>
-    </div>
+<div class="progress-text" style="width: 17%">
+    <p> Repo </p>
+</div>
+
+<div class="progress-text" style="width: 16%">
+    <p> Branch </p>
+</div>
+
+<div class="progress progress-striped">
+    <div class="progress-bar progress-bar-success" style="width: 17%"></div>
+    <div class="progress-bar progress-bar-warning active" style="width: 17%"></div>
+    <div class="progress-bar progress-bar-danger" style="width: 66%"></div>
 </div>
 
 
