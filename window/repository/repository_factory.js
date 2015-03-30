@@ -35,7 +35,6 @@ app.factory('repoFactory', function ($rootScope, $q, branchFactory){
                                 console.log('entered identify function')
                                 console.log('post-identify repo', $rootScope.repo.identity)
                                 var options = {
-                                all: true,
                                 amend: false,
                                 author: "blakeprobinson <bprobinson@zoho.com>"
                                 }
@@ -62,7 +61,6 @@ app.factory('repoFactory', function ($rootScope, $q, branchFactory){
         },
         commit: function (repository, commitMsg) {
             var options = {
-            all: true,
             amend: false,
             author: "blakeprobinson <bprobinson@zoho.com>"
             }
