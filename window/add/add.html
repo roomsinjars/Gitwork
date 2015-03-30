@@ -4,11 +4,12 @@
 </div>
 
 <div class="form-group">
-    <button class="btn btn-primary" type="button" ng-click="getStatus()">Click for Files</button>
-     <button class="btn btn-primary" type="button" ng-repeat="fileUS in filesUnstaged" ng-click="add(fileUS)">{{ fileUS.fileName }}</button>
+    <button class="btn btn-primary" type="button" ng-click="getStatus()">Update Status</button>
+    <p>Unstaged: (Click to add file to commit)</p>
+     <button class="btn btn-primary" type="button" ng-repeat="fileUS in filesUnstaged" ng-click="add(fileUS.fileName)">{{ fileUS.fileName }}</button>
 
-     <p>Staged: <p>
-      <button class="btn btn-primary" type="button" ng-repeat="fileS in filesStaged" ng-click="add(fileS)">{{ fileS.fileName }}</button>
+     <p>Staged: (Click to remove file from commit)<p>
+      <button class="btn btn-primary" type="button" ng-repeat="fileS in filesStaged" ng-click="remove(fileS.fileName)">{{ fileS.fileName }}</button>
     <h3>Commit Progress</h3>
     <div class="input-group">
         <span class="input-group-addon">Message:</span>
