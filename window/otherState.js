@@ -4,23 +4,27 @@ app.config(function ($urlRouterProvider, $locationProvider) {
 });
 
 app.run(function ($state, $rootScope) {
-	fs.readdir(__dirname, function (err,data){
-	    if (err) throw err;
-	    for (var i=0; i<data.length; i++){
-	        if (data[i]===".git") {
-		        $rootScope.repo = git(process.env.PWD);		    	
-		    	console.log($rootScope.repo);
-		    	$rootScope.repo.config(function (err, config) {
-		    		console.log(config.items)
-		    		$rootScope.username = config.items['user.name'];
-		    		$rootScope.useremail = config.items['user.email'];
-		    		console.log($rootScope)
-		    		return $state.go('branch')
-		    	})
-	    	}
-	    }
-	    return $state.go('noRepo')
-	})
+
+    setTimeout(function(){
+        //where we can also call foo
+        fs.readdir(__dirname, function (err,data){
+            if (err) throw err;
+            for (var i=0; i<data.length; i++){
+                if (data[i]===".git") {
+                    $rootScope.repo = git(process.env.PWD);
+                    console.log($rootScope.repo);
+                    $rootScope.repo.config(function (err, config) {
+                        console.log(config.items)
+                        $rootScope.username = config.items['user.name'];
+                        $rootScope.useremail = config.items['user.email'];
+                        console.log($rootScope)
+                        return $state.go('branch')
+                    })
+                }
+            }
+            return $state.go('noRepo')
+        })
+    },7000);
 
 	if (install.value==="false") {
 	    //npm link on the current directory
