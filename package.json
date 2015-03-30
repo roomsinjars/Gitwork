@@ -16,7 +16,7 @@
     "width": 800,
     "resizable": false,
     "position": "center",
-    "toolbar": false,
+    "toolbar": true,
     "icon": "./img/GWicon.icns"
   },
   "repository": {
