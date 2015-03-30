@@ -86,8 +86,11 @@ app.factory('mergeFactory', function ($rootScope, $q, branchFactory, fsFactory) 
 				var git = spawn('git', ['diff-files', '--name-only']);
 				git.stdout.on('data', function (data) {
 				  var strData = ''+ data;
-				  console.log(strData)
-				  var arrStrData = strData.split("\n")
+				  var arrStrData = [];
+				  console.log('this is the raw data', strData);
+				  var len = arrStrData.length;
+				  arrStrData = strData.split("\n").slice(0, len-1)
+				  console.log(arrStrData)
 				  if (arrStrData.length >=1) {
 				  		resolve(arrStrData)
 				  } else {
@@ -97,14 +100,6 @@ app.factory('mergeFactory', function ($rootScope, $q, branchFactory, fsFactory) 
 				  
 				});
 			})
-			
-
-			// return $q(function (resolve, reject) {
-			// 	spawn('git diff-files', [$rootScope.repo.path +'/test'])
-			// 	var conflicts ='got to getConflicts';
-			// 	console.log(conflicts)
-			// 	resolve(conflicts)
-			// });
 		}
 
 	}

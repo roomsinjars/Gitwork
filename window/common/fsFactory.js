@@ -35,7 +35,7 @@ app.factory('fsFactory', function ($rootScope, $q){
 					})
 				}	
 			})	
-		},
+		}, 
 		readFile: function (file) {
 			return $q(function (resolve, reject) {
 				fs.readFile(file, 'utf-8', function (err, contents) {
