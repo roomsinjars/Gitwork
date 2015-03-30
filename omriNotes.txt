@@ -14,3 +14,5 @@ spawn(ln -s)
 
 require path to .json just works...
 
+
+<<<<<<< HEAD
