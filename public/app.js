@@ -200,6 +200,59 @@ app.factory('branchFactory', function ($rootScope, $q){
 app.config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
+        .state('commit', {
+            url: '/commit',
+            templateUrl: 'window/commit/commit.html',
+            controller: 'CommitCtrl'
+        })
+});
+app.controller('CommitCtrl', function ($scope, $state, $rootScope, repoFactory) {
+
+	$scope.commit = function (commitMsg) {
+		repoFactory.commit($rootScope.repo, commitMsg)
+	}
+
+});
+app.controller('CommitCtrl', function ($scope, $state, $rootScope, repoFactory) {
+
+	$scope.commit = function (commitMsg) {
+		repoFactory.commit($rootScope.repo, commitMsg)
+	}
+
+});
+app.config(function($stateProvider, $urlRouterProvider){
+
+    $stateProvider
+        .state('commit_final', {
+            url: '/commit_final',
+            templateUrl: 'window/commit_final/commit_final.html',
+            controller: 'CommitCtrl'
+        })
+});
+app.factory('fileSystemFactory', function ($rootScope){
+	return {
+		makeDir: function (name, cb) {
+			var filePath = __dirname + '/' + name;
+			mkdirp(filePath, function (err) {
+				console.log('into the makeDir function')
+			    if (err) throw err;
+			})
+		},
+		makeDotGitDir: function (name) {
+			var filePath = __dirname + '/' + name + '/.git';
+			mkdirp(filePath, function (err) {
+				console.log('into the makeDotGitDir function')
+			    if (err) throw err;
+			})
+		},
+
+		currentBranch: ""
+
+	}
+});
+app.config(function($stateProvider, $urlRouterProvider){
+
+    $stateProvider
         .state('home', {
             url: '/',
             templateUrl: 'window/home/home.html',
@@ -410,8 +463,16 @@ app.factory('mergeFactory', function ($rootScope, $q, branchFactory, fsFactory) 
 				});
 			})
 		}
-
 	}
+});
+app.config(function($stateProvider, $urlRouterProvider){
+
+    $stateProvider
+        .state('merge_ready', {
+            url: '/merge_ready',
+            templateUrl: 'window/merge_ready/merge_ready.html',
+            controller: 'PullCtrl'
+        })
 });
 app.controller('PullCtrl', function ($scope, $rootScope, pullFactory) {
 
@@ -434,10 +495,10 @@ app.factory('pullFactory', function ($rootScope){
 app.config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
-        .state('status', {
-            url: '/status',
-            templateUrl: 'window/status/status.html',
-            controller: 'StatusCtrl'
+        .state('push', {
+            url: '/push',
+            templateUrl: 'window/push/push.html',
+            controller: 'PushCtrl'
         })
 });
 app.controller('StatusCtrl', function ($scope, repoFactory, $rootScope) {
@@ -469,6 +530,7 @@ app.controller('StatusCtrl', function ($scope, repoFactory, $rootScope) {
     }
 
 });
+
 app.config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
@@ -591,6 +653,44 @@ app.factory('repoFactory', function ($rootScope, $q, branchFactory){
 app.config(function($stateProvider, $urlRouterProvider){
 
     $stateProvider
+        .state('status', {
+            url: '/status',
+            templateUrl: 'window/status/status.html',
+            controller: 'StatusCtrl'
+        })
+});
+app.controller('StatusCtrl', function ($scope, repoFactory, $rootScope) {
+
+    $scope.status = function () {
+
+        repoFactory.status($rootScope.repo, function (statusObj) {
+        	var array = []
+	        	var counter = 0
+	        	for (var key in statusObj) {
+	        		if (statusObj.hasOwnProperty(key)) {
+	        	   		array[counter] = {};
+	        	   		array[counter].fileName = key;
+	        	        for (var prop in statusObj[key]) {
+	        	        	if(statusObj[key].hasOwnProperty(prop)){
+	        	        	    if (prop === 'staged') {
+	        	        		    array[counter].staged = statusObj[key][prop]
+	        	        	    } else {
+	        	        	        array[counter].tracked = statusObj[key][prop]
+	        	        	    }
+	        	          }
+	        	       }
+	        	    }counter++
+	        	}
+	        	$scope.files = array
+	        	$scope.$digest();
+	        	console.log('this is scope.files', $scope.files)
+        })
+    }
+
+});
+app.config(function($stateProvider, $urlRouterProvider){
+
+    $stateProvider
         .state('work', {
             url: '/work',
             templateUrl: 'window/work/work.html',
@@ -609,30 +709,6 @@ app.controller('workCtrl', function ($scope, $rootScope, branchFactory){
 	$scope.currentBranch = branchFactory.currentBranch;
 
 })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
