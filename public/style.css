@@ -45,3 +45,10 @@ body {
     display: inline-block;
 }
 
+.branch-button{
+    margin-right: 1%;
+}
+
+.work-button{
+    float: right;
+}
