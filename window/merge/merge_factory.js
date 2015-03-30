@@ -55,32 +55,32 @@ app.factory('mergeFactory', function ($rootScope, $q, branchFactory, fsFactory) 
 	            
 	        });
 		},
-		findConflicts: function () {
-			var closure = {}
-			fsFactory.findFilesInDir($rootScope.repo.path +'/test', ['.git'])
-				.then(function (files) {
-					self.getConflicts()
-					closure.files = files
-					console.log('these are the files', closure.files)
-					return fsFactory.arrayMap(files, fsFactory.readFile);
-				})
-				.then(function (arrayOfContents) {
-					closure.contents = arrayOfContents
-					return fsFactory.arrayMap(arrayOfContents, fsFactory.findInFile)
-				})
-				.then(function (arrayOfBooleans) {
-					closure.booleans = arrayOfBooleans
-					closure.conflictFiles = []
-					var booleanIndex = 0;
-					console.log('this is the array of Booleans', closure.booleans)
-					for (var i = 0, len = arrayOfBooleans.length; i < len; i++) {
-						if (arrayOfBooleans[i]) {
-							closure.conflictFiles.push(closure.contents[i])
-						}
-					}
-					console.log(closure.conflictFiles)
-				})
-		},
+		// findConflicts: function () {
+		// 	var closure = {}
+		// 	fsFactory.findFilesInDir($rootScope.repo.path +'/test', ['.git'])
+		// 		.then(function (files) {
+		// 			self.getConflicts()
+		// 			closure.files = files
+		// 			console.log('these are the files', closure.files)
+		// 			return fsFactory.arrayMap(files, fsFactory.readFile);
+		// 		})
+		// 		.then(function (arrayOfContents) {
+		// 			closure.contents = arrayOfContents
+		// 			return fsFactory.arrayMap(arrayOfContents, fsFactory.findInFile)
+		// 		})
+		// 		.then(function (arrayOfBooleans) {
+		// 			closure.booleans = arrayOfBooleans
+		// 			closure.conflictFiles = []
+		// 			var booleanIndex = 0;
+		// 			console.log('this is the array of Booleans', closure.booleans)
+		// 			for (var i = 0, len = arrayOfBooleans.length; i < len; i++) {
+		// 				if (arrayOfBooleans[i]) {
+		// 					closure.conflictFiles.push(closure.contents[i])
+		// 				}
+		// 			}
+		// 			console.log(closure.conflictFiles)
+		// 		})
+		// },
 		getConflicts: function () {
 			return $q(function (resolve, reject) {
 				var git = spawn('git', ['diff-files', '--name-only']);
