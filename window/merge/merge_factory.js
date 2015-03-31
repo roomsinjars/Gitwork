@@ -142,29 +142,30 @@ app.factory('mergeFactory', function (
 
 		mergeSpawn: function () {
 			return $q(function (resolve, reject) {
-				var git = spawn('git', ['merge', 'master']); 
-				git.stdout.on('data', function (data) {
-					console.log('this is the raw', data)
-				  var strData = ''+ data;
-				  var arrStrData = [];
-				  console.log('this is the raw data', strData);
-				  var len = arrStrData.length;
-				  arrStrData = strData.split("\n").slice(0, len-1)
-				  console.log(arrStrData)
-				  if (arrStrData.length >=1) {
-				  		resolve(arrStrData)
-				  } else {
-				  	  var error = 'No files are in conflict';
-				  	  reject(error)
-				  }			  
+				console.log('getting here')
+				var options = {
+					cwd: $rootScope.repo.path
+				}
+				var git = spawn('git', ['merge', 'master'], options); 
+				exec('git merge master', function (error, stdout, stderr) {
+					if (error) reject(error)
+					console.log('getting here, too')
+					console.log('this is the raw data', stdout)
+					var arrStrData = [];
+
+					arrStrData = stdout.split("\n").slice(0, arrStrData.length-1)
+					resolve(arrStrData)
+
+				})			  
 				});
-			})
+			
 		},
 
 		getConflicts: function () {
 
 			//this is happening at the wrong working directory
 			return $q(function (resolve, reject) {
+				console.log('getConflicts got called')
 				var options = {
 					cwd: $rootScope.repo.path
 				}
