@@ -3,6 +3,17 @@ app.config(function($stateProvider, $urlRouterProvider){
       .state('commit', {
           url: '/commit',
           templateUrl: 'window/commit/commit.html',
-          controller: 'CommitCtrl'
-      })
+          controller: 'CommitCtrl',
+          resolve: {
+          	unstaged: function(commitFactory){
+          							return commitFactory.unstaged()
+          						},
+
+          	staged: function(commitFactory){
+          							return commitFactory.staged()
+          						}
+							
+										
+          	}
+       }) 
 });

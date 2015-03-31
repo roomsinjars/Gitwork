@@ -1,5 +1,9 @@
-app.controller('CommitCtrl', function ($scope, $state, $rootScope, repoFactory, commitFactory) {
+app.controller('CommitCtrl', function ($scope, $state, $rootScope, repoFactory, commitFactory, staged, unstaged) {
 	
+	$scope.filesUnstaged = unstaged
+
+	$scope.filesStaged = staged
+
 	$scope.commit = function (commitMsg) {
 		repoFactory.commit($rootScope.repo, commitMsg)
 	}
@@ -30,17 +34,17 @@ app.controller('CommitCtrl', function ($scope, $state, $rootScope, repoFactory, 
 
 });
 	// $scope.getStatus = function() {
-	// 	Status.get().then(function(data) {
-	// 		$scope.filesUnstaged = [];
-	// 		$scope.filesStaged = [];
-	// 		console.log('data', data);
-	// 		for (var i=0; i< data.length; i++){
-	// 			console.log(data[i].tracked);
-	// 				if (data[i].staged == false) {
-	// 					$scope.filesUnstaged.push(data[i]);
-	// 				} else {
-	// 					$scope.filesStaged.push(data[i]);
-	// 				}
-	// 		}
-	// 	})
+		// Status.get().then(function(data) {
+		// 	$scope.filesUnstaged = [];
+		// 	$scope.filesStaged = [];
+		// 	console.log('data', data);
+		// 	for (var i=0; i< data.length; i++){
+		// 		console.log(data[i].tracked);
+		// 			if (data[i].staged == false) {
+		// 				$scope.filesUnstaged.push(data[i]);
+		// 			} else {
+		// 				$scope.filesStaged.push(data[i]);
+		// 			}
+		// 	}
+		// })
 	// }
