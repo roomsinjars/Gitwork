@@ -1,15 +1,14 @@
 <div class="alert alert-dismissible alert-info">
     <h4>Time to commit your work!</h4>
-    <p>Your files have automatically been staged and are ready to be committed.  Please enter a message to accompany your commit.</p>
+    <p>Please select the files below you would like to commit.</p>
 </div>
 
 <div class="form-group">
-    <p>Unstaged: (Click to add file to commit)</p>
-     <button class="btn btn-primary branch-button" type="button" ng-repeat="fileUS in filesUnstaged" ng-click="add(fileUS.fileName)">{{ fileUS.fileName }}</button>
+    <p>Click to Stage</p>
+     <button class="btn btn-primary branch-button btn-sm" type="button" ng-repeat="fileUS in filesUnstaged" ng-click="add(fileUS.fileName)">{{ fileUS.fileName }}</button>
 
-    <p>Staged: (Click to remove file from commit)<p>
-    <button class="btn btn-primary branch-button" type="button" ng-repeat="fileS in filesStaged" ng-click="remove(fileS.fileName)">{{ fileS.fileName }}</button>
-    <h3>Commit Progress</h3>
+    <p>Click to Unstage<p>
+    <button class="btn btn-primary branch-button btn-sm" type="button" ng-repeat="fileS in filesStaged" ng-click="remove(fileS.fileName)">{{ fileS.fileName }}</button>
     <div class="input-group">
         <span class="input-group-addon">Message:</span>
         <input type="text" class="form-control" placeholder="Enter commit message here" ng-model="commitMsg">

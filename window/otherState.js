@@ -24,7 +24,7 @@ app.run(function ($state, $rootScope) {
             }
             return $state.go('noRepo')
         })
-    },5000);
+    },100);
 
 	if (install.value==="false") {
 	    //npm link on the current directory
