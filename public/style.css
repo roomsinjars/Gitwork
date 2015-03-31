@@ -92,3 +92,13 @@ h3{
     font-size: medium;
     margin-top: 1%;
 }
+
+.commit-button{
+    float: right;
+    margin-top: 1%;
+}
+
+.branch-button{
+    float: right;
+    margin-top: 1%;
+}
