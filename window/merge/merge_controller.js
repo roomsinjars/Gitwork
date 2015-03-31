@@ -16,6 +16,9 @@ app.controller('MergeCtrl', function ($scope, repoFactory, $rootScope, mergeFact
         	// .then(function (repo) {
         	// 	console.log('got here', repo)
         	// })
+            .then(function (repo) {
+                $scope.mergeSuccess = true;
+            })
         	.catch(function (err) {
                 console.log(err)
                 if (err.message === 'This merge has conflicts') {
@@ -29,9 +32,7 @@ app.controller('MergeCtrl', function ($scope, repoFactory, $rootScope, mergeFact
                 }
         		
         	})
-        	.then(function (repo) {
-        	 	$scope.mergeSuccess = true;
-        	})
+        	
         	
 
         

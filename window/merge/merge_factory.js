@@ -63,7 +63,7 @@ app.factory('mergeFactory', function (
 			return $q(function (resolve, reject) {
 				var mergeOptions = new NodeGit.MergeOptions()
 				mergeOptions.fileFavor = 2
-				NodeGit.Merge.commits(repo.repo, repo.branchCommit, repo.masterCommit, mergeOptions)
+				NodeGit.Merge.commits(repo.repo, repo.branchCommit, repo.masterCommit, null)
 					.then(function (index) {
 						if (!index.hasConflicts()) {
 			                index.write();
@@ -165,7 +165,10 @@ app.factory('mergeFactory', function (
 
 			//this is happening at the wrong working directory
 			return $q(function (resolve, reject) {
-				var git = spawn('git', ['diff-files', '--name-only']);
+				var options = {
+					cwd: $rootScope.repo.path
+				}
+				var git = spawn('git', ['diff-files', '--name-only'], options);
 				git.stdout.on('data', function (data) {
 				  var strData = ''+ data;
 				  var arrStrData = [];
