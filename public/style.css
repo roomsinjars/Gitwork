@@ -43,6 +43,11 @@ body {
 .progress-text{
     text-align: center;
     display: inline-block;
+    margin-top: 2%;
+}
+
+.progress-text p{
+  font-size: medium;
 }
 
 .branch-button{
@@ -52,4 +57,38 @@ body {
 
 .work-button{
     float: right;
+}
+
+.merge-button{
+    margin-right: 1%;
+}
+
+.alert-info h4{
+    font-weight: 900;
+
+}
+
+.alert-info p{
+    font-size: medium;
+}
+
+h3{
+    font-size: medium;
+}
+
+.input-group{
+    width: 95%;
+}
+
+.input-group-btn:last-child > .btn, .input-group-btn:last-child > .btn-group {
+    margin-left: 15%
+}
+
+.commit-text{
+    font-size: small;
+}
+
+.form-group p{
+    font-size: medium;
+    margin-top: 1%;
 }
