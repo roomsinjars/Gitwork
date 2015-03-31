@@ -1,4 +1,4 @@
-app.factory('commitFactory', function($rootScope, $q){
+app.factory('commitFactory', function($rootScope, $q, Status){
 	return {
 
 		addFiles: function(file) {
@@ -18,6 +18,27 @@ app.factory('commitFactory', function($rootScope, $q){
 					return resolve(data)
 				})
 			})
+		},
+
+		unstagedFiles: function() {
+			Status.get().then(function(data){
+				var arr = [];
+				for (var i=0; i< data.length; i++){
+					if (data[i].staged == false) arr.push(data[i]);
+				}
+			})
+			return arr;
+		},
+
+		stagedFiles: function() {
+			Status.get().then(function(data){
+				var arr = [];
+				for (var i=0; i< data.length; i++){
+					if (data[i].staged == true) arr.push(data[i]);
+				}
+			})
+			return arr;
 		}
+
 	}
 })
