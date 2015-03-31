@@ -147,7 +147,7 @@ app.factory('mergeFactory', function (
 					cwd: $rootScope.repo.path
 				}
 				var git = spawn('git', ['merge', 'master'], options); 
-				exec('git merge master', function (error, stdout, stderr) {
+				exec('git merge master -m "merged branch into master"', function (error, stdout, stderr) {
 					if (error) reject(error)
 					console.log('getting here, too')
 					console.log('this is the raw data', stdout)

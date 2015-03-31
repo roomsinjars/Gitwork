@@ -7,7 +7,16 @@ app.controller('MergeCtrl', function ($scope, repoFactory, $rootScope, mergeFact
         //     console.log('this is the error', err)
         // })
         mergeFactory.mergeSpawn().then(function (arrStrData) {
-            $scope.mergeOutcome = arrStrData;
+            if (arrStrData[1] && arrStrData[1].slice(0,8)==="CONFLICT") {
+                //$state.go('merge-failure')
+            } else if (arrStrData[0].slice(0,7)==="Already") {
+                 $scope.mergeOutcome = arrStrData;
+            } else if (arrStrData[0] === "error: 'merge' is not possible because you have unmerged files.") {
+                $state.go('commit_final')
+            } else {
+                //$state.go('merge-success')
+            }
+            
         })
         .catch(function (conflict) {
             $scope.conflictFiles = conflict
