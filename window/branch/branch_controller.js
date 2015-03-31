@@ -8,9 +8,17 @@ app.controller('BranchCtrl', function ($scope, $state, $rootScope, branches, bra
   }
 
   $scope.newBranch = function(branchName) {
-    branchFactory.switchBranch("master");
-  	branchFactory.createNewBranch(branchName);
-  	branchFactory.currentBranch = branchName;
+    branchFactory.switchBranch('master')
+      .then(function (data) {
+        return branchFactory.createNewBranch(branchName)
+      }).then(function (data) {
+        branchFactory.currentBranch = branchName;
+        console.log(branchFactory.currentBranch)
+        return branchFactory.switchBranch(branchName)
+      }).then(function (data) {
+        $state.go('work');
+      })
+  	
   }
 
 

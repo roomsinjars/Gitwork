@@ -5,6 +5,9 @@ app.config(function ($urlRouterProvider, $locationProvider) {
 
 app.run(function ($state, $rootScope) {
 
+    $rootScope.repo = git(process.env.PWD);
+    console.log('app.run repo', $rootScope.repo);
+
     setTimeout(function(){
         //where we can also call foo
         fs.readdir(__dirname, function (err,data){
@@ -12,12 +15,9 @@ app.run(function ($state, $rootScope) {
             for (var i=0; i<data.length; i++){
                 if (data[i]===".git") {
                     $rootScope.repo = git(process.env.PWD);
-                    console.log($rootScope.repo);
                     $rootScope.repo.config(function (err, config) {
-                        console.log(config.items)
                         $rootScope.username = config.items['user.name'];
                         $rootScope.useremail = config.items['user.email'];
-                        console.log($rootScope)
                         return $state.go('branch')
                     })
                 }
@@ -38,4 +38,6 @@ app.run(function ($state, $rootScope) {
 	    })
 	}
 
+
 })
+

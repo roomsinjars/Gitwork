@@ -13,13 +13,12 @@ app.factory('repoFactory', function ($rootScope, $q, branchFactory){
                     var giftRepo = _repo
                     console.log(giftRepo)
                     $rootScope.repo = giftRepo
-                    console.log('this is the rootScope.repo', $rootScope.repo)
                 })
             })                  
         },
         createRepo: function (name) {
             mkdirp(__dirname + '/' + name, function (err) {
-                if (err) throw err;
+                if (err) throw err; //could stop whole app.
                 mkdirp(__dirname + '/' + name + '/'+'.git', function (err) {
                   if (err) throw err;
                   git.init(__dirname+'/'+name, function (err, _repo) {
@@ -32,8 +31,6 @@ app.factory('repoFactory', function ($rootScope, $q, branchFactory){
                              if (err) throw err;
                              var author = "blakeprobinson <bprobinson@zoho.com>";
                              $rootScope.repo.identify(author, function (err) {
-                                console.log('entered identify function')
-                                console.log('post-identify repo', $rootScope.repo.identity)
                                 var options = {
                                 amend: false,
                                 author: "blakeprobinson <bprobinson@zoho.com>"
