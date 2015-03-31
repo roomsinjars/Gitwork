@@ -4,6 +4,6 @@ app.config(function($stateProvider, $urlRouterProvider){
         .state('commit_final', {
             url: '/commit_final',
             templateUrl: 'window/commit_final/commit_final.html',
-            controller: 'CommitCtrl'
+            controller: 'CommitFinalCtrl'
         })
 });

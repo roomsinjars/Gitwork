@@ -32,7 +32,6 @@ app.factory('repoFactory', function ($rootScope, $q, branchFactory){
                              var author = "blakeprobinson <bprobinson@zoho.com>";
                              $rootScope.repo.identify(author, function (err) {
                                 var options = {
-                                all: true,
                                 amend: false,
                                 author: "blakeprobinson <bprobinson@zoho.com>"
                                 }
@@ -59,7 +58,6 @@ app.factory('repoFactory', function ($rootScope, $q, branchFactory){
         },
         commit: function (repository, commitMsg) {
             var options = {
-            all: true,
             amend: false,
             author: "blakeprobinson <bprobinson@zoho.com>"
             }
