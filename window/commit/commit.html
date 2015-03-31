@@ -11,10 +11,12 @@
     <button class="btn btn-primary branch-button btn-sm btn-success" type="button" ng-repeat="fileS in filesStaged" ng-click="remove(fileS.fileName)">{{ fileS.fileName }}</button>
     <div class="input-group">
         <span class="input-group-addon">Message:</span>
-        <input type="text" class="form-control" placeholder="Enter commit message here" ng-model="commitMsg">
-          <span class="input-group-btn">
-            <button class="btn btn-primary" type="button" ng-click="commit(commitMsg)" ui-sref="merge_ready">Commit</button>
-          </span>
+        <form name="commit_form" class="commit-input">
+            <input type="text" class="form-control" placeholder="Enter commit message here" ng-model="commitMsg" name="commit_Message" ng-maxlength=3 />
+              <span class="input-group-btn">
+                <button class="btn btn-primary commit-button" type="button" ng-click="commit(commitMsg)" ui-sref="merge_ready" ng-show="commit_form.commit_Message.$dirty && commit_form.commit_Message.$error.maxlength">Commit</button>
+              </span>
+        </form>
     </div>
 </div>
 
