@@ -5,9 +5,10 @@
 
 <div class="form-group">
     <p>Click to Stage</p>
-     <button class="btn btn-primary btn-sm" type="button" ng-repeat="fileUS in filesUnstaged" ng-click="add(fileUS.fileName)">{{ fileUS.fileName }}</button>
+     <button class="btn btn-primary branch-button btn-sm" type="button" ng-repeat="fileUS in filesUnstaged" ng-click="add(fileUS.fileName)">{{ fileUS.fileName }}</button>
+
     <p>Click to Unstage<p>
-    <button class="btn btn-primary btn-sm" type="button" ng-repeat="fileS in filesStaged" ng-click="remove(fileS.fileName)">{{ fileS.fileName }}</button>
+    <button class="btn btn-primary branch-button btn-sm" type="button" ng-repeat="fileS in filesStaged" ng-click="remove(fileS.fileName)">{{ fileS.fileName }}</button>
     <div class="input-group">
         <span class="input-group-addon">Message:</span>
         <input type="text" class="form-control" placeholder="Enter commit message here" ng-model="commitMsg">
