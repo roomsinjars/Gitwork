@@ -12,17 +12,34 @@
         </span>
     </div>
 </div>
-
-<div class="alert alert-dismissible alert-warning" ng-show='mergeOutcome'>
+<div class="alert alert-dismissible alert-warning" ng-show='mergeConflicts'>
   <button type="button" class="close" data-dismiss="alert">×</button>
-  <h4>Warning!</h4>
-  <p ng-repeat='line in mergeOutcome'>{{line}}</p>
+  <h4>Warning! You have merge conflicts</h4>
+  <p ng-repeat='line in mergeOutcome'></p>
+    <li>{{line}}</li>
+  <span class="input-group-btn">
+    <button class="btn btn-primary" type="button" ui-sref='commit_final'>Commit</button>
+  </span>
   <!-- <p>This merge has conflicts.  Go to the files with the conflicts, resolve them and commit the changes.</p> -->
 </div>
 
-<div class="alert alert-dismissible alert-success" ng-show='mergeSuccess'>
+<div class="alert alert-dismissible alert-warning" ng-show='alreadyMerged'>
   <button type="button" class="close" data-dismiss="alert">×</button>
-  <strong>Well done!</strong> You successfully read <a href="#" class="alert-link">this important alert message</a>.
+  <h4>No need to merge, you're already up-to-date with master.  Go ahead and push your changes.</h4>
+  <span class="input-group-btn">
+    <button class="btn btn-primary" type="button" ui-sref='push'>Push</button>
+  </span>
+  <!-- <p>This merge has conflicts.  Go to the files with the conflicts, resolve them and commit the changes.</p> -->
+</div>
+
+<div class="alert alert-dismissible alert-warning" ng-show='mergeErr'>
+  <button type="button" class="close" data-dismiss="alert">×</button>
+  <h4>Warning!</h4>
+  <p>You have unmerged files that you need to commit.  Fix the merge conflicts then click commit.</p>
+  <!-- <p>This merge has conflicts.  Go to the files with the conflicts, resolve them and commit the changes.</p> -->
+  <span class="input-group-btn">
+    <button class="btn btn-primary" type="button" ui-sref='commit_final'>Commit</button>
+  </span>
 </div>
 
 <div class="progress-text" style="width: 17%">
