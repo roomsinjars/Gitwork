@@ -15,11 +15,9 @@
     <h3>Create a new branch:</h3>
     <div class="input-group">
         <span class="input-group-addon">Feature:</span>
-        <form name="feature_form">
-        <input type="text" class="form-control" placeholder="Feature Branch" ng-model="branchName" name="feature_name" ng-maxlength=3>
-          <span class="input-group-btn">
-            <button class="btn btn-primary create-branch branch-button" type="button" ng-click="newBranch(branchName)"  ng-show="feature_form.feature_name.$dirty && feature_form.feature_name.$error.maxlength">Create</button>
-        </form>
+        <input type="text" class="form-control" placeholder="Feature Branch" ng-model="branchName" name="feature_name" />
+          <span class="input-group-btn" ng-show="branchName.length > 3">
+            <button class="btn btn-primary create-branch branch-button" type="button" ng-click="newBranch(branchName)">Create</button>
           </span>
     </div>
 </div>
