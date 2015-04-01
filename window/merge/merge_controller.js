@@ -5,6 +5,9 @@ app.controller('MergeCtrl', function
         branchFactory.switchBranch('master').then(function (data) {
             return pullFactory.pullRepo()
         })
+        .then(function (data){
+            return mergeFactory.postFetchMerge()
+        })
         .then(function (data) {
             return branchFactory.switchBranch(branchFactory.currentBranch)
         })
@@ -24,6 +27,8 @@ app.controller('MergeCtrl', function
             if (errArr[1] === "error: 'merge' is not possible because you have unmerged files.") {
                 console.log('this is the errArr in the dotCatch', errArr)
                 $scope.mergeErr = errArr
+            } else {
+                console.log(errArr)
             }
         })
 

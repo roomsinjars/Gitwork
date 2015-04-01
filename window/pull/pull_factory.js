@@ -9,6 +9,7 @@ app.factory('pullFactory', function ($rootScope, $state, commitFactory, $q){
                     if (data.length < 1){
                         $rootScope.repo.remote_fetch("", function(err){
                             if (err) throw err;
+                            resolve(err)
                             console.log("fetched repo")
                             resolve(data)
                         })
