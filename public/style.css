@@ -1,3 +1,7 @@
+/*
+/////State Animations/////
+*/
+
 [ui-view].ng-enter, [ui-view].ng-leave {
     position: absolute;
     left: 0;
@@ -36,40 +40,12 @@
     transform:translate3d(100px, 0, 0);
 }
 
+/*
+/////HTML Body/////
+*/
+
 body {
     background-color: #141d27;
-}
-
-.progress-text{
-    text-align: center;
-    display: inline-block;
-    margin-top: 2%;
-}
-
-.progress-text p{
-  font-size: medium;
-}
-
-.branch-button{
-    margin-right: 1%;
-    margin-top: 1%;
-}
-
-.work-button{
-    float: right;
-}
-
-.merge-button{
-    margin-right: 1%;
-}
-
-.alert-info h4{
-    font-weight: 900;
-
-}
-
-.alert-info p{
-    font-size: medium;
 }
 
 h3{
@@ -84,11 +60,77 @@ h3{
     margin-left: 15%
 }
 
-.commit-text{
-    font-size: small;
-}
-
 .form-group p{
     font-size: medium;
     margin-top: 1%;
 }
+
+/*
+/////Progress Bar/////
+*/
+
+.progress-text{
+    text-align: center;
+    display: inline-block;
+    margin-top: 2%;
+}
+
+.progress-text p{
+    font-size: medium;
+}
+
+/*
+/////Branch State/////
+*/
+
+.branch-button{
+    margin-right: 1%;
+    margin-top: 1%;
+}
+
+.branch-button{
+    margin-top: 1%;
+}
+
+/*
+/////Work State/////
+*/
+
+.work-button{
+    float: right;
+}
+
+/*
+/////Merge State/////
+*/
+
+.merge-button{
+    margin-right: 1%;
+}
+
+.alert-info h4{
+    font-weight: 900;
+
+}
+
+.alert-info p{
+    font-size: medium;
+}
+
+/*
+/////Commit State/////
+*/
+
+.commit-text{
+    font-size: small;
+}
+
+
+.commit-input{
+
+}
+
+.commit-button{
+    margin-top: 1%;
+}
+

@@ -32,6 +32,8 @@ app.controller('CommitCtrl', function ($scope, $state, $rootScope, repoFactory, 
 			})
 	}
 
+
+
 });
 	// $scope.getStatus = function() {
 		// Status.get().then(function(data) {
