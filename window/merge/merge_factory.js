@@ -172,6 +172,36 @@ app.factory('mergeFactory', function (
 			
 		},
 
+		postFetchMerge: function () {
+			return $q(function (resolve, reject) {
+				console.log('getting to postMergeMaster')
+				var options = {
+					cwd: $rootScope.repo.path
+				}; 
+				exec('git merge origin/master', options
+					//'git merge master -m "merged branch into master"'
+					, function (error, stdout, stderr) {
+					if (error) {
+						var errArr = []
+						errArr = error.message.split("\n").slice(0, errArr.length-1)
+						self.mergeMsg = errArr
+						console.log('this is self.mergeMsg in postMergeMaster', self.mergeMsg)
+						reject(errArr)
+					} else {
+						console.log('getting here, too')
+						console.log('this is the raw data in postMergeMaster', stdout)
+						var arrStrData = [];
+						arrStrData = stdout.split("\n").slice(0, arrStrData.length-1)
+						self.mergeMsg = arrStrData
+						resolve(arrStrData)
+					}
+					
+					
+
+				})			  
+				});
+		}, 
+
 		mergeMsg: [],
 
 		getConflicts: function () {
