@@ -1,13 +1,9 @@
-app.config(function($stateProvider, $urlRouterProvider){
+app.config(function ($stateProvider, $urlRouterProvider){
 
     $stateProvider
         .state('merge-failure', {
             url: '/mergeFailure',
             templateUrl: 'window/merge-failure/merge_failure.html',
-            controller: 'MergeFailCtrl'
+            controller: 'MergeCtrl'
         })
 });
-
-app.controller('MergeFailCtrl', function($scope){
-	
-})

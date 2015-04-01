@@ -1,1 +1,8 @@
 <h2>Merge Fail</h2>
+
+<div class="alert alert-dismissible alert-warning" ng-show='mergeOutcome'>
+  <button type="button" class="close" data-dismiss="alert">×</button>
+  <h4>Warning!</h4>
+  <p ng-repeat='line in mergeOutcome'>{{line}}</p>
+  <!-- <p>This merge has conflicts.  Go to the files with the conflicts, resolve them and commit the changes.</p> -->
+</div>

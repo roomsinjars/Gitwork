@@ -1,6 +1,7 @@
 app.factory('mergeFactory', function (
 	$rootScope, $q, branchFactory, fsFactory, repoFactory) {
 	var self = this;
+	console.log('this is this in mergeFactory', self)
 	return {
 
 		getRepo: function (path) {
@@ -140,26 +141,38 @@ app.factory('mergeFactory', function (
 			})
 		},
 
-		mergeSpawn: function () {
+		mergeExec: function () {
 			return $q(function (resolve, reject) {
 				console.log('getting here')
 				var options = {
 					cwd: $rootScope.repo.path
-				}
-				var git = spawn('git', ['merge', 'master'], options); 
-				exec('git merge master -m "merged branch into master"', function (error, stdout, stderr) {
-					if (error) reject(error)
-					console.log('getting here, too')
-					console.log('this is the raw data', stdout)
-					var arrStrData = [];
-
-					arrStrData = stdout.split("\n").slice(0, arrStrData.length-1)
-					resolve(arrStrData)
+				}; 
+				exec('git merge master', options
+					//'git merge master -m "merged branch into master"'
+					, function (error, stdout, stderr) {
+					if (error) {
+						var errArr = []
+						errArr = error.message.split("\n").slice(0, errArr.length-1)
+						self.mergeMsg = errArr
+						console.log('this is self.mergeMsg', self.mergeMsg)
+						reject(errArr)
+					} else {
+						console.log('getting here, too')
+						console.log('this is the raw data', stdout)
+						var arrStrData = [];
+						arrStrData = stdout.split("\n").slice(0, arrStrData.length-1)
+						self.mergeMsg = arrStrData
+						resolve(arrStrData)
+					}
+					
+					
 
 				})			  
 				});
 			
 		},
+
+		mergeMsg: [],
 
 		getConflicts: function () {
 
