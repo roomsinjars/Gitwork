@@ -147,7 +147,7 @@ app.factory('mergeFactory', function (
 				var options = {
 					cwd: $rootScope.repo.path
 				}; 
-				exec('git merge master', options
+				exec('git merge master -m "merged master into branch"', options
 					//'git merge master -m "merged branch into master"'
 					, function (error, stdout, stderr) {
 					if (error) {

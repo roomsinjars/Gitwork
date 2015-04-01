@@ -8,9 +8,13 @@ app.factory('pullFactory', function ($rootScope, $state, commitFactory, $q){
                     console.log('pull', data);
                     if (data.length < 1){
                         $rootScope.repo.sync('origin', 'master', function(err){
-                            if (err) throw err;
-                            resolve(err);
-                            console.log("fetched repo");
+                            if (err) {
+                            	resolve(err)
+                            } else {
+                            	var done = 'done'
+                            	resolve(done)
+                            	console.log("fetched repo")
+                            };    
                         })
                     } else {
                         $state.go('commit');

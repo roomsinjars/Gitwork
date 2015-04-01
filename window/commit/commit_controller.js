@@ -9,14 +9,18 @@ app.controller('CommitCtrl', function ($scope, $state, $rootScope, repoFactory, 
 	}
 
 	$scope.add = function(file) {
-		commitFactory.addFiles(file);
-		$scope.getStatus();
+		commitFactory.addFiles(file).then(function (data) {
+			$scope.getStatus();
+		});
+		
 		
 	}
 
 	$scope.remove = function(file) {
-		commitFactory.removeFiles(file);
-		$scope.getStatus();
+		commitFactory.removeFiles(file).then(function (data) {
+			$scope.getStatus();
+		});
+		
 	}
 	
 	$scope.getStatus = function () {
