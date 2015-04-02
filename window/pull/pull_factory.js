@@ -3,24 +3,25 @@ app.factory('pullFactory', function ($rootScope, $state, commitFactory, $q){
     return {
         pullRepo: function(){
 
-            return $q(function (resolve, reject){
-                commitFactory.unstaged().then(function(data){
-                    console.log('pull', data);
-                    if (data.length < 1){
-                        $rootScope.repo.sync('origin', 'master', function(err){
-                            if (err) {
-                            	resolve(err)
-                            } else {
-                            	var done = 'done'
-                            	resolve(done)
-                            	console.log("fetched repo")
-                            };    
-                        })
+            return $q(function (resolve, reject) {
+                var options = {
+                    cwd: $rootScope.repo.path
+                }; 
+                exec('git pull', options, function (error, stdout, stderr) {
+                    if (error) {
+                        var errArr = []
+                        errArr = error.message.split("\n").slice(0, errArr.length-1)
+                        reject(errArr)
                     } else {
-                        $state.go('commit');
+                        console.log('getting here, too')
+                        console.log('this is the raw data', stdout)
+                        var arrStrData = [];
+                        arrStrData = stdout.split("\n").slice(0, arrStrData.length-1)
+                        self.mergeMsg = arrStrData
+                        resolve(arrStrData)
                     }
-                })
-            })
+                })            
+            });
         }
     }
 });
