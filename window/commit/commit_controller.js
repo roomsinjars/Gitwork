@@ -5,7 +5,7 @@ app.controller('CommitCtrl', function ($scope, $state, $rootScope, repoFactory, 
 	$scope.filesStaged = staged
 
 	$scope.commit = function (commitMsg) {
-		repoFactory.commit($rootScope.repo, commitMsg)
+		commitFactory.commit($rootScope.repo, commitMsg)
 	}
 
 	$scope.add = function(file) {

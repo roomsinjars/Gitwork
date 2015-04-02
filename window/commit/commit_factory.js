@@ -1,6 +1,16 @@
 app.factory('commitFactory', function($rootScope, $q, Status){
 	return {
 
+		commit: function (repository, commitMsg) {
+		    var options = {
+		    amend: false,
+		    author: $rootScope.username + ' ' + $rootScope.useremail
+		    }
+		    repository.commit(commitMsg, options, function (err) {
+		        if (err) throw err;
+		    })
+		},
+
 		addFiles: function(file) {
 			return $q(function (resolve, reject){
 				$rootScope.repo.add(file, function (err, data){

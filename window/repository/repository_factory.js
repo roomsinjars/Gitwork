@@ -46,25 +46,7 @@ app.factory('repoFactory', function ($rootScope, $q, branchFactory){
                 })
             })
         },
-
-        createBranch: function(branchName) {
-            $rootScope.repo.create_branch(branchName, function (err) {
-                if (err) throw err;
-                $rootScope.repo.checkout(branchName, function (err) {
-                    if (err) throw err
-                })  
-
-            })
-        },
-        commit: function (repository, commitMsg) {
-            var options = {
-            amend: false,
-            author: "blakeprobinson <bprobinson@zoho.com>"
-            }
-            repository.commit(commitMsg, options, function (err) {
-                if (err) throw err;
-            })
-        },
+        
         statusObject: function (statusObject) {
             return statusObject
         },
