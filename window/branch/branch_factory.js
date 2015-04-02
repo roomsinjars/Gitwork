@@ -19,6 +19,15 @@ app.factory('branchFactory', function ($rootScope, $q){
 			})
 		},
 
+		deleteOldBranch: function(branchName) {
+			return $q(function(resolve, reject){
+				$rootScope.repo.delete_branch(branchName, function (err, data){
+					if (err) return reject(err);
+					resolve(data)
+				})
+			})
+		},
+
 		getAllBranches: function(){
 			return $q(function (resolve, reject){
 				fs.readdir(__dirname + '/.git/refs/heads', function(err, data){
