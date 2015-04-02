@@ -4,7 +4,7 @@ app.factory('commitFactory', function($rootScope, $q, Status){
 		commit: function (repository, commitMsg) {
 		    var options = {
 		    amend: false,
-		    author: $rootScope.username + ' ' + $rootScope.useremail
+		    author: $rootScope.username + ' <' + $rootScope.useremail + '>'
 		    }
 		    repository.commit(commitMsg, options, function (err) {
 		        if (err) throw err;
