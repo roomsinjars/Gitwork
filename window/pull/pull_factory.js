@@ -3,7 +3,7 @@ app.factory('pullFactory', function ($rootScope, $state, commitFactory, $q){
     return {
         pullRepo: function(){
 
-            return $q(function(resolve, reject){
+            return $q(function (resolve, reject){
                 commitFactory.unstaged().then(function(data){
                     console.log('pull', data);
                     if (data.length < 1){
