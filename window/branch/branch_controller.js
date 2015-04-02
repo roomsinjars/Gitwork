@@ -1,14 +1,14 @@
 app.controller('BranchCtrl', function ($scope, $state, $rootScope, branches, branchFactory, pullFactory) {
-  var deleteBranches = [];
+  // var deleteBranches = [];
   $scope.branches = branches;
 
   
-  $scope.deleteBranches = function(){
-    for (var i=0; i<branches.length; i++){
-      if (!(value==='master')) deleteBranches.push(value);
-    }
-    return deleteBranches;
-  }
+  // $scope.deleteBranches = function(){
+  //   for (var i=0; i<branches.length; i++){
+  //     if (!(value==='master')) deleteBranches.push(value);
+  //   }
+  //   return deleteBranches;
+  // }
 
   
 
