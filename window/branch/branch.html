@@ -4,7 +4,7 @@
 </div>
 
 <div class="form-group">
-    <h3>Choose a branch to use:</h3>
+    <h3>Choose a branch:</h3>
     <div class="input-group">
         <span class="input-group-addon">Branch:</span>
         <a ng-repeat="branch in branches" class="btn-sm btn-primary select-branch" ng-click="switch(branch)" ui-sref="work">{{ branch }}</a>
@@ -19,6 +19,13 @@
           <span class="input-group-btn" ng-show="branchName.length > 3">
             <button class="btn btn-primary create-branch branch-button" type="button" ng-click="newBranch(branchName)">Create</button>
           </span>
+    </div>
+</div>
+
+<div class="form-group">
+    <h3>Branch to DELETE:</h3>
+    <div class="input-group">
+        <a ng-repeat="branch in deleteBranches" class="btn-sm btn-primary select-branch" ng-click="deleteBranch(branch)">{{ branch }}</a>
     </div>
 </div>
 

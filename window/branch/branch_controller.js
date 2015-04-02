@@ -1,6 +1,17 @@
 app.controller('BranchCtrl', function ($scope, $state, $rootScope, branches, branchFactory, pullFactory) {
-
+  var deleteBranches = [];
   $scope.branches = branches;
+
+  
+  $scope.deleteBranches = function(){
+    for (var i=0; i<branches.length; i++){
+      if (!(value==='master')) deleteBranches.push(value);
+    }
+    return deleteBranches;
+  }
+
+  
+
 
   $scope.switch = function (branchName) {
     console.log('switch', branchName);
@@ -18,11 +29,22 @@ app.controller('BranchCtrl', function ($scope, $state, $rootScope, branches, bra
         return branchFactory.switchBranch(branchName)
     }).then(function (data) {
         $state.go('work');
-    }).catch(function (err) {
-        console.log(err)
-    })
-  	
+
+      })
   }
 
+  $scope.deleteBranch = function(branchName) {
+    console.log('deleteBranch', branchName);
+    branchFactory.switchBranch('master').then(function(data){
+      console.log('after switch');
+      return branchFactory.deleteOldBranch(branchName)
+    })
+    .then(function(data){
+      console.log('after delete');
+      return branchFactory.getAllBranches().then(function(branches){
+        $scope.branches = branches;
+      })
+    })
+  }
 
 });
