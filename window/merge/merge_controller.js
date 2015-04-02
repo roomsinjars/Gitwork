@@ -2,7 +2,15 @@ app.controller('MergeCtrl', function
     ($scope, repoFactory, $rootScope, mergeFactory, $state, branchFactory, pullFactory) {
     $scope.merge = function () {        
 
-        pullFactory.pullRepo().then(function (data) {
+        var branch = branchFactory.currentBranch
+
+        branchFactory.switchBranch('master').then(function (data) {
+            return pullFactory.pullRepo()
+        })
+        .then(function (data) {
+            return branchFactory.switchBranch(branch)
+        })
+        .then(function (data) {
             return mergeFactory.mergeExec()
         })
         .then(function (arrStrData) {
