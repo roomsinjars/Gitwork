@@ -6,13 +6,19 @@ app.config(function($stateProvider, $urlRouterProvider){
             templateUrl: 'window/branch/branch.html',
             controller: 'BranchCtrl',
             resolve: {
- 							branches: function(branchFactory){
- 								return branchFactory.getAllBranches().then(function(data){
- 									return data; 
- 								}, function failed(err){
- 									return err; 
- 								})
- 							}
+					branches: function(branchFactory){
+						return $q(function (resolve,reject) {
+							branchFactory.switchBranch('master').then(function (data) {
+							  return pullFactory.pullRepo()
+							}).then(function (data) {
+								return branchFactory.getAllBranches()
+							}).then(function (data) {
+								resolve(data)
+							}).catch(function (err){
+								reject(err)
+							})
+						})
+					}
             }
         })
 });

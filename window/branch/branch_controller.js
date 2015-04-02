@@ -11,19 +11,16 @@ app.controller('BranchCtrl', function ($scope, $state, $rootScope, branches, bra
   $scope.newBranch = function(branchName) {
     console.log('initial', $scope.branchName);
     
-    pullFactory.pullRepo().then(function (data) {
-      return branchFactory.switchBranch('master')
-    })
+    branchFactory.createNewBranch(branchName)
     .then(function (data) {
-        console.log('data', data, 'branchName', branchName)
-        return branchFactory.createNewBranch(branchName)
-    }).then(function (data) {
         branchFactory.currentBranch = branchName;
         console.log('bf', branchFactory.currentBranch, 'name', branchName)
         return branchFactory.switchBranch(branchName)
-      }).then(function (data) {
+    }).then(function (data) {
         $state.go('work');
-      })
+    }).catch(function (err) {
+        console.log(err)
+    })
   	
   }
 
