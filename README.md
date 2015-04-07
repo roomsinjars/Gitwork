@@ -1,5 +1,7 @@
 # Gitwork
 
+![Badge of Honor](https://img.shields.io/badge/Built%20at-Fullstack-green.svg?style=flat-square)
+
 ![home](https://cloud.githubusercontent.com/assets/8791823/6994152/98bca5d0-dadc-11e4-9a4a-9423fe5690dd.png)
 
 ## Selecting a Repository
