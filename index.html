@@ -1,158 +1,44 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>Gitwork</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css" media="screen">
-    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootswatch.min.css">
-    <link rel="stylesheet" href="src/css/style.css">
+<html lang='en'>
 
-</head>
+    <head>
+        <meta charset='utf-8'>
+        <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+        <meta name='viewport' content='width=device-width, initial-scale=1'>
+        <meta name='description' content=''>
+        <meta name='author' content=''>
 
-<body>
-    <div class="navbar navbar-default navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <a href="index.html" class="navbar-brand">Gitwork</a>
-                <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
+        <title>GitWork</title>
+
+        <!--stylesheets-->
+        <link href='bower_components/bootstrap/dist/css/bootstrap.min.css' rel='stylesheet'>
+        <link rel='stylesheet' href='bower_components/bootstrap/dist/css/bootswatch.min.css'>
+        <link rel='stylesheet' href='public/style.css'>
+    </head>
+
+    <body ng-app='GitWork' role='document'>
+
+        <!--custon navbar-->
+        <navbar></navbar>
+
+
+        <!--where content is injected-->
+
+            <div class="span12 ui-view-container">
+                <div class="well jumbotron" ui-view></div>
             </div>
-            <div class="navbar-collapse collapse" id="navbar-main">
-                <ul class="nav navbar-nav">
-                    <li>
-                        <a href="index.html">Home</a>
-                    </li>
-                    <li>
-                        <a href="download.html">Download</a>
-                    </li>
-                    <li>
-                        <a href="about.html">About Us</a>
-                    </li>
-                </ul>
-
-                <ul class="nav navbar-nav navbar-right">
-                    <li><a href="#" target="_blank">Support</a></li>
-                </ul>
-
-            </div>
-        </div>
-    </div>
-
-    <div class="container">
-        <!-- Containers
-        ================================================== -->
 
 
-    <div class="row">
-        <div class="col-lg-12">
-            <div>
-                <div class="jumbotron">
-                    <h1>Gitwork</h1>
-                    <p>A lightweight Git tool which provides users with a best practice Git framework for working on teams.</p>
-                    <p><a class="btn btn-primary btn-lg" href="download.html">Download Now</a></p>
-                </div>
-            </div>
-        </div>
-    </div>
+        <!--javascript formatting -->
+        <script src='bower_components/jquery/dist/jquery.min.js'></script>
+        <script src='bower_components/bootstrap/dist/js/bootstrap.min.js'></script>
+        <script src='bower_components/angular/angular.min.js'></script>
+        <script src='bower_components/angular-ui-router/release/angular-ui-router.min.js'></script>
+        <script src="bower_components/angular-animate/angular-animate.js"></script>
 
-    <div class="row">
-        <div class="col-lg-12">
+        <!--Angular gulp file-->
+        <script src='public/app.js'></script>
 
-            <h2 class="page-title">Getting Started</h2>
-
-            <!--Repository-->
-            <h3 class="state-header">Selecting a Repository</h3>
-            <p class="state-header-text">Post installation, Gitwork can be launched by typing "gw" into the command line.  We recommend that you launch Gitwork in the directory that contains the .git folder for
-            their project.  If working on a project for the first time, you should create a directory and launch Gitwork from the newly created directory.</p>
-            <img class="state-image" src="src/images/repository.png">
-            <ul class="state-text">
-                <li>The above screen will only appear if Gitwork is launched from a directory that does not contain a .git folder.</li>
-                <li>You will need to clone a Github repo in order to continue.  Enter the URL to a current project on Github, and it will automatically be cloned to the directory in which you launched Gitwork.</li>
-            </ul>
-
-            <!--Branch-->
-            <h3 class="state-header">Selecting a Branch</h3>
-            <p class="state-header-text">You will have the option to continue working on branch or create a new feature branch.</p>
-            <img class="state-image" src="src/images/branch.png">
-            <ul class="state-text">
-                <li>The current list of available branches will be displayed for selection.</li>
-                <li>You can also delete a branch if it is no longer needed. The new branch name must be a minimum of 4 characters long and cannot contain any spaces.</li>
-            </ul>
-
-            <!--Development-->
-            <h3 class="state-header">Developing</h3>
-            <p class="state-header-text">You can notify Gitwork that they are done working on your feature by clicking the "next" button. </p>
-            <img class="state-image" src="src/images/working.png">
-
-            <!--Commit-->
-            <h3 class="state-header">Committing Work</h3>
-            <p class="state-header-text">Once done working on your feature, you will be given the ability to commit your work.  Gitwork will automatically list all files that were changed since the previous commit.
-            You should select the files that changed that you would like to commit.</p>
-            <img class="state-image" src="src/images/commit.png">
-            <ul class="state-text">
-                <li>A valid commit message must be entered in order for the commit button to appear.</li>
-                <li>Functionality is built in to commit additional files in the future, so you should not feel obligated to commit every file that you changed</li>
-                <li>The "Refresh Files" button will only need to be selected if you make changes after entering the commit state.</li>
-            </ul>
-
-            <!--Next Step-->
-            <h3 class="state-header">Next Steps</h3>
-            <p class="state-header-text">Select the option that best fits your goals.  To continue working on the same feature branch, select "Continue Working on branch".  If you would like to make a commit with
-            additional files, select "Make New Commit".  Or if you are ready to merge your changes with the master branch, select "Merge Branch with Master".</p>
-            <img class="state-image" src="src/images/next_step.png">
-            <ul class="state-text">
-                <li>All files must be committed prior to merging your feature branch with master.  You will be sent back to the commit page if you attempt merging without committing all files. </li>
-            </ul>
-
-            <!--Merge-->
-            <h3 class="state-header">Merge Changes</h3>
-            <p class="state-header-text">Select "merge" to ensure your feature is incorporated into the most recent version of your project.</p>
-            <img class="state-image" src="src/images/first_merge.png">
-            <ul class="state-text">
-                <li>The merge function will check if your branch is up to date with master.  It will automatically make your branch current with master when "merge" is selected.</li>
-                <li>>You will be notified if your current branch in up to date with master. In which case you would not be required to merge.</li>
-            </ul>
-
-            <!--Push-->
-            <h3 class="state-header">Push to Github</h3>
-            <p class="state-header-text">Selecting the "Push" button will push your feature branch to Github.</p>
-            <img class="state-image" src="src/images/push.png">
-            <ul class="state-text">
-                <li>The branch will be pushed to Github, but you will still need merge your branch with the master branch on Github to have your changes incorporated into production.</li>
-            </ul>
-
-            <!--Success-->
-            <h3 class="state-header">Congratulations!</h3>
-            <p class="state-header-text">Your feature has now been pushed to Github and is ready to be merged with master.  You now have the option to go back and pickup where you left off working on a past feature,
-            or begin working on a new feature!</p>
-            <img class="state-image" src="src/images/success.png">
-
-        </div>
-    </div>
-
-
-    <footer>
-        <div class="row">
-            <div class="col-lg-12">
-                <ul class="list-unstyled">
-                    <li><a href="https://github.com/BLevine11/Gitwork">GitHub</a></li>
-                    <li class="pull-right"><a href="#top">Back to top</a></li>
-                </ul>
-            </div>
-        </div>
-    </footer>
-
-    </div>
-
-    <script src="bower_components/jquery/dist/jquery.min.js"></script>
-    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="bower_components/bootstrap/dist/js/bootswatch.js"></script>
-
-</body>
+    </body>
 
 </html>
